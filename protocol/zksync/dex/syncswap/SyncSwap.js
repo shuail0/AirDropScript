@@ -2,8 +2,7 @@ const path = require('path');
 const ethers = require('ethers');
 const { defaultAbiCoder } = require('ethers').utils;
 // const Dex = require('../../../module/dex.js');
-const { getContract } = require(path.resolve(__dirname, '../../../base/utils.js'));
-
+const { getContract } = require('../../../../base/utils');
 class SyncSwap {
   constructor() {
     this.name = 'SyncSwap';

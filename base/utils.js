@@ -20,21 +20,26 @@ return parseFloat(utils.formatUnits(num, decimals));
 
 // 将CSV文件转换为Objects
 const convertCSVToObjectSync = (filePath) => {
-    const objects = [];
-    const fileData = fs.readFileSync(filePath, 'utf-8');
-    const lines = fileData.trim().split('\n');
-    const header = lines[0].split(',');
-    for (let i = 1; i < lines.length; i++) {
-      const values = lines[i].split(',');
-      const obj = {};
-      for (let j = 0; j < header.length; j++) {
-        const trimmedKey = header[j].replace(/\s/g, '');
-        obj[trimmedKey] = values[j];
+  const objects = [];
+  const fileData = fs.readFileSync(filePath, 'utf-8');
+  const lines = fileData.trim().split('\n');
+  const header = lines[0].split(',');
+  for (let i = 1; i < lines.length; i++) {
+    const values = lines[i].split(',');
+    const obj = {};
+    for (let j = 0; j < header.length; j++) {
+      const trimmedKey = header[j].replace(/\s/g, '');
+      if (trimmedKey === 'taskTag') {
+          obj[trimmedKey] = values[j].trim(); // 移除换行符和其他空白字符
+      } else {
+          obj[trimmedKey] = values[j];
       }
-      objects.push(obj);
     }
-    return objects;
-  };
+    objects.push(obj);
+  }
+  return objects;
+};
+
 
 // 暂停函数
 const  sleep = (minutes) => {
@@ -57,7 +62,7 @@ const saveLog = (projectName, message) => {
       format: winston.format.simple(),
       transports: [
         new winston.transports.Console(),
-        new winston.transports.File({ filename: `./data/${projectName}.log` }),
+        new winston.transports.File({ filename: `./${projectName}.log` }),
       ],
     });
     const currentTime = new Date().toISOString();

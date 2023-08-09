@@ -1,5 +1,5 @@
 /**
- * tasks1 : velocore交互程序：
+ * tasks4 : mute交互程序：
  *  1.传入wallet类。
  *  2.查询账户ETH余额。
  *  3.将eth余额的20%-30%兑换为USDC
@@ -7,15 +7,14 @@
  *  5.将USDC兑换为ETH。
  */
 
-const Velocore = require('../protocol/dex/velocore/velocore');
-const { Wallet, Provider } = require('zksync-web3');
-const { getSwapTokenAddress, fetchToken, getBalance, tokenApprove } = require('../base/coin/token.js')
-const { floatToFixed, fixedToFloat,sleep, getRandomFloat, saveLog  } = require('../base/utils.js')
+const Mute = require('../protocol/zksync/dex/mute/mute.js');
+const { fetchToken, getBalance, tokenApprove } = require('../base/coin/token.js')
+const { floatToFixed, fixedToFloat, getRandomFloat  } = require('../base/utils.js')
 const ethers = require('ethers');
 
-const task1 = async (wallet) => {
+module.exports = async (wallet) => {
 
-    const velocore = new Velocore()
+    const mute = new Mute();
     const ETHAddress = '0x0000000000000000000000000000000000000000';
     const wETHAddress = '0x5aea5775959fbc2557cc8789bc1bf90a239d9a91';
     const usdcAddress = '0x3355df6D4c9C3035724Fd0e3914dE96A5a83aaf4';
@@ -35,9 +34,7 @@ const task1 = async (wallet) => {
     console.log('随机交易数量', amount.toString(), ' 开始交易')
 
     // // 将ETH兑换成USDC
-    let tx = await velocore.swapEthToToken(wallet, wETHAddress, usdc.address, amount);
-    console.log(tx)
-    
+    let tx = await mute.swapEthToToken(wallet, wETH.address, usdc.address, amount);
     console.log('交易成功txHash：', tx.transactionHash)
 
     // 查询USDC余额
@@ -46,11 +43,10 @@ const task1 = async (wallet) => {
 
     console.log('USDC余额：', usdcBalance.toString(), '开始授权...');
 
-    await tokenApprove(wallet, usdc.address, velocore.routerAddr, usdcBalance);
+    await tokenApprove(wallet, usdc.address, mute.routerAddr, usdcBalance);
     console.log('授权成功，开始交易')
-    tx = await velocore.swapTokenToEth(wallet, usdc.address, wETH.address, usdcBalance);
+    tx = await mute.swapTokenToEth(wallet, usdc.address, wETH.address, usdcBalance);
     console.log('交易成功 txHash:', tx.transactionHash)
 
 };
 
-module.exports = { task1 };
