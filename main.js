@@ -53,7 +53,6 @@ const walletData = convertCSVToObjectSync(walletPath);
 
 
             try {
-
                 await executeTask(wt.taskTag, wallet); // 根据taskTag执行对应的任务。
                 // 保存日志
                 const currentTime = new Date().toISOString();
@@ -63,11 +62,13 @@ const walletData = convertCSVToObjectSync(walletPath);
                 console.log('任务结束，程序暂停5分钟')
                 await sleep(5);
                 console.log('暂停结束')
+                process.exit()
 
             } catch (error) {
-
+                const currentTime = new Date().toISOString();
                 const logMessage = `time:${currentTime}, walletName:${wt.Wallet}, walletAddr:${wt.Address}, taskTag:${wt.taskTag}, error:${error}`;
                 saveLog('./logs/Error', logMessage);
+                process.exit()
                 
 
             };

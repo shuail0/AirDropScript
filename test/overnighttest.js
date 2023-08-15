@@ -28,7 +28,7 @@ const { constants } = require('starknet');
 
         const overnight = new Overnight();
 
-        // 测试 Mint USD+
+        // // 测试 Mint USD+
         // const balance = await getBalance(wallet, usdcAddress);
         // console.log(balance.toString());
         // const balance = floatToFixed(1, 6);
@@ -38,13 +38,13 @@ const { constants } = require('starknet');
         // const tx = await overnight.mint(wallet, usdcAddress, balance);
         // console.log(tx)
 
-        // 测试 销毁USD+
-        const balance = floatToFixed(1, 6);
-        console.log('开始授权')
-        await tokenApprove(wallet, usdcAddress, overnight.exchangeAddr, balance);
-        console.log('开始redeem USD+')
-        const tx = await overnight.redeem(wallet, usdcAddress, balance);
-        console.log(tx);
+        // // 测试 销毁USD+
+        // const balance = floatToFixed(1, 6);
+        // console.log('开始授权')
+        // await tokenApprove(wallet, usdcAddress, overnight.exchangeAddr, balance);
+        // console.log('开始redeem USD+')
+        // const tx = await overnight.redeem(wallet, usdcAddress, balance);
+        // console.log(tx);
 
 
     }

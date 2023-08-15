@@ -6,7 +6,18 @@ const { BigNumber, utils } = require('ethers');
 // 创建合约
 const getContract = (address, abi, provider) => {
     return new ethers.Contract(address, abi, provider)
-}
+};
+
+// 检查是否是有效的私钥
+const isValidPrivateKey = (key) => {
+  try {
+      new ethers.Wallet(key);
+      return true;
+  } catch {
+      return false;
+  }
+};
+
 
 // 将浮点数转换为大数
 const floatToFixed = (num, decimals = 18) => {
@@ -54,6 +65,32 @@ const getRandomFloat = (min, max, precision = 18) => {
   return randomInteger / integerPrecision;
 };
 
+// 随机生成域名
+const generateRandomDomain = (length, mode = "mix") => {
+  let charset;
+
+  switch (mode) {
+      case "numeric":
+          charset = "0123456789";
+          break;
+      case "alphabetic":
+          charset = "abcdefghijklmnopqrstuvwxyz";
+          break;
+      case "mix":
+      default:
+          charset = "abcdefghijklmnopqrstuvwxyz0123456789";
+          break;
+  }
+
+  let domainName = "";
+  for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * charset.length);
+      domainName += charset[randomIndex];
+  }
+
+  return domainName;
+};
+
 
 // 保存日志
 const saveLog = (projectName, message) => {
@@ -69,4 +106,4 @@ const saveLog = (projectName, message) => {
     logger.info(`${currentTime} ${message}`);
   };
 
-module.exports = { getContract, floatToFixed, fixedToFloat, convertCSVToObjectSync, sleep, getRandomFloat, saveLog }
+module.exports = { getContract, floatToFixed, fixedToFloat, convertCSVToObjectSync, sleep, getRandomFloat, saveLog, isValidPrivateKey,generateRandomDomain }

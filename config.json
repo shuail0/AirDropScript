@@ -1,0 +1,8 @@
+{
+    "zskrpc": "https://mainnet.era.zksync.io",
+    "ethrpc": "https://eth-mainnet.g.alchemy.com/v2/qRnk4QbaEmXJEs5DMnhitC0dSow-qATl",
+    "maxGasPrice": 20,
+    "walletPath": "/Users/lishuai/Documents/crypto/bockchainbot/TestWalletData.csv",
+    "CONCURRENCY": 2,
+    "sleepDuration": 0.5
+}
