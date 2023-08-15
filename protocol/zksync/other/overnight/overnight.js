@@ -30,7 +30,11 @@ class Overnight {
 
     async redeem(wallet, token, amount) {
         const exchange = await this.getExchange(wallet);
-        const response = await exchange.redeem(token, amount);
+        const params = {
+            gasPrice: await wallet.getGasPrice(),
+            gasLimit: await exchange.estimateGas.redeem(token, amount)
+        }
+        const response = await exchange.redeem(token, amount, params);
         return await response.wait();
     }
  };
