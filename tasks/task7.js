@@ -1,5 +1,5 @@
 /**
- * tasks3 : mavrick交互程序：
+ * tasks7 : mavrick交互程序：
  *  1.传入wallet类。
  *  2.将0.001-0.002ETH兑换为USDC
  *  3.查询账户USDC余额
