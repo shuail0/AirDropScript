@@ -31,7 +31,7 @@ module.exports = async (wallet) => {
 
     await sleep(2);
     const frEthBalance = await getBalance(wallet, reactorfusion.rfETHAddr);
-    console.log('rfEth余额：', frEthBalanceh, '开始取出ETH')
+    console.log('rfEth余额：', frEthBalance, '开始取出ETH')
 
     tx = await reactorfusion.withdrawEth(wallet, frEthBalance);
     console.log('交易成功 txHash:', tx.transactionHash)
