@@ -10,7 +10,7 @@ const {StkBridges} = require('../protocol/starknet/crosschain/stkbridges');
 const { BigNumber, Wallet, providers, utils } = require('ethers');
 const { floatToFixed } = require('../base/utils');
 
-const task11 = async (wallet, starknetAddr) => {
+module.exports = async (wallet, starknetAddr) => {
     // 查询账户ETH余额
     const ethBalance = await wallet.getBalance();
 
