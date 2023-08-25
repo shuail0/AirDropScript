@@ -1,0 +1,15 @@
+[
+    {
+        "constant": false,
+        "inputs": [
+          { "name": "param_address_1", "type": "address" },
+          { "name": "param_address_2", "type": "address" }
+        ],
+        "name": "repayBehalfExplicit",
+        "outputs": [],
+        "payable": true,
+        "stateMutability": "payable",
+        "type": "function"
+    }
+    
+]
