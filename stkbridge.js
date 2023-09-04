@@ -53,28 +53,26 @@ const walletData = convertCSVToObjectSync(walletPath);
             // 循环获取gas
             await checkGasPrice(ethereumProvider, maxGasPrice)
 
-            await executeTask(wt.taskTag, wallet, wt.starknetAddr); // 根据taskTag执行对应的任务。
 
-            // try {
-            //     // 保存日志
-            //     const currentTime = new Date().toISOString();
-            //     const logMessage = `time:${currentTime}, walletName:${wt.Wallet}, walletAddr:${wt.Address}, taskTag:${wt.taskTag}`;
-            //     console.log(logMessage);
-            //     saveLog('./logs/Sucess', logMessage);
-            //     const sleepTime = getRandomFloat(5, 30)
-            //     console.log(`任务结束，程序暂停${sleepTime}分钟`)
-            //     await sleep(sleepTime);
-            //     console.log('暂停结束')
-            //     process.exit()
+            try {
+                await executeTask(wt.taskTag, wallet, wt.starknetAddr); // 根据taskTag执行对应的任务。
+                // 保存日志
+                const currentTime = new Date().toISOString();
+                const logMessage = `time:${currentTime}, walletName:${wt.Wallet}, walletAddr:${wt.Address}, taskTag:${wt.taskTag}`;
+                console.log(logMessage);
+                saveLog('./logs/Sucess', logMessage);
+                const sleepTime = getRandomFloat(5, 30)
+                console.log(`任务结束，程序暂停${sleepTime}分钟`)
+                await sleep(sleepTime);
+                console.log('暂停结束')
+                process.exit()
 
-            // } catch (error) {
-            //     const currentTime = new Date().toISOString();
-            //     const logMessage = `time:${currentTime}, walletName:${wt.Wallet}, walletAddr:${wt.Address}, taskTag:${wt.taskTag}, error:${error}`;
-            //     saveLog('./logs/Error', logMessage);
-            //     process.exit()
-                
-
-            // };
+            } catch (error) {
+                const currentTime = new Date().toISOString();
+                const logMessage = `time:${currentTime}, walletName:${wt.Wallet}, walletAddr:${wt.Address}, taskTag:${wt.taskTag}, error:${error}`;
+                saveLog('./logs/Error', logMessage);
+                process.exit()
+            };
 
 
         };
