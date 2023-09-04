@@ -1,4 +1,4 @@
-const { BigNumber, Wallet, providers } = require('ethers');
+const { BigNumber, Wallet, providers, utils } = require('ethers');
 const { getContract, floatToFixed } = require('../../../../base/utils');
 const { SequencerProvider, constants } = require("starknet");
 
@@ -24,7 +24,6 @@ class StkBridges {
             to_address: stkContractAddr,
             entry_point_selector: entryPointSelector,
             payload: payload
-
         });
         return responseEstimateMessageFee.overall_fee;
     };
@@ -36,11 +35,15 @@ class StkBridges {
          * stkAddr: stk接收钱包地址
          * stkFee: 预估的stk网络Gas费
          */
+
         const bridge = getContract(this.ethContractAddr, this.bridgeAbi, wallet);
+           // 计算预留gas
         const params = {
-            value: amount.add(stkFee)
+            value: amount.add(stkFee),
+            gasLimit: BigNumber.from(117855),
+            gasPrice: await wallet.getGasPrice()
+
         };
-        // return params
         const response = await bridge.deposit(amount, BigNumber.from(stkAddr).toString(), params);
         return await response.wait();
     };
