@@ -11,7 +11,6 @@ const { BigNumber, Wallet, providers, utils } = require('ethers');
 const { floatToFixed } = require('../base/utils');
 
 module.exports = async (wallet, starknetAddr) => {
-// const task11 = async (wallet, starknetAddr) => {
     // 查询账户ETH余额
     const ethBalance = await wallet.getBalance();
 
@@ -43,13 +42,4 @@ module.exports = async (wallet, starknetAddr) => {
 
 };
 
-
-// const ethRPC = 'https://eth-mainnet.g.alchemy.com/v2/qRnk4QbaEmXJEs5DMnhitC0dSow-qATl';
-// const testprvikey = 'cad2716ad3028c52712858b836af38b1f2e95de2d502eebba4876dd0e940811a';
-// const amount = floatToFixed(0.001, 18);
-// const starknetAddr = '0x066666940329073d9DD0669d274a4d0870C07192D49f714B9a4ac294F3c3f0b3'
-// const provider = new providers.JsonRpcProvider(ethRPC);
-// const wallet = new Wallet(testprvikey, provider);
-
-// task11(wallet, starknetAddr);
 
