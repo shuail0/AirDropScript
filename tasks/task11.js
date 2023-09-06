@@ -7,8 +7,7 @@
 
 
 const {StkBridges} = require('../protocol/starknet/crosschain/stkbridges');
-const { BigNumber, Wallet, providers, utils } = require('ethers');
-const { floatToFixed } = require('../base/utils');
+const { BigNumber,  utils } = require('ethers');
 
 module.exports = async (wallet, starknetAddr) => {
     // 查询账户ETH余额
