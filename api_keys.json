@@ -1,0 +1,17 @@
+{
+    "binance": {
+      "api_key": "your_binance_api_key_here",
+      "api_secret": "your_binance_api_secret_here"
+    },
+    "okx": {
+      "api_key": "",
+      "api_secret": "",
+      "password": ""
+    },
+    "bitget": {
+      "api_key": "",
+      "api_secret": "",
+      "password": ""
+    }
+  }
+  
