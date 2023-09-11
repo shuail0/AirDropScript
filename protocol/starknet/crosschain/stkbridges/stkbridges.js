@@ -1,6 +1,6 @@
 const { BigNumber, Wallet, providers, utils } = require('ethers');
 const { getContract, floatToFixed } = require('../../../../base/utils');
-const { SequencerProvider, constants } = require("starknet");
+const { SequencerProvider, constants, RpcProvider } = require("starknet");
 
 class StkBridges {
     constructor() {
