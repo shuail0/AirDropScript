@@ -1,16 +1,9 @@
-[
-  {
-    "constant": "false",
-    "inputs": [
-      {
-        "name": "param_address_1",
-        "type": "address"
-      }
-    ],
-    "name": "mint",
-    "outputs": [],
-    "payable": "true",
-    "stateMutability": "payable",
-    "type": "function"
-  }
-]
+[{
+  "constant": false,
+  "inputs": [{"name": "param_address_1", "type": "address"}],
+  "name": "mint",
+  "outputs": [],
+  "payable": true,
+  "stateMutability": "payable",
+  "type": "function"
+}]

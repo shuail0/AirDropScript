@@ -8,13 +8,14 @@ const { getContract,floatToFixed } = require('../../../../base/utils');
 class Zerc20 {
     constructor() {
 
-        thix.abi = require('./abi/zerc20.json')
+        this.abi = require('./abi/zerc20.json');
 
     }
 
-    async mint(wallet, token) {
+    async mint(wallet, token, value) {
         const tokenContract = getContract(token, this.abi, wallet);
-        const response = await tokenContract.mint(wallet.address);
+        const params = {value: floatToFixed(value)};
+        const response = await tokenContract.mint(wallet.address, params);
         return await response.wait();
      };
 };
