@@ -1,6 +1,6 @@
 const { Provider, Account, constants, Contract, num, shortString, BigNumberish, CallData } = require('starknet');
 const abi = require('./stkToken.json');
-const { getContract, feltToStr, feltToInt } = require('../stkUtils');
+const { getContract, feltToStr, feltToInt, bigNumbetToUint256, uint256ToBigNumber } = require('../stkUtils');
 
 function getTokenContract(tokenAddr, provider) {
     return getContract(tokenAddr, abi, provider);
@@ -8,14 +8,13 @@ function getTokenContract(tokenAddr, provider) {
 
 async function fetchToken(tokenAddr, provider) {
     const contract = getTokenContract(tokenAddr, provider);
-    const decimal = await contract.decimals();
-    const symbol = await contract.symbol();
-    const name = await contract.name();
+    const promises = [contract.name(), contract.symbol(), contract.decimals()];
+    const results = await Promise.all(promises);
 
     const tokenInfo = {
-        name: feltToStr(name.name),
-        symbol: feltToStr(symbol.symbol),
-        decimal: feltToInt(decimal.decimals),
+        name: feltToStr(results[0].name),
+        symbol: feltToStr(results[1].symbol),
+        decimal: feltToInt(results[2].decimals),
         address: tokenAddr,
     };
     return tokenInfo;
@@ -24,10 +23,11 @@ async function fetchToken(tokenAddr, provider) {
 async function getBalance(account, tokenAddr) {
     const contract = getTokenContract(tokenAddr, account);
     const balance = await contract.balanceOf(account.address);
-    return balance.balance;
+    return uint256ToBigNumber(balance.balance);
 }
 
 async function tokenApprove(account, tokenAddr, spender, amount) {
+    amount = bigNumbetToUint256(amount);
     const contract = getTokenContract(tokenAddr, account);
     const response = await contract.approve(spender, amount);
     const tx = await account.waitForTransaction(response.transaction_hash);
@@ -40,13 +40,14 @@ function getApproveCallData(tokenAddr, spender, amount) {
         entrypoint: "approve",
         calldata: CallData.compile({
             spender: spender,
-            amount: amount,
+            amount: bigNumbetToUint256(amount),
         })
     };
     return params;
 }
 
 async function tokenTransfer(account, tokenAddr, toAddr, amount) {
+    amount = bigNumbetToUint256(amount);
     const contract = getTokenContract(tokenAddr, account); // Changed from `wallet` to `account`
     const response = await contract.transfer(toAddr, amount);
     const tx = await account.waitForTransaction(response.transaction_hash);

@@ -91,6 +91,16 @@ const generateRandomDomain = (length, mode = "mix") => {
   return domainName;
 };
 
+// bigNumber 乘以浮点数
+
+function multiplyBigNumberWithDecimal(bigNum, decimal, precision = 18) {
+  // 将小数转换为一个整数，基于所给的精度（默认是10^18）
+  const multiplier = ethers.BigNumber.from("10").pow(precision);
+  const scaledDecimal = ethers.BigNumber.from((decimal * Math.pow(10, precision)).toFixed(0));
+  
+  // 乘以转换后的小数值然后除以精度，得到最终结果
+  return bigNum.mul(scaledDecimal).div(multiplier);
+}
 
 // 保存日志
 const saveLog = (projectName, message) => {
@@ -106,4 +116,4 @@ const saveLog = (projectName, message) => {
     logger.info(`${currentTime} ${message}`);
   };
 
-module.exports = { getContract, floatToFixed, fixedToFloat, convertCSVToObjectSync, sleep, getRandomFloat, saveLog, isValidPrivateKey,generateRandomDomain }
+module.exports = { getContract, floatToFixed, fixedToFloat, convertCSVToObjectSync, sleep, getRandomFloat, saveLog, isValidPrivateKey,generateRandomDomain, multiplyBigNumberWithDecimal }
