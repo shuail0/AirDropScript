@@ -1,0 +1,286 @@
+[
+    {
+      "data": [
+        {
+          "name": "pair",
+          "type": "felt"
+        },
+        {
+          "name": "pid",
+          "type": "felt"
+        },
+        {
+          "name": "token0",
+          "type": "felt"
+        },
+        {
+          "name": "token1",
+          "type": "felt"
+        },
+        {
+          "name": "stable",
+          "type": "felt"
+        },
+        {
+          "name": "fee",
+          "type": "felt"
+        },
+        {
+          "name": "fees",
+          "type": "felt"
+        }
+      ],
+      "keys": [],
+      "name": "PairCreated",
+      "type": "event"
+    },
+    {
+      "data": [
+        {
+          "name": "previousOwner",
+          "type": "felt"
+        },
+        {
+          "name": "newOwner",
+          "type": "felt"
+        }
+      ],
+      "keys": [],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "name": "constructor",
+      "type": "constructor",
+      "inputs": [
+        {
+          "name": "pair_code_hash",
+          "type": "felt"
+        },
+        {
+          "name": "fees_code_hash",
+          "type": "felt"
+        },
+        {
+          "name": "owner",
+          "type": "felt"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "name": "pairCodeHash",
+      "type": "function",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "res",
+          "type": "felt"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "name": "feesCodeHash",
+      "type": "function",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "res",
+          "type": "felt"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "name": "pairFor",
+      "type": "function",
+      "inputs": [
+        {
+          "name": "token0",
+          "type": "felt"
+        },
+        {
+          "name": "token1",
+          "type": "felt"
+        },
+        {
+          "name": "stable",
+          "type": "felt"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "res",
+          "type": "felt"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "name": "isPair",
+      "type": "function",
+      "inputs": [
+        {
+          "name": "pair",
+          "type": "felt"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "res",
+          "type": "felt"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "name": "isPairFor",
+      "type": "function",
+      "inputs": [
+        {
+          "name": "token0",
+          "type": "felt"
+        },
+        {
+          "name": "token1",
+          "type": "felt"
+        },
+        {
+          "name": "stable",
+          "type": "felt"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "is",
+          "type": "felt"
+        },
+        {
+          "name": "pair",
+          "type": "felt"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "name": "allPairsLength",
+      "type": "function",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "res",
+          "type": "felt"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "name": "allPairs",
+      "type": "function",
+      "inputs": [
+        {
+          "name": "pid",
+          "type": "felt"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "res",
+          "type": "felt"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "name": "lastPair",
+      "type": "function",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "res",
+          "type": "felt"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "name": "owner",
+      "type": "function",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "res",
+          "type": "felt"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "name": "pendingOwner",
+      "type": "function",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "res",
+          "type": "felt"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "name": "createPair",
+      "type": "function",
+      "inputs": [
+        {
+          "name": "token_a",
+          "type": "felt"
+        },
+        {
+          "name": "token_b",
+          "type": "felt"
+        },
+        {
+          "name": "stable",
+          "type": "felt"
+        },
+        {
+          "name": "fee",
+          "type": "felt"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "res",
+          "type": "felt"
+        }
+      ]
+    },
+    {
+      "name": "transferOwnership",
+      "type": "function",
+      "inputs": [
+        {
+          "name": "new_owner",
+          "type": "felt"
+        },
+        {
+          "name": "directly",
+          "type": "felt"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "name": "claimOwnership",
+      "type": "function",
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "name": "renounceOwnership",
+      "type": "function",
+      "inputs": [],
+      "outputs": []
+    }
+  ]
