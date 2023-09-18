@@ -52,5 +52,4 @@ module.exports = async (params) => {
     // 将tokenB换成TokenA
     tx = await myswap.swapTokenToToken(account, tokenB.address, tokenA.address, tokenBalance);
     console.log('交易成功，tx:', tx, ',任务结束');
-
 };
