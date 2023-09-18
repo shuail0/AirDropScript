@@ -4,7 +4,7 @@ const fs = require('fs');
 
 
 const loadApiKeys = (exchangeName) => {
-    const apiKeys = require('../../api_keys.json');
+    const apiKeys = require('../../config/cex_api_keys.json');
     if (!apiKeys[exchangeName.toLowerCase()]) {
         throw new Error(`API keys for ${exchangeName} not found in api_keys.json`);
     }

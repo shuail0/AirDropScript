@@ -19,6 +19,10 @@ const ethereumProvider = new ethers.getDefaultProvider(ethrpc);
     const wallet = new Wallet(wt.PrivateKey, provider, ethereumProvider);
     const reactorfusion = new ReactorFusion();
     const amount = floatToFixed(0.001)
-    const tx = await reactorfusion.supplyEth(wallet, amount);
-    console.log(tx)
+    // const tx = await reactorfusion.supplyEth(wallet, amount);
+    // console.log(tx)
+
+    // 还款
+    const tx = await reactorfusion.repayEth(wallet, amount);
+    console.log('交易成功 txHash:', tx.transactionHash);
 })();

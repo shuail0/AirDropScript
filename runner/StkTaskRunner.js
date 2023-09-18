@@ -1,11 +1,10 @@
-const { Wallet, Provider } = require('zksync-web3');
-const { convertCSVToObjectSync, fixedToFloat, sleep, isValidPrivateKey, saveLog } = require('./base/utils');
-const tasks = require('./tasks');
+const { convertCSVToObjectSync, fixedToFloat, sleep, isValidPrivateKey, saveLog } = require('../base/utils');
+const tasks = require('../tasks');
 const ethers = require('ethers');
-const CONFIG = require('./config.json');
+const CONFIG = require('../config/StkTaskRunnerConfig.json');
+const {Provider, Account, constants, RpcProvider} = require('starknet');
 
-
-const provider = new Provider(CONFIG.zskrpc);
+const provider = new Provider({ sequencer: { network: constants.NetworkName.SN_MAIN } });
 const ethereumProvider = new ethers.getDefaultProvider(CONFIG.ethrpc);
 const walletData = convertCSVToObjectSync(CONFIG.walletPath);
 
@@ -31,35 +30,38 @@ async function checkGasPrice() {
     }
 }
 
-async function executeTask(taskTag, wallet) {
-    const taskName = `task${taskTag}`;
-
+// 执行函数
+const executeTask = async (taskTag, params) => {
+    // 转换taskTag为字符串形式
+    const taskName = 'task' + taskTag;
+    // 检查任务是否存在
     if (typeof tasks[taskName] === 'function') {
-        console.log(`地址：${wallet.address} 开始执行任务：${taskName}`);
-        await tasks[taskName](wallet);
+        console.log('地址：', params.Address,' 开始执行任务：', taskName)
+        await tasks[taskName](params);
     } else {
         console.log(`Task ${taskName} not found!`);
+
     }
-}
+};
 
 async function processWallet(wt) {
     if (!isValidPrivateKey(wt.PrivateKey)) {
         logWithTime('./logs/Error', `Invalid private key for wallet: ${wt.Wallet}`);
         return;
     }
-    
-    const wallet = new Wallet(wt.PrivateKey, provider, ethereumProvider);
     await checkGasPrice();
+    const account = new Account(provider, wt.Address, wt.PrivateKey);
+    wt.account = account
 
     try {
-        await executeTask(wt.taskTag, wallet); 
-        logWithTime('./logs/Sucess', `walletName:${wt.Wallet}, walletAddr:${wt.Address}, taskTag:${wt.taskTag}`);
+        await executeTask(wt.taskTag, wt); 
+        logWithTime('../logs/Sucess', `walletName:${wt.Wallet}, walletAddr:${wt.Address}, taskTag:${wt.taskTag}`);
         
         console.log(`任务完成，线程暂停${CONFIG.sleepDuration}分钟`);
         await sleep(CONFIG.sleepDuration);
         console.log('暂停结束');
     } catch (error) {
-        logWithTime('./logs/Error', `walletName:${wt.Wallet}, walletAddr:${wt.Address}, taskTag:${wt.taskTag}, error:${error}`);
+        logWithTime('../logs/Error', `walletName:${wt.Wallet}, walletAddr:${wt.Address}, taskTag:${wt.taskTag}, error:${error}`);
     }
 }
 

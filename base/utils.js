@@ -100,7 +100,13 @@ function multiplyBigNumberWithDecimal(bigNum, decimal, precision = 18) {
   
   // 乘以转换后的小数值然后除以精度，得到最终结果
   return bigNum.mul(scaledDecimal).div(multiplier);
+};
+
+function getRandomElement(arr) {
+  const randomIndex = Math.floor(Math.random() * arr.length);
+  return arr[randomIndex];
 }
+
 
 // 保存日志
 const saveLog = (projectName, message) => {
@@ -116,4 +122,4 @@ const saveLog = (projectName, message) => {
     logger.info(`${currentTime} ${message}`);
   };
 
-module.exports = { getContract, floatToFixed, fixedToFloat, convertCSVToObjectSync, sleep, getRandomFloat, saveLog, isValidPrivateKey,generateRandomDomain, multiplyBigNumberWithDecimal }
+module.exports = { getContract, floatToFixed, fixedToFloat, convertCSVToObjectSync, sleep, getRandomFloat, saveLog, isValidPrivateKey,generateRandomDomain, multiplyBigNumberWithDecimal, getRandomElement }
