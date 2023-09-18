@@ -56,10 +56,9 @@ async function processWallet(wt) {
     try {
         await executeTask(wt.taskTag, wt); 
         logWithTime('../logs/Sucess', `walletName:${wt.Wallet}, walletAddr:${wt.Address}, taskTag:${wt.taskTag}`);
-        
-        console.log(`任务完成，线程暂停${CONFIG.sleepDuration}分钟`);
-        await sleep(CONFIG.sleepDuration);
-        console.log('暂停结束');
+        const interval = getRandomFloat(CONFIG.minInterval, CONFIG.maxInterval)
+        console.log(`任务完成，线程暂停${interval}分钟`);
+        await sleep(interval);
     } catch (error) {
         logWithTime('../logs/Error', `walletName:${wt.Wallet}, walletAddr:${wt.Address}, taskTag:${wt.taskTag}, error:${error}`);
     }

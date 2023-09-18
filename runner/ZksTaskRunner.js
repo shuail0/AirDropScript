@@ -1,5 +1,5 @@
 const { Wallet, Provider } = require('zksync-web3');
-const { convertCSVToObjectSync, fixedToFloat, sleep, isValidPrivateKey, saveLog } = require('../base/utils');
+const { convertCSVToObjectSync, fixedToFloat, sleep, isValidPrivateKey, saveLog, getRandomFloat } = require('../base/utils');
 const tasks = require('../tasks');
 const ethers = require('ethers');
 const CONFIG = require('../config/ZksTaskRunnerConfig.json');
@@ -54,9 +54,9 @@ async function processWallet(wt) {
     try {
         await executeTask(wt.taskTag, wallet); 
         logWithTime('../logs/Sucess', `walletName:${wt.Wallet}, walletAddr:${wt.Address}, taskTag:${wt.taskTag}`);
-        
-        console.log(`任务完成，线程暂停${CONFIG.sleepDuration}分钟`);
-        await sleep(CONFIG.sleepDuration);
+        const interval = getRandomFloat(CONFIG.minInterval, CONFIG.maxInterval)
+        console.log(`任务完成，线程暂停${interval}分钟`);
+        await sleep(interval);
         console.log('暂停结束');
     } catch (error) {
         logWithTime('../logs/Error', `walletName:${wt.Wallet}, walletAddr:${wt.Address}, taskTag:${wt.taskTag}, error:${error}`);
