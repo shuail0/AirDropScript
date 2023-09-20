@@ -29,6 +29,13 @@ const fixedToFloat = (num, decimals = 18) => {
 return parseFloat(utils.formatUnits(num, decimals));
 };
 
+const toBeHex = (value) => {
+  // 如果 value 已经是 BigNumber，直接转换
+  // 否则，先将其转化为 BigNumber
+  let bigNum = BigNumber.isBigNumber(value) ? value : BigNumber.from(value);
+  return bigNum.toHexString();
+};
+
 // 将CSV文件转换为Objects
 const convertCSVToObjectSync = (filePath) => {
   const objects = [];
@@ -122,4 +129,4 @@ const saveLog = (projectName, message) => {
     logger.info(`${currentTime} ${message}`);
   };
 
-module.exports = { getContract, floatToFixed, fixedToFloat, convertCSVToObjectSync, sleep, getRandomFloat, saveLog, isValidPrivateKey,generateRandomDomain, multiplyBigNumberWithDecimal, getRandomElement }
+module.exports = { getContract, floatToFixed, fixedToFloat, convertCSVToObjectSync, sleep, getRandomFloat, saveLog, isValidPrivateKey,generateRandomDomain, multiplyBigNumberWithDecimal, getRandomElement, toBeHex }
