@@ -1,6 +1,8 @@
 /**
- * task14: 10kswap 交互
- * 1. 
+ * task55: 10kswap 交互
+ * 1. 查询账户ETH余额
+ * 2. 将10%-20%（随机）的ETH随机兑换为tokens中的一个币。
+ * 3. 暂停一段时间后再换回ETH。
  */
 const {fetchToken, getBalance} = require('../base/coin/stkToken.js');
 const { getRandomFloat, multiplyBigNumberWithDecimal, fixedToFloat, sleep, getRandomElement } = require('../base/utils.js');
