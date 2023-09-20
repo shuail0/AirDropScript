@@ -44,7 +44,7 @@ async function executeTask(taskTag, wallet, ...args) {
 
 async function processWallet(wt) {
     if (!isValidPrivateKey(wt.PrivateKey)) {
-        logWithTime('./logs/Error', `Invalid private key for wallet: ${wt.Wallet}`);
+        logWithTime('../logs/Error', `Invalid private key for wallet: ${wt.Wallet}`);
         return;
     }
     

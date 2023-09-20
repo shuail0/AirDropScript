@@ -1,11 +1,13 @@
-const { convertCSVToObjectSync, fixedToFloat, sleep, isValidPrivateKey, saveLog } = require('../base/utils');
+const { convertCSVToObjectSync, fixedToFloat, sleep, isValidPrivateKey, saveLog, getRandomFloat } = require('../base/utils');
 const tasks = require('../tasks');
 const ethers = require('ethers');
 const CONFIG = require('../config/StkTaskRunnerConfig.json');
 const {Provider, Account, constants, RpcProvider} = require('starknet');
 
 const provider = new Provider({ sequencer: { network: constants.NetworkName.SN_MAIN } });
+// const provider = new RpcProvider({ nodeUrl: CONFIG.stkrpc});
 const ethereumProvider = new ethers.getDefaultProvider(CONFIG.ethrpc);
+
 const walletData = convertCSVToObjectSync(CONFIG.walletPath);
 
 const logWithTime = (filepath, message) => {
@@ -19,7 +21,6 @@ async function checkGasPrice() {
     while (true) {
         console.log('开始获取当前主网GAS');
         const gasPrice = fixedToFloat(await ethereumProvider.getGasPrice(), 9);
-        
         if (gasPrice <= CONFIG.maxGasPrice) {
             console.log(`当前的gas为：${gasPrice}，小于${CONFIG.maxGasPrice}，程序继续运行`);
             return gasPrice;
@@ -46,13 +47,20 @@ const executeTask = async (taskTag, params) => {
 
 async function processWallet(wt) {
     if (!isValidPrivateKey(wt.PrivateKey)) {
-        logWithTime('./logs/Error', `Invalid private key for wallet: ${wt.Wallet}`);
+        logWithTime('../logs/Error', `Invalid private key for wallet: ${wt.Wallet}`);
         return;
     }
     await checkGasPrice();
-    const account = new Account(provider, wt.Address, wt.PrivateKey);
-    wt.account = account
-
+    if (wt.Cairo === '0'){
+        wt.account = new Account(provider, wt.Address, wt.PrivateKey);
+    } 
+    else if(wt.Cairo === '1') {
+        wt.account = new Account(provider, wt.Address, wt.PrivateKey, '1'); 
+    }
+    else{
+        logWithTime('../logs/Error', `未指定Cairo版本: ${wt.Wallet}`);
+        return;
+    }
     try {
         await executeTask(wt.taskTag, wt); 
         logWithTime('../logs/Sucess', `walletName:${wt.Wallet}, walletAddr:${wt.Address}, taskTag:${wt.taskTag}`);

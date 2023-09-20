@@ -2,9 +2,9 @@
 
 // stk 跨链执行程序
 
-const { convertCSVToObjectSync, fixedToFloat,sleep, getRandomFloat, saveLog  } = require('./base/utils');
+const { convertCSVToObjectSync, fixedToFloat,sleep, getRandomFloat, saveLog  } = require('../base/utils');
 const { BigNumber, Wallet, providers, utils } = require('ethers');
-const tasks = require('./tasks');
+const tasks = require('../tasks');
 const ethers = require('ethers');
 const ethrpc = "https://eth-mainnet.g.alchemy.com/v2/qRnk4QbaEmXJEs5DMnhitC0dSow-qATl"
 const ethereumProvider = new ethers.getDefaultProvider(ethrpc);
