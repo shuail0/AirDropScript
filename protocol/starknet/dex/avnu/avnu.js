@@ -7,7 +7,6 @@
 
 const { getApproveCallData } = require('../../../../base/coin/stkToken.js');
 const { multiCallContract, getContract, bigIntToHex, floatToUint256, multiplyUint256ByFraction, addSecondsToCurrentTimestamp, bigNumbetToUint256, uint256ToBigNumber, feltToStr, feltToInt, bigIntToBigNumber } = require('../../../../base/stkUtils.js');
-const axios = require('axios')
 const qs = require('qs');
 const {toBeHex} = require('../../../../base/utils.js');
 class Avnu {
