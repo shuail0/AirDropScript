@@ -188,7 +188,7 @@ StarkNet目前用的是人字拖钱包，暂不支持头盔钱包。
 
 ## 安装依赖
 
-在终端中用`npm`安装依赖：` npm install zksync-web3 starknet`
+在终端中用`npm`安装依赖：` npm install zksync-web3 starknet winston qs ccxt`
 
 
 

@@ -33,5 +33,5 @@ module.exports = async (params) => {
     console.log(`提币成功，等待${sleepTime}分钟后尝试跨链;`)
     await sleep(sleepTime);  // 等待10分钟
     // tasks.task11(params.wallet, params.starknetAddr);  // 跨链
-    await retry(tasks.task11, [params.wallet, params.starknetAddr], 2, 5);  // 跨链，最多重试1次
+    await retry(tasks.task51, [params.wallet, params.starknetAddr], 2, 5);  // 跨链，最多重试1次
  };

@@ -1,22 +1,47 @@
 /**
- * 多交易所提币程序，目前只加了OKX
- * 具体执行逻辑参照task13.js
+ * 多交易所提币程序
+ * 具体执行逻辑参照task52.js
  */
 
-const { loadApiKeys, initExchange } = require('./cexUtils');
-const { okxWithdraw } = require('./okx/okx');
+
+const { loadApiKeys } = require('./cexUtils');
+const Bitget = require('./bitget');
+const OKX = require('./okx');
+
 
 const multExchangeWithdraw = async (params) => {
     const { Address, tag, currency, amount, chain, exchange_name } = params;  // 提取需要的参数
 
     const apiKeys = loadApiKeys(exchange_name);
-    const exchange = initExchange(exchange_name, ...Object.values(apiKeys));
-
-    if (exchange_name.toLowerCase() === 'okx') {
-        await okxWithdraw(exchange, Address, tag, currency, amount, chain);
+    switch (exchange_name.toLowerCase()) {
+        case 'okx':
+            exchangeInstance = new OKX(apiKeys);
+            break;
+        case 'bitget':
+            exchangeInstance = new Bitget(apiKeys);
+            break;
+        default:
+            throw new Error(`Exchange ${exchange_name} is not supported`);
     }
-    // ... other exchanges
-
+    exchangeInstance.withdraw(Address, tag, currency, amount, chain);
 };
 
-module.exports = { multExchangeWithdraw };
+
+const assetPooling = async (params) => {
+    const { currency, exchange_name } = params;  // 提取需要的参数
+
+    const apiKeys = loadApiKeys(exchange_name);
+    switch (exchange_name.toLowerCase()) {
+        case 'okx':
+            exchangeInstance = new OKX(apiKeys);
+            break;
+        case 'bitget':
+            exchangeInstance = new Bitget(apiKeys);
+            break;
+        default:
+            throw new Error(`Exchange ${exchange_name} is not supported`);
+    }
+    exchangeInstance.assetTransferFromSubAccountToMainAccounAll(currency);
+};
+
+module.exports = { multExchangeWithdraw, assetPooling };

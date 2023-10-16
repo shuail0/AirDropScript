@@ -2,6 +2,8 @@ const { Provider, Account, constants, Contract, num, shortString, BigNumberish, 
 const abi = require('./stkToken.json');
 const { getContract, feltToStr, feltToInt, bigNumbetToUint256, uint256ToBigNumber } = require('../stkUtils');
 
+const provider = new Provider({ sequencer: { network: constants.NetworkName.SN_MAIN } });
+
 function getTokenContract(tokenAddr, provider) {
     return getContract(tokenAddr, abi, provider);
 }
@@ -34,16 +36,31 @@ async function tokenApprove(account, tokenAddr, spender, amount) {
     return tx.transaction_hash;
 }
 
+// function getApproveCallData(tokenAddr, spender, amount) {
+//     const params = {
+//         contractAddress: tokenAddr,
+//         entrypoint: "approve",
+//         calldata: CallData.compile({
+//             spender: spender,
+//             amount: bigNumbetToUint256(amount),
+//         })
+//     };
+//     return params;
+// }
+
 function getApproveCallData(tokenAddr, spender, amount) {
-    const params = {
+    const contractCallData = new CallData(abi)
+    const calldata = contractCallData.compile('approve',{
+        spender: spender,
+        amount: bigNumbetToUint256(amount)
+    }
+       )
+    return {
         contractAddress: tokenAddr,
-        entrypoint: "approve",
-        calldata: CallData.compile({
-            spender: spender,
-            amount: bigNumbetToUint256(amount),
-        })
-    };
-    return params;
+        entrypoint: 'approve',
+        calldata: calldata
+        
+    }
 }
 
 async function tokenTransfer(account, tokenAddr, toAddr, amount) {

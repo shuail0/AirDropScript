@@ -4,12 +4,18 @@ const fs = require('fs');
 
 
 const loadApiKeys = (exchangeName) => {
-    const apiKeys = require('../../config/cex_api_keys.json');
+    const apiKeys = require('../../config/CexApiKeys.json');
     if (!apiKeys[exchangeName.toLowerCase()]) {
         throw new Error(`API keys for ${exchangeName} not found in api_keys.json`);
     }
 
-    return apiKeys[exchangeName.toLowerCase()];
+    return {
+        ...apiKeys[exchangeName.toLowerCase()],
+        enableRateLimit: true,
+        timeout: 3000,
+        rateLimit: 10,
+        httpsProxy: 'http://127.0.0.1:7890',
+    };
 };
 
 const initExchange = (exchangeName, apiKey, apiSecret, password = null, enableRateLimit = true) => {
@@ -17,21 +23,6 @@ const initExchange = (exchangeName, apiKey, apiSecret, password = null, enableRa
     if (!exchangeClass) {
         throw new Error(`Unsupported exchange: ${exchangeName}`);
     }
-
-    const exchangeParams = {
-        apiKey,
-        secret: apiSecret,
-        enableRateLimit,
-        timeout: 3000,
-        rateLimit: 10,
-        httpsProxy: 'http://127.0.0.1:7890',
-        // httpProxy: 'http://127.0.0.1:7890'
-    };
-
-    if (password) {
-        exchangeParams.password = password;
-    }
-
     return new exchangeClass(exchangeParams);
 };
 
