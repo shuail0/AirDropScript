@@ -142,7 +142,7 @@ git config --global user.email "youremail@example.com"
 
 ```
 
-请将 `"Your Name"` 和 `"youremail@example.com"` 替换为你的真实姓名和邮箱地址。
+请将 `"Your Name"` 和 `"youremail@example.com"` 替换为你的Github姓名和Github邮箱地址。
 
 **3. 生成 SSH 密钥：**
 
