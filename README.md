@@ -48,19 +48,6 @@ DEX交互：
 3. overnight可以mint和销毁。
 
 
-
-后续更新计划：
-
-近期计划主要是为zks全自动大额交互做准备
-
-1. 增加币安提币
-2. 增加OK获取冲币地址、资金划转至主账户
-3. zks增加新项目、增加mavrick和izuswap单边流动性
-4. 优化zks的dex交互路径和逻辑
-5. 增加项目(下图）：
-
-![image-20230919205219181](/Users/lishuai/Documents/crypto/bockchainbot/AirDropScript/image-20230919205219181.png)
-
 # 程序结构
 
 ``` 
@@ -129,6 +116,94 @@ StarkNet目前用的是人字拖钱包，暂不支持头盔钱包。
  - exchange_name：交易所名字。
  - starknetAddr：starknet钱包地址。
 
+
+
+# 连接Github下载代码
+
+## GIT安装配置
+
+**1. 检查是否已安装 Git：**
+
+首先，打开终端应用程序（Terminal），并运行以下命令来检查是否已安装 Git：
+
+``` bash
+git --version
+```
+
+如果 Git 已经安装，将显示 Git 的版本号。如果没有安装，你将看到一个提示，询问是否要安装 Git。按照提示完成安装。
+
+**2. 配置用户信息：**
+
+在终端中运行以下命令，设置你的 Git 用户名和邮箱地址。这些信息将用于你的 Git 提交记录。
+
+``` bash
+git config --global user.name "Your Name"
+git config --global user.email "youremail@example.com"
+
+```
+
+请将 `"Your Name"` 和 `"youremail@example.com"` 替换为你的真实姓名和邮箱地址。
+
+**3. 生成 SSH 密钥：**
+
+为了与 GitHub 进行安全的通信，你需要生成 SSH 密钥。运行以下命令生成 SSH 密钥：
+
+``` bash
+ssh-keygen -t ed25519 -C "youremail@example.com"
+```
+
+在这里，将 `"youremail@example.com"` 替换为你的 GitHub 邮箱地址。按照提示，可以选择在默认位置保存密钥，或者指定自己的位置。不设置密码时，将无需输入密码即可访问密钥。
+
+**4. 添加 SSH 密钥到 SSH 代理：**
+
+在终端中运行以下命令，以确保 SSH 密钥已经添加到 SSH 代理，以便不再需要输入密码。
+
+``` bash
+eval "$(ssh-agent -s)"
+ssh-add -K ~/.ssh/id_ed25519
+```
+
+请确保 `~/.ssh/id_ed25519` 路径正确，如果你将密钥保存到了不同的位置，请相应更改。
+
+**5. 添加 SSH 密钥到 GitHub：**
+
+将你的公共 SSH 密钥添加到 GitHub。运行以下命令来复制你的公钥:
+
+``` bash
+pbcopy < ~/.ssh/id_ed25519.pub
+```
+
+然后，访问 GitHub 的设置页面，在 "SSH and GPG keys" 部分添加一个新的 SSH 密钥，将复制的公钥粘贴到那里。
+
+**6. 验证连接：**
+
+最后，在终端运行以下命令来验证你的 SSH 密钥是否成功连接到 GitHub：
+
+``` bash
+ssh -T git@github.com
+```
+
+如果一切设置正确，你将看到一条消息，确认你已成功连接到 GitHub。
+
+
+
+## 代码下载和更新
+
+1. 打开终端（在 macOS 上是终端应用，或在 Windows 上是命令提示符或 PowerShell）。
+
+2. 使用 `cd` 命令导航到你希望将代码克隆到的本地目录。例如：
+
+   ``` bash
+   cd /path/to/your/local/directory
+   ```
+
+   在这里，将 `/path/to/your/local/directory` 替换为你要放置代码的实际本地目录路径。
+
+3. 运行 `git clone git@github.com:shuail0/AirDropScript.git` 命令下载代码。
+4. 后续在程序目录下运行 `git pull`可以获得更新。
+
+
+
 # 环境安装
 
 ## 安装Nodejs
@@ -194,11 +269,42 @@ StarkNet目前用的是人字拖钱包，暂不支持头盔钱包。
 
 # 参数配置
 
+所有参数配置均在coinfig文件目录下：
 
+​	`CexApiKeys.json` ： 交易所API配置，将从交易所创建的ApiKey填入对应字段即可。
+
+​	`StkTaskRunnerConfig.json`:  Starknet运行配置，具体参数设置如下：
+
+```json
+    "ethrpc": "https://eth-mainnet.g.alchemy.com/v2/qRnk4QbaEmXJEs5DMnhitC0dSow-qATl",  // 以太坊主网RPC设置，可以从alchemy申请
+    "maxGasPrice": 20,  // 最大GAS限制，运行时GAS大于这个值，程序暂停
+    "walletPath": "/Users/lishuai/Documents/crypto/bockchainbot/StkTestWalletData.csv",  // 地址文件路径
+    "CONCURRENCY": 1,  // 运行线程数量
+    "minInterval": 0.5,  // 账号间隔最小时间
+    "maxInterval": 15  // 账号间隔最大时间
+```
+
+`ZksTaskRunnerConfig.json`: zkSync运行配置，具体参数设置如下：
+
+```json
+{
+    "zskrpc": "https://mainnet.era.zksync.io", // zkSync网络RPC设置，可以从alchemy申请
+    "ethrpc": "https://eth-mainnet.g.alchemy.com/v2/qRnk4QbaEmXJEs5DMnhitC0dSow-qATl",// 以太坊主网RPC设置，可以从alchemy申请
+    "maxGasPrice": 20,    // 最大GAS限制，运行时GAS大于这个值，程序暂停
+    "walletPath": "/Users/lishuai/Documents/crypto/bockchainbot/TestWalletData.csv", // 地址文件路径
+    "CONCURRENCY": 2,  // 运行线程数量
+    "minInterval": 0.5,  // 账号间隔最小时间
+    "maxInterval": 15  // 账号间隔最大时间
+}
+```
 
 
 
 # 运行程序
 
-
+1. 在终端进入runner 目录` cd runner`runner目录下有多个文件，根据需要执行的任务来运行对应文件即可,如想要执行zksync的任务，在终端运行`node ZksTaskRunner.js`即可：
+   - `stkbridge.js`: 从主网跨链至STK网络
+   - `StkTaskRunner.js`：执行Starknet网络的任务
+   - `StkwithdrwAndbridge.js`： 执行从交易所提币，并走官方桥跨链至STK网络
+   - `ZksTaskRunner.js`： 执行zkSync网络的任务
 
