@@ -1,2 +1,2 @@
-Wallet,Address,PrivateKey, taskTag,tag,currency,amount,chain,exchange_name,starknetAddr
+Wallet,Address,PrivateKey,taskTag,tag,currency,amount,chain,exchange_name,starknetAddr
 testwallet,xxxx,xxxxx,13,,ETH,0.02,ETH-ERC20,okx,0x066666940329073d9DD0669d274a4d0870C0732d449f714B9a4ac294F3c3f0b3
