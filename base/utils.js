@@ -58,6 +58,37 @@ const convertCSVToObjectSync = (filePath) => {
   return objects;
 };
 
+//  将objet保存为csv
+const saveObjectToCSV = (data, outputPath) => {
+  // Check if the file already exists. If not, write headers.
+  if (!fs.existsSync(outputPath)) {
+      const headers = Object.keys(data[0]).join(',');
+      fs.writeFileSync(outputPath, headers + '\n', 'utf8');
+  }
+
+  for (let i = 0; i < data.length; i++) {
+      const item = data[i];
+      const values = Object.values(item).map(value => `"${value}"`).join(',');
+      const csvRow = `${values}\n`;
+
+      fs.appendFileSync(outputPath, csvRow, 'utf8');
+  }
+
+  console.log(`Data saved to ${outputPath}`);
+};
+
+// 将单个对象追加到 CSV 文件
+const appendObjectToCSV = (obj, outputPath) => {
+  // Check if the file already exists. If not, write headers.
+  if (!fs.existsSync(outputPath)) {
+      const headers = Object.keys(obj).filter(key => key !== 'wallet').join(',');
+      fs.writeFileSync(outputPath, headers + '\n', 'utf8');
+  }
+  const values = Object.values(obj).map(value => `"${value}"`).join(',');
+  const csvRow = `${values}\n`;
+  fs.appendFileSync(outputPath, csvRow, 'utf8');
+
+};
 
 // 暂停函数
 const  sleep = (minutes) => {
@@ -98,6 +129,25 @@ const generateRandomDomain = (length, mode = "mix") => {
   return domainName;
 };
 
+
+const nearestUsableTick = (tick, tickSpacing) => {
+  const remainder = tick % tickSpacing;
+  if (remainder === 0) {
+      // 如果tick已经是tickSpacing的倍数，直接返回
+      return tick;
+  }
+  // 计算与当前tick距离更近的两个可用tick
+  const lowerBound = tick - remainder;
+  const upperBound = tick + (tickSpacing - remainder);
+  // 确定哪一个更近
+  if (Math.abs(lowerBound - tick) <= Math.abs(upperBound - tick)) {
+      return lowerBound;
+  } else {
+      return upperBound;
+  }
+}
+
+
 // bigNumber 乘以浮点数
 
 function multiplyBigNumberWithDecimal(bigNum, decimal, precision = 18) {
@@ -115,6 +165,23 @@ function getRandomElement(arr) {
 }
 
 
+function getKeyFromPassword(password, salt) {
+  const iterations = 100000;
+  const keylen = 32;
+  const digest = 'sha512';
+  return crypto.pbkdf2Sync(password, salt, iterations, keylen, digest);
+}
+
+function decryptUsingAESGCM(a, e, i, s, password) {
+  const key = getKeyFromPassword(password, Buffer.from(s, 'hex'));
+  const decipher = crypto.createDecipheriv('aes-256-gcm', key, Buffer.from(i, 'hex'));
+
+  decipher.setAuthTag(Buffer.from(a, 'hex'));
+
+  const decryptedData = Buffer.concat([decipher.update(Buffer.from(e, 'hex')), decipher.final()]);
+  return decryptedData.toString('utf8');
+}
+
 // 保存日志
 const saveLog = (projectName, message) => {
     const logger = winston.createLogger({
@@ -129,4 +196,4 @@ const saveLog = (projectName, message) => {
     logger.info(`${currentTime} ${message}`);
   };
 
-module.exports = { getContract, floatToFixed, fixedToFloat, convertCSVToObjectSync, sleep, getRandomFloat, saveLog, isValidPrivateKey,generateRandomDomain, multiplyBigNumberWithDecimal, getRandomElement, toBeHex }
+module.exports = { getContract, floatToFixed, fixedToFloat, convertCSVToObjectSync, sleep, getRandomFloat, saveLog, isValidPrivateKey,generateRandomDomain, multiplyBigNumberWithDecimal, getRandomElement, toBeHex, nearestUsableTick, saveObjectToCSV, appendObjectToCSV, decryptUsingAESGCM }
