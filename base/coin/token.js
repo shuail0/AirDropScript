@@ -1,4 +1,3 @@
-const { Wallet } = require('ethers');
 const { getContract } = require('../utils.js');
 const abi = require('./erc20.json');
 

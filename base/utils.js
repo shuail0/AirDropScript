@@ -2,6 +2,7 @@ const ethers = require('ethers');
 const winston = require('winston');
 const fs = require('fs');
 const { BigNumber, utils } = require('ethers');
+const crypto = require('crypto');
 
 // 创建合约
 const getContract = (address, abi, provider) => {
@@ -78,7 +79,7 @@ const saveObjectToCSV = (data, outputPath) => {
 };
 
 // 将单个对象追加到 CSV 文件
-const appendObjectToCSV = (obj, outputPath) => {
+const appendObjectToCSV = async (obj, outputPath) => {
   // Check if the file already exists. If not, write headers.
   if (!fs.existsSync(outputPath)) {
       const headers = Object.keys(obj).filter(key => key !== 'wallet').join(',');
