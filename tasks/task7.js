@@ -14,8 +14,8 @@ const { floatToFixed, fixedToFloat,sleep, getRandomFloat, saveLog  } = require('
 const Overnight = require('../protocol/zksync/other/overnight/overnight');
 const ethers = require('ethers');
 
-module.exports = async (wallet) => {
-
+module.exports = async (params) => {
+    const { wallet } = params
     const mavrick = new Mavrick();
     const overnight = new Overnight();
     const ETHAddress = '0x0000000000000000000000000000000000000000';

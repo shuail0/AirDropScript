@@ -12,8 +12,8 @@ const { getSwapTokenAddress, fetchToken, getBalance, tokenApprove } = require('.
 const { floatToFixed, fixedToFloat,sleep, getRandomFloat, saveLog  } = require('../base/utils.js')
 const ethers = require('ethers');
 
-module.exports = async (wallet) => {
-
+module.exports = async (params) => {
+    const {wallet} = params;
     const syncswap = new SyncSwap();
     const ETHAddress = '0x0000000000000000000000000000000000000000';
     const wETHAddress = '0x5aea5775959fbc2557cc8789bc1bf90a239d9a91';

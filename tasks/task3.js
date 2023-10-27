@@ -9,11 +9,11 @@
 
 const Mavrick = require('../protocol/zksync/dex/mavrick/mavrick');
 const { getSwapTokenAddress, fetchToken, getBalance, tokenApprove } = require('../base/coin/token.js')
-const { floatToFixed, fixedToFloat,sleep, getRandomFloat, saveLog  } = require('../base/utils.js')
+const { floatToFixed, fixedToFloat, sleep, getRandomFloat, saveLog } = require('../base/utils.js')
 const ethers = require('ethers');
 
-module.exports = async (wallet) => {
-
+module.exports = async (params) => {
+    const { wallet } = params
     const mavrick = new Mavrick();
     const ETHAddress = '0x0000000000000000000000000000000000000000';
     const wETHAddress = '0x5aea5775959fbc2557cc8789bc1bf90a239d9a91';
@@ -25,7 +25,7 @@ module.exports = async (wallet) => {
     // // 查询账户余额
     const ethBalance = fixedToFloat(await getBalance(wallet, ETHAddress));
     console.log('账户ETH余额：', ethBalance);
-    
+
     // // 设定随机金额
     const minAmount = ethBalance * 0.2  // 最小交易数量
     const maxAmount = ethBalance * 0.3 // 最大交易数量

@@ -6,7 +6,8 @@
 const Zerc20 = require('../protocol/zksync/other/zerc20/zerc20');
 
 
-module.exports = async (wallet) => { 
+module.exports = async (params) => {
+    const { wallet } = params 
     const zerc20 = new Zerc20();
     const erc20Datas = [
         {

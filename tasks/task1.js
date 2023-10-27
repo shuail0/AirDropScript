@@ -12,7 +12,9 @@ const { fetchToken, getBalance, tokenApprove } = require('../base/coin/token.js'
 const { floatToFixed, fixedToFloat, getRandomFloat } = require('../base/utils.js')
 const ethers = require('ethers');
 
-module.exports = async (wallet) => {
+module.exports = async (params) => {
+
+    const {wallet} = params;
 
     const velocore = new Velocore();
     const ETHAddress = '0x0000000000000000000000000000000000000000';

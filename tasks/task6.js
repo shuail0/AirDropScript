@@ -9,8 +9,8 @@ const ZksNetwork = require('../protocol/zksync/nft/zksnetwork/zksnetwork');
 const { generateRandomDomain  } = require('../base/utils.js')
 const ethers = require('ethers');
 
-module.exports = async (wallet) => {
-
+module.exports = async (params) => {
+    const { wallet } = params
     const zksNetwork = new ZksNetwork();
     let domainName = generateRandomDomain(7);
     let state = await zksNetwork.isDomainAvailable(wallet, domainName);

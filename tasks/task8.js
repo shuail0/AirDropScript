@@ -11,8 +11,8 @@ const { floatToFixed, fixedToFloat, getRandomFloat, sleep } = require('../base/u
 const ethers = require('ethers');
 
 
-module.exports = async (wallet) => {
-
+module.exports = async (params) => {
+    const { wallet } = params
     const ETHAddress = '0x0000000000000000000000000000000000000000';
 
     const reactorfusion = new Reactorfusion();
