@@ -1,16 +1,21 @@
-const { convertCSVToObjectSync, fixedToFloat, sleep, isValidPrivateKey, saveLog, getRandomFloat } = require('../base/utils');
+const { convertCSVToObjectSync, fixedToFloat, sleep, decryptUsingAESGCM, saveLog, getRandomFloat, appendObjectToCSV } = require('../base/utils');
 const tasks = require('../tasks');
 const ethers = require('ethers');
 const CONFIG = require('../config/StkTaskRunnerConfig.json');
 const {Provider, Account, constants, RpcProvider} = require('starknet');
+const readlineSync = require('readline-sync');
+const fs = require('fs');
+const crypto = require('crypto');
 
 const provider = new Provider({ sequencer: { network: constants.NetworkName.SN_MAIN } });
 // const provider = new RpcProvider({ nodeUrl: CONFIG.stkrpc});
 const ethereumProvider = new ethers.getDefaultProvider(CONFIG.ethrpc);
-
 const walletData = convertCSVToObjectSync(CONFIG.walletPath);
+const pwd = readlineSync.question('Please enter your password: ', {
+    hideEchoBack: true
+});
 
-const logWithTime = (filepath, message) => {
+const logWithTime = async (filepath, message) => {
     const currentTime = new Date().toISOString();
     const fullMessage = `time:${currentTime}, ${message}`;
     console.log(fullMessage);
@@ -20,14 +25,19 @@ const logWithTime = (filepath, message) => {
 async function checkGasPrice() {
     while (true) {
         console.log('开始获取当前主网GAS');
-        const gasPrice = fixedToFloat(await ethereumProvider.getGasPrice(), 9);
-        if (gasPrice <= CONFIG.maxGasPrice) {
-            console.log(`当前的gas为：${gasPrice}，小于${CONFIG.maxGasPrice}，程序继续运行`);
-            return gasPrice;
+        try {
+            const gasPrice = fixedToFloat(await ethereumProvider.getGasPrice(), 9);
+            
+            if (gasPrice <= CONFIG.maxGasPrice) {
+                console.log(`当前的gas为：${gasPrice}，小于${CONFIG.maxGasPrice}，程序继续运行`);
+                return gasPrice;
+            }
+            console.log(`当前的gas为：${gasPrice}，大于${CONFIG.maxGasPrice}，程序暂停10分钟`);
+            await sleep(10); // 10 minutes
+        } catch (error) {
+            console.log('获取GAS价格失败，程序暂停1分钟后重新尝试');
+            await sleep(1); // 1 minute
         }
-        
-        console.log(`当前的gas为：${gasPrice}，大于${CONFIG.maxGasPrice}，程序暂停10分钟`);
-        await sleep(10);
     }
 }
 
@@ -46,29 +56,36 @@ const executeTask = async (taskTag, params) => {
 };
 
 async function processWallet(wt) {
-    if (!isValidPrivateKey(wt.PrivateKey)) {
-        logWithTime('../logs/Error', `Invalid private key for wallet: ${wt.Wallet}`);
-        return;
-    }
+
     await checkGasPrice();
+    const pky = decryptUsingAESGCM(wt.a, wt.e, wt.i, wt.s, pwd);
     if (wt.Cairo === '0'){
-        wt.account = new Account(provider, wt.Address, wt.PrivateKey);
+        wt.account = new Account(provider, wt.Address, pky);
     } 
     else if(wt.Cairo === '1') {
-        wt.account = new Account(provider, wt.Address, wt.PrivateKey, '1'); 
+        wt.account = new Account(provider, wt.Address, pky, '1'); 
     }
     else{
         logWithTime('../logs/Error', `未指定Cairo版本: ${wt.Wallet}`);
         return;
     }
+
+
     try {
         await executeTask(wt.taskTag, wt); 
-        logWithTime('../logs/Sucess', `walletName:${wt.Wallet}, walletAddr:${wt.Address}, taskTag:${wt.taskTag}`);
+        await logWithTime('../logs/Sucess', `walletName:${wt.Wallet}, walletAddr:${wt.Address}, taskTag:${wt.taskTag}`);
+        wt.time = new Date().toISOString();
+        delete wt.account;
+        await appendObjectToCSV(wt, '../logs/starknetSucess.csv')
         const interval = getRandomFloat(CONFIG.minInterval, CONFIG.maxInterval)
         console.log(`任务完成，线程暂停${interval}分钟`);
         await sleep(interval);
     } catch (error) {
-        logWithTime('../logs/Error', `walletName:${wt.Wallet}, walletAddr:${wt.Address}, taskTag:${wt.taskTag}, error:${error}`);
+        await logWithTime('../logs/Error', `walletName:${wt.Wallet}, walletAddr:${wt.Address}, taskTag:${wt.taskTag}, error:${error}`);
+        wt.time = new Date().toISOString();
+        wt.error = error;
+        delete wt.account;
+        await appendObjectToCSV(wt, '../logs/starknetFail.csv')
     }
 }
 
