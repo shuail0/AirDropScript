@@ -80,7 +80,7 @@ async function processQueue() {
     if (walletData.length === 0) return true;
     
     const wt = walletData.shift();
-    await processWallet(wt, psd);
+    await processWallet(wt, pwd);
     return processQueue();
 }
 
