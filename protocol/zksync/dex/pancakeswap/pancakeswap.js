@@ -279,39 +279,5 @@ class PancakeSwap {
 
 module.exports = PancakeSwap;
 
-// const zskrpc = "https://mainnet.era.zksync.io"
-// const ethrpc = "https://eth-mainnet.g.alchemy.com/v2/qRnk4QbaEmXJEs5DMnhitC0dSow-qATl"
-// const provider = new Provider(zskrpc);
-// const ethereumProvider = new ethers.getDefaultProvider(ethrpc);
-// const walletPath = '/Users/lishuai/Documents/crypto/bockchainbot/TestWalletData.csv';
-
-// const wETHAddress = '0x5AEa5775959fBC2557Cc8789bC1bf90A239D9a91';
-// const usdcAddress = '0x3355df6D4c9C3035724Fd0e3914dE96A5a83aaf4';
-// const usdplusAddress = '0x8E86e46278518EFc1C5CEd245cBA2C7e3ef11557';
-// const poolFee = 500;
-// const amount = floatToFixed(1, 6)
-// const amountA = floatToFixed(0.001, 18)
-// const amountB = floatToFixed(1, 6)
-
-// console.log(Number(amountA)*0.2)
-
-
-// const walletData = convertCSVToObjectSync(walletPath);
-// const wallet = new Wallet(walletData[0]['PrivateKey'], provider, ethereumProvider);
-// const pancake = new PancakeSwap()
-
-
-// pancake.getPoolInfo(wallet, wETHAddress, usdcAddress, poolFee).then(console.log)
-// pancake.getQuote(wallet, usdcAddress, wETHAddress, poolFee, amount).then(console.log)
-
-// pancake.swapEthToToken(wallet, wETHAddress, usdcAddress, poolFee, amount).then(console.log)
-// tokenApprove(wallet, usdcAddress, pancake.v3SwapRouterAddress, amount);
-// pancake.swapTokenToEth(wallet, usdcAddress, wETHAddress, poolFee, amount).then(console.log);
-// tokenApprove(wallet, usdcAddress, pancake.nonfungiblePositionManagerAddress, amountB);
-// pancake.mintLiquidityPosition(wallet, wETHAddress, usdcAddress, poolFee, amountA, amountB, -0.5, -0.4).then(console.log)
-// pancake.getLPPositionIds(wallet).then(console.log)
-// pancake.getLPPositionInfo(wallet, '122011').then(console.log)
-// pancake.decreaseETHLiquidity(wallet, '120188', 0.5).then(console.log);
-// pancake.decreaseETHAndTokenLiquidity(wallet, '122011', 1).then(console.log);
 
 

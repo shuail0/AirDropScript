@@ -238,7 +238,7 @@ class Izumi {
 
     };
 
-    async mintETHLiquidityPosition(wallet, tokenX, tokenY, poolFee, amountX, amountY, tickLower, tickUppe) {
+    async mintETHLiquidityPosition(wallet, tokenX, tokenY, poolFee, amountX, amountY, tickLower, tickUpper) {
         const callData = this.getMintLiquidityPositionCallData(wallet, tokenX, tokenY, poolFee, amountX, amountY, tickLower, tickUpper);
         const liquidityManagerContract = this.getLiquidityManagerContract(wallet);
         const response = await liquidityManagerContract.multicall([callData], {value: amountY})
@@ -269,7 +269,7 @@ class Izumi {
         const collectCallData = this.getCollectCallData(wallet, tokenId, this.liquidityManagerAddress );
         const unwrapCallData = this.getUnwrapWETH9Calldata(wallet);
         const token = (positionInfo.tokenX === this.wETHAddress) ? positionInfo.tokenY : positionInfo.tokenX;
-        const sweepTokenCallData = this.getSweepTokenCallData(wallet,usdcAddress);
+        const sweepTokenCallData = this.getSweepTokenCallData(wallet, sweepToken);
         const liquidityManagerContract = this.getLiquidityManagerContract(wallet);
         const response = await liquidityManagerContract.multicall([callData, collectCallData, unwrapCallData, sweepTokenCallData])
         return await response.wait();
@@ -284,25 +284,25 @@ class Izumi {
 
 module.exports = Izumi;
 
-const zskrpc = "https://mainnet.era.zksync.io"
-const ethrpc = "https://eth-mainnet.g.alchemy.com/v2/qRnk4QbaEmXJEs5DMnhitC0dSow-qATl"
-const provider = new Provider(zskrpc);
-const ethereumProvider = new ethers.getDefaultProvider(ethrpc);
-const walletPath = '/Users/lishuai/Documents/crypto/bockchainbot/TestWalletData.csv';
+// const zskrpc = "https://mainnet.era.zksync.io"
+// const ethrpc = "https://eth-mainnet.g.alchemy.com/v2/qRnk4QbaEmXJEs5DMnhitC0dSow-qATl"
+// const provider = new Provider(zskrpc);
+// const ethereumProvider = new ethers.getDefaultProvider(ethrpc);
+// const walletPath = '/Users/lishuai/Documents/crypto/bockchainbot/TestWalletData.csv';
 
-const wETHAddress = '0x5AEa5775959fBC2557Cc8789bC1bf90A239D9a91';
-const usdcAddress = '0x3355df6D4c9C3035724Fd0e3914dE96A5a83aaf4';
-const usdplusAddress = '0x8E86e46278518EFc1C5CEd245cBA2C7e3ef11557';
-const poolFee = 2000;
-const amount = floatToFixed(100, 6)
-const amountA = floatToFixed(0.001, 18)
-const amountB = floatToFixed(0, 6)
+// const wETHAddress = '0x5AEa5775959fBC2557Cc8789bC1bf90A239D9a91';
+// const usdcAddress = '0x3355df6D4c9C3035724Fd0e3914dE96A5a83aaf4';
+// const usdplusAddress = '0x8E86e46278518EFc1C5CEd245cBA2C7e3ef11557';
+// const poolFee = 2000;
+// const amount = floatToFixed(100, 6)
+// const amountA = floatToFixed(0.001, 18)
+// const amountB = floatToFixed(0, 6)
 
 
 
-const walletData = convertCSVToObjectSync(walletPath);
-const wallet = new Wallet(walletData[0]['PrivateKey'], provider, ethereumProvider);
-const izumi = new Izumi()
+// const walletData = convertCSVToObjectSync(walletPath);
+// const wallet = new Wallet(walletData[0]['PrivateKey'], provider, ethereumProvider);
+// const izumi = new Izumi()
 
 
 // izumi.getPoolInfo(wallet, wETHAddress, usdcAddress, poolFee).then(console.log)
@@ -321,7 +321,7 @@ const izumi = new Izumi()
 // izumi.getLPPositionInfo(wallet, 187494).then(console.log)
 // izumi.decreaseETHLiquidity(wallet, 187494, 0.5, usdcAddress).then(console.log);
 
-izumi.increaseLiquidityToETHPool(wallet, 187494, amountB, amountA, amountA).then(console.log);
+// izumi.increaseLiquidityToETHPool(wallet, 187494, amountB, amountA, amountA).then(console.log);
 // izumi.decreaseETHAndTokenLiquidity(wallet, '122011', 1).then(console.log);
 
 
