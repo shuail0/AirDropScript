@@ -4,13 +4,14 @@
 
 
 
-## 2023/11/11更新日志
+## 2023/11/1更新
 
 - 新增tasks10-tasks14五个任务，这五个是velocore、syncswap、mavrick、mute、ezkalibur的交互程序；
 - 任务流程：
   1. 将指定范围随机将一定数量的ETH兑换为USDC。
   2. 将获得的USDC兑换为ETH。
 - 数量默认为0.001-0.002ETH，想要修改范围可以打开对应的`tasks.js`文件，修改代码中的`minAmount`和`maxAmoung`变量。
+- 原来的task1-5是将钱包中一定比例的ETH兑换为USDC，再将钱包中的所有USDC兑换为ETH。新增的任务是在一定范围内将ETH兑换为USDC，并将收到的USDC在兑换为ETH，根据实际情况跑不同的task就可以。。
 
 
 
