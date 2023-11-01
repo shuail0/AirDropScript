@@ -1,5 +1,19 @@
 # AirDropScript
 
+# 更新记录
+
+
+
+## 2023/11/11更新日志
+
+- 新增tasks10-tasks14五个任务，这五个是velocore、syncswap、mavrick、mute、ezkalibur的交互程序；
+- 任务流程：
+  1. 将指定范围随机将一定数量的ETH兑换为USDC。
+  2. 将获得的USDC兑换为ETH。
+- 数量默认为0.001-0.002ETH，想要修改范围可以打开对应的`tasks.js`文件，修改代码中的`minAmount`和`maxAmoung`变量。
+
+
+
 # intro
 
 ### 支持项目： 
