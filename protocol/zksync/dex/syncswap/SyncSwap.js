@@ -61,7 +61,7 @@ class SyncSwap {
   async swapTokenToToken(wallet, tokenIn, tokenOut, amount, min = 0) {
     const router = await this.getRouter(wallet);
     // console.log('classicrouter', classicrouter)
-    poolAddr = await this.getPool(wallet, tokenIn, tokenOut);
+    const poolAddr = await this.getPool(wallet, tokenIn, tokenOut);
     // 交易模式：
     // 1 - 提取并解包装到原生ETH
     // 2 - 提取并包装到wETH
@@ -83,16 +83,16 @@ class SyncSwap {
       amountIn: amount
     }];
 
-    const params = {
-      gasPrice: await wallet.getGasPrice(),
-      gasLimit: await router.estimateGas.swap(paths, 0, ethers.BigNumber.from(Math.floor(Date.now() / 1000)).add(1800), params),
-    };
+    // const params = {
+    //   gasPrice: await wallet.getGasPrice(),
+    //   gasLimit: await router.estimateGas.swap(paths, 0, ethers.BigNumber.from(Math.floor(Date.now() / 1000)).add(1800), params),
+    // };
 
     const response = await router.swap(
       paths,
       0,
       ethers.BigNumber.from(Math.floor(Date.now() / 1000)).add(1800),
-      params
+      // params
     )
     return await response.wait();
 
