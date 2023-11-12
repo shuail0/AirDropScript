@@ -17,6 +17,8 @@ class Mavrick {
         this.poolAbi = require('./abi/MaverickIPool.json');
         this.positionAbi = require('./abi/MaverickIPosition.json');
         this.positionInspectorAbi = require('./abi/MaverickIPositionInspector.json');
+
+        this.wETH = '0x5AEa5775959fBC2557Cc8789bC1bf90A239D9a91';
     };
 
     getRouter(wallet, routerAddr = this.routerAddr, routerAbi = this.routerAbi) {
@@ -77,7 +79,7 @@ class Mavrick {
     //     ]);
     // };
 
-    getIncreaseLiquidityCallData(wallet, poolAddress, tokenId, kind, pos, amountA, amountB, isDelta) {
+    getIncreaseLiquidityCallData(wallet, poolAddress, tokenId, kind, tick, amountA, amountB, isDelta) {
         const router = this.getRouter(wallet);
         return router.interface.encodeFunctionData(
             "addLiquidityToPool",
@@ -87,7 +89,7 @@ class Mavrick {
                 [ // params array
                     {
                         kind: kind,  // one of the 4 Kinds (0=static, 1=right, 2=left, 3=both) in uint8
-                        pos: pos,
+                        pos: tick,  //pos 
                         isDelta: isDelta,
                         deltaA: amountA,
                         deltaB: amountB
@@ -110,7 +112,7 @@ class Mavrick {
             tokenId, // LP tokenID
             [
                 {
-                    binId: binId,   // one of the 4 Kinds (0=static, 1=right, 2=left, 3=both) in uint8
+                    binId: binId, // binID是LP所在的Bin
                     amount: liquidity,  // remove amount
                 }
             ],
@@ -171,6 +173,11 @@ class Mavrick {
         }));
     };
 
+    async geBinPositionBalance(wallet, poolAddress, tokenId, binId) {
+        const poolContract = this.getPoolContract(wallet, poolAddress);
+        return await poolContract.balanceOf(tokenId, binId);
+    }
+
     async getLPPositionInfo(wallet, pool, tokenId, kind) {
         const positionInspectorContract = this.getPositionInspectorContract(wallet);
         const {tokenA, tokenB} = await positionInspectorContract.addressBinReservesAllKindsAllTokenIds(wallet.address, pool);
@@ -178,25 +185,22 @@ class Mavrick {
             tokenA,
             tokenB
         }
-
-        
-
      };
 
-    async getPoolInfo(wallet, poolAddress) {
+    async getPoolInfo(wallet, tokenA, tokenB, poolFee, width) {
+        const poolAddress = await this.getPool(wallet, tokenA, tokenB, poolFee, width);
         const pool = this.getPoolContract(wallet, poolAddress);
-        const [tokenA, tokenB, fee, tickSpacing, state] = await Promise.all([
+        const [_tokenA, _tokenB, fee, tickSpacing, state] = await Promise.all([
             pool.tokenA(),
             pool.tokenB(),
             pool.fee(),
             pool.tickSpacing(),
             pool.getState()
-            // pool.lookback(),
-
         ]);
         return {
-            tokenA,
-            tokenB,
+            poolAddress,
+            tokenA: _tokenA,
+            tokenB: _tokenB,
             fee: Number(fee),
             tickSpacing: Number(tickSpacing),
             activeTick: state.activeTick,
@@ -206,7 +210,7 @@ class Mavrick {
         }
     };
 
-    async getBinPositions(wallet, poolAddress, tick, kind) {
+    async getBinId(wallet, poolAddress, tick, kind=0) {
         const pool = this.getPoolContract(wallet, poolAddress);
         const binPositions = await pool.binPositions(tick, kind);
         return Number(binPositions);  // 返回特定的binID
@@ -236,6 +240,12 @@ class Mavrick {
         return await response.wait();
     };
 
+    async positionApprove(tokenId) {
+        const positionContract = this.getPositionContract(wallet);
+        const response = await positionContract.approve(this.routerAddr, tokenId);
+        return await response.wait();
+    };
+
     // async mintLiquidityPosition(wallet, tokenX, tokenY, poolFee, amountX, amountY, tickLower, tickUpper) {
     //     const callData = this.getMintLiquidityPositionCallData(wallet, tokenX, tokenY, poolFee, amountX, amountY, tickLower, tickUpper);
     //     const liquidityManagerContract = this.getLiquidityManagerContract(wallet);
@@ -244,8 +254,8 @@ class Mavrick {
 
     // };
 
-    async mintETHLiquidityPosition(wallet, poolAddress, tokenId, kind, pos, amountA, amountB, amountETH, isDellta) {
-        const callData = this.getIncreaseLiquidityCallData(wallet, poolAddress, tokenId, kind, pos, amountA, amountB, isDellta);
+    async mintETHLiquidityPosition(wallet, poolAddress, tokenId, kind, tick, amountA, amountB, amountETH, isDellta=false) {
+        const callData = this.getIncreaseLiquidityCallData(wallet, poolAddress, tokenId, kind, tick, amountA, amountB, isDellta);
         const router = this.getRouter(wallet);
         const refundETHCallData = router.interface.encodeFunctionData('refundETH')
         const response = await router.multicall([callData, refundETHCallData], { value: amountETH })
@@ -269,19 +279,22 @@ class Mavrick {
 
     // };
 
-    async decreaseETHLiquidity(wallet, poolAddress, tokenId, kind, liquidityAmount) {
 
+    async decreaseETHLiquidity(wallet, tokenA, tokenB, poolFee, width, tokenId, tick,liquidityAmount=ethers.BigNumber.from("0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF")) {
+        const poolInfo = await this.getPoolInfo(wallet, tokenA, tokenB, poolFee, width);
+        const binId = await this.getBinId(wallet, poolInfo.poolAddress, tick, 0);  // 查询BinID
 
-        // const positionInfo = await this.getLPPositionInfo(wallet, poolAddress, tokenId, kind);
-        // const liquidityAmount = parseInt(Number(positionInfo.liquidity) * decreasePCT);
-        const callData = this.getDecreaseLiquidityCallData(wallet, poolAddress, tokenId, kind, liquidityAmount, wallet.address);
-        // console.log(callData)
-        // const collectCallData = this.getCollectCallData(wallet, tokenId, this.liquidityManagerAddress);
-        // const unwrapCallData = this.getUnwrapWETH9Calldata(wallet);
-        // const token = (positionInfo.tokenX === this.wETHAddress) ? positionInfo.tokenY : positionInfo.tokenX;
-        // const sweepTokenCallData = this.getSweepTokenCallData(wallet, sweepToken);
+        // console.log('查询仓位余额信息')
+        // const postionBalance = await this.geBinPositionBalance(wallet, poolInfo.poolAddress, tokenId, binId);
+        // console.log(postionBalance.toString());
+
+        const callData = this.getDecreaseLiquidityCallData(wallet, poolInfo.poolAddress, tokenId, binId,liquidityAmount, '0x0000000000000000000000000000000000000000');
+        const unwrapCallData = this.getUnwrapWETH9Calldata(wallet);
+        const sweepToken = (poolInfo.tokenA === this.wETHAddress) ? poolInfo.tokenB : poolInfo.tokenA;
+        const sweepTokenCallData = this.getSweepTokenCallData(wallet, sweepToken);
         const router = this.getRouter(wallet);
-        const response = await router.multicall([callData])
+        const response = await router.multicall([callData, unwrapCallData, sweepTokenCallData])
+
         return await response.wait();
 
     };
@@ -293,38 +306,6 @@ class Mavrick {
 
 module.exports = Mavrick;
 
-
-
-// const zskrpc = "https://mainnet.era.zksync.io"
-// const ethrpc = "https://eth-mainnet.g.alchemy.com/v2/qRnk4QbaEmXJEs5DMnhitC0dSow-qATl"
-// const provider = new Provider(zskrpc);
-// const ethereumProvider = new ethers.getDefaultProvider(ethrpc);
-// const walletPath = '/Users/lishuai/Documents/crypto/bockchainbot/TestWalletData.csv';
-
-// const wETHAddress = '0x5AEa5775959fBC2557Cc8789bC1bf90A239D9a91';
-// const usdcAddress = '0x3355df6D4c9C3035724Fd0e3914dE96A5a83aaf4';
-// const usdplusAddress = '0x8E86e46278518EFc1C5CEd245cBA2C7e3ef11557';
-// const poolFee = 0.02 / 100;
-// const width = 0.02
-// const amount = floatToFixed(100, 6)
-// const amountA = floatToFixed(0, 6)
-// const amountB = floatToFixed(0.001, 18)
-
-
-// const walletData = convertCSVToObjectSync(walletPath);
-// const wallet = new Wallet(walletData[0]['PrivateKey'], provider, ethereumProvider);
-
-// const mavrick = new Mavrick();
-
-// tokenApprove(wallet, usdcAddress, mavrick.routerAddr, amount);
-
-// mavrick.getPool(wallet, wETHAddress, usdcAddress, poolFee, width).then(console.log)
-// mavrick.getPoolInfo(wallet, '0x41c8cf74c27554a8972d3bf3d2bd4a14d8b604ab').then(console.log)
-// mavrick.getBinPositions(wallet, '0x41C8cf74c27554A8972d3bf3D2BD4a14D8B604AB', 380, 0).then(console.log)
-// mavrick.mintETHLiquidityPosition(wallet, '0x41C8cf74c27554A8972d3bf3D2BD4a14D8B604AB', 0, 0, 380, amountA, amountB, amountB, true).then(console.log)
-// mavrick.getLPPositionIds(wallet).then(console.log);
-// mavrick.decreaseETHLiquidity(wallet, '0x41C8cf74c27554A8972d3bf3D2BD4a14D8B604AB', 219662, 0, amountB);
-// mavrick.getLPPositionInfo(wallet,'0x41C8cf74c27554A8972d3bf3D2BD4a14D8B604AB', '219662', 0);
 
 // struct AddLiquidityParams {
 //     uint8 kind;
