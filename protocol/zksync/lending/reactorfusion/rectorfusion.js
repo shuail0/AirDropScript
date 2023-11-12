@@ -16,17 +16,34 @@ class ReactorFusion {
         this.Unitroller = '0x23848c28Af1C3AA7B999fA57e6b6E8599C17F3f2';
         this.rfUSDCAddr = '0x04e9Db37d8EA0760072e1aCE3F2A219988Fdac29';
         this.rfETHAddr = '0xC5db68F30D21cBe0C9Eac7BE5eA83468d69297e6';
+        this.rfBTCAddr = '0x0a976E1E7D3052bEb46085AcBE1e0DAccF4A19CF';
+        this.rfUSDTAddr = '0x894cccB9908A0319381c305f947aD0EF44838591';
         this.rfEthRepayAddr = '0x1d49f21c70adbc243906ffd6cf84c460d23152c2';
         this.RFimplementation = '0x5fED00811e8B84B1CD37B07cE16E7C78cB07e89d';
         this.RewardsDistributorimplementation = '0x7e40162E8b98186F3eEe0104ED4E03bDB6e64B34';
         this.RewardsDistributorproxy = '0x53C0DE201cabob3f74EA7C1D95bD76F76EfD12A9';
 
         this.rfEthAbi = require('./abi/rfEth.json');
-        this.rfEthRepayAbi = require('./abi/rfEthRepay.json')
+        this.rfEthRepayAbi = require('./abi/rfEthRepay.json');
         this.rfTokenAbi = require('./abi/rfToken.json');
+        this.UnitrollerAbi = require('./abi/unitroller.json');
     };
     getrfTokenContract(wallet, rfTokenAddr=this.rfETHAddr, rfTokenAbi=this.rfEthAbi) {
         return getContract(rfTokenAddr, rfTokenAbi, wallet);
+    };
+    getUnitrollerContract(wallet) {
+        return getContract(this.Unitroller, this.UnitrollerAbi, wallet)
+    };
+
+    async enterMarkets(wallet, rfTokenAddress) {
+        const UnitrollerContract = this.getUnitrollerContract(wallet);
+        const response = await UnitrollerContract.enterMarkets([rfTokenAddress]);
+        return await response.wait();
+    };
+    async exitMarket(wallet, rfTokenAddress) {
+        const UnitrollerContract = this.getUnitrollerContract(wallet);
+        const response = await UnitrollerContract.exitMarket(rfTokenAddress);
+        return await response.wait();
     };
 
     async supplyEth(wallet, amount) {
@@ -70,17 +87,22 @@ class ReactorFusion {
 
      };
 
-    async borrowToken(wallet, amount, token=this.rfUSDCAddr) {
-        const rfTokenContract = this.getrfTokenContract(wallet, token, this.rfTokenAbi);
+    async borrowToken(wallet, amount, rfToken=this.rfUSDCAddr) {
+        const rfTokenContract = this.getrfTokenContract(wallet, rfToken, this.rfTokenAbi);
         const response = await rfTokenContract.borrow(amount);
         return await response.wait();
      };
     
-    async repayToken(wallet, amount, token=this.rfUSDCAddr){
-        const rfTokenContract = this.getrfTokenContract(wallet, token, this.rfTokenAbi);
+    async repayToken(wallet, amount, rfToken=this.rfUSDCAddr){
+        const rfTokenContract = this.getrfTokenContract(wallet, rfToken, this.rfTokenAbi);
         const response = await rfTokenContract.repayBorrow(amount);
         return await response.wait();
      };
+
+    async getBorrowAmount(wallet, rfToken) {
+        const rfTokenContract = this.getrfTokenContract(wallet, rfToken, this.rfTokenAbi);
+        return await rfTokenContract.borrowBalanceStored(wallet.address);
+    }
      
 };
 
