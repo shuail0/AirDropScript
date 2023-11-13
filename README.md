@@ -4,6 +4,15 @@
 
 
 
+## 2023/11/13 更新
+
+- 增加task30、task31、task32、task33、task34四个任务
+- task30: 大额交互执行任务，从交易所中提币-> 执行taks31-34 4个任务 -> 将资金重新存入交易所。
+- task31： pancake单边增加ETH-USDC池流动性程序，每次加入0.95ETH的流动性，反复增加5次。
+- task32： mavrick单边增加ETH-USDC池流动性程序，每次加入0.95ETH的流动性，反复增加5次。
+- task33： izumi单边增加ETH-USDC池流动性程序，每次加入0.95ETH的流动性，反复增加5次。
+- taks34:  reactor大额交互程序，每次存入0.95ETH，反复存取5次。
+
 ## 2023/11/1更新
 
 - 新增tasks10-tasks14五个任务，这五个是velocore、syncswap、mavrick、mute、ezkalibur的交互程序；
