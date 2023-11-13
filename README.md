@@ -12,6 +12,7 @@
 - task32： mavrick单边增加ETH-USDC池流动性程序，每次加入0.95ETH的流动性，反复增加5次。
 - task33： izumi单边增加ETH-USDC池流动性程序，每次加入0.95ETH的流动性，反复增加5次。
 - taks34:  reactor大额交互程序，每次存入0.95ETH，反复存取5次。
+- 将csv文件打开方式修改为使用papaparse库打开, 需要使用`npm install` 命令更新库。
 
 ## 2023/11/1更新
 
