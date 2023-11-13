@@ -12,7 +12,7 @@ const loadApiKeys = (exchangeName) => {
     return {
         ...apiKeys[exchangeName.toLowerCase()],
         enableRateLimit: true,
-        timeout: 3000,
+        timeout: 10000,
         rateLimit: 10,
         httpsProxy: 'http://127.0.0.1:7890',
     };
