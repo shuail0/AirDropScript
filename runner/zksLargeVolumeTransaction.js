@@ -1,77 +1,96 @@
-
-
-// stk 跨链执行程序
-
 const { Wallet, Provider } = require('zksync-web3');
-const { convertCSVToObjectSync, fixedToFloat, sleep, isValidPrivateKey, saveLog, getRandomFloat } = require('../base/utils');
+const { convertCSVToObjectSync, fixedToFloat, sleep, appendObjectToCSV, saveLog, getRandomFloat, decryptUsingAESGCM } = require('../base/utils');
 const tasks = require('../tasks');
 const ethers = require('ethers');
 const CONFIG = require('../config/ZksLargeVolumeTrasactionConfig.json');
+const readlineSync = require('readline-sync');
+const fs = require('fs');
+const crypto = require('crypto');
 
-const {zskrpc, ethrpc, maxGasPrice, walletPath} = CONFIG 
+const provider = new Provider(CONFIG.zskrpc);
+const ethereumProvider = new ethers.getDefaultProvider(CONFIG.ethrpc);
+const walletData = convertCSVToObjectSync(CONFIG.walletPath);
+const pwd = readlineSync.question('Please enter your password: ', {
+    hideEchoBack: true // 密码不回显
+});
 
-const provider = new Provider(zskrpc);
-const ethereumProvider = new ethers.getDefaultProvider(ethrpc);
-const walletData = convertCSVToObjectSync(walletPath);
 
-// 获取gas
-const checkGasPrice = async (ethereumProvider, maxGasPrice) => {
-    let gasPrice;
+const logWithTime = async (filepath, message) => {
+    const currentTime = new Date().toISOString();
+    const fullMessage = `time:${currentTime}, ${message}`;
+    console.log(fullMessage);
+    saveLog(filepath, fullMessage);
+};
+
+async function checkGasPrice() {
     while (true) {
         console.log('开始获取当前主网GAS');
-        gasPrice = fixedToFloat(await ethereumProvider.getGasPrice(), 9);
-        if (gasPrice > maxGasPrice) {
-            console.log('当前的gas为：', gasPrice, '大于', maxGasPrice,'，程序暂停10分钟');
-            await sleep(10);  
-        } else {
-            console.log('当前的gas为：', gasPrice, '小于', maxGasPrice,'，程序继续运行');
-            break;
+        try {
+            const gasPrice = fixedToFloat(await ethereumProvider.getGasPrice(), 9);
+            
+            if (gasPrice <= CONFIG.maxGasPrice) {
+                console.log(`当前的gas为：${gasPrice}，小于${CONFIG.maxGasPrice}，程序继续运行`);
+                return gasPrice;
+            }
+
+            console.log(`当前的gas为：${gasPrice}，大于${CONFIG.maxGasPrice}，程序暂停10分钟`);
+            await sleep(10); // 10 minutes
+        } catch (error) {
+            console.log('获取GAS价格失败，程序暂停1分钟后重新尝试');
+            await sleep(1); // 1 minute
         }
     }
-    return gasPrice;
-};
-// 执行函数
-const executeTask = async (taskTag, params) => {
-    // 转换taskTag为字符串形式
-    const taskName = 'task' + taskTag;
-    // 检查任务是否存在
+}
+
+async function executeTask(taskTag, wt, ...args) {
+    const taskName = `task${taskTag}`;
+
     if (typeof tasks[taskName] === 'function') {
-        console.log('地址：', params.Address,' 开始执行任务：', taskName)
-        await tasks[taskName](params);
+        console.log(`地址：${wt.Address} 开始执行任务：${taskName}`);
+        await tasks[taskName](wt, ...args);
     } else {
         console.log(`Task ${taskName} not found!`);
-
     }
-};
+}
 
-;(
-    async () => {
-        console.log('开始循环...')
-        for (wt of walletData) {
-            wt.wallet = new Wallet(wt.PrivateKey, provider);
-            // 循环获取gas
-            await checkGasPrice(ethereumProvider, maxGasPrice)
-            await executeTask(wt.taskTag, wt); // 根据taskTag执行对应的任务。
-
-            // try {
-
-            //     // 保存日志
-            //     const currentTime = new Date().toISOString();
-            //     const logMessage = `time:${currentTime}, walletName:${wt.Wallet}, walletAddr:${wt.Address}, taskTag:${wt.taskTag}`;
-            //     console.log(logMessage);
-            //     saveLog('./logs/Sucess', logMessage);
-            //     const sleepTime = getRandomFloat(5, 30)
-            //     console.log(`任务结束，程序暂停${sleepTime}分钟`)
-            //     await sleep(sleepTime);
-            //     console.log('暂停结束')
-
-            // } catch (error) {
-            //     const currentTime = new Date().toISOString();
-            //     const logMessage = `time:${currentTime}, walletName:${wt.Wallet}, walletAddr:${wt.Address}, taskTag:${wt.taskTag}, error:${error}`;
-            //     saveLog('./logs/Error', logMessage);
-            // };
-
-
-        };
+async function processWallet(wt, ...args) {
+    await checkGasPrice();
+    try {
+        const pky = decryptUsingAESGCM(wt.a, wt.e, wt.i, wt.s, pwd)
+        wt.wallet = new Wallet(pky, provider, ethereumProvider);
+        await executeTask(wt.taskTag, wt); 
+        await logWithTime('../logs/Sucess', `walletName:${wt.Wallet}, walletAddr:${wt.Address}, taskTag:${wt.taskTag}`);
+        wt.time = new Date().toISOString();
+        delete wt.wallet;
+        await appendObjectToCSV(wt, '../logs/zksyncLargeVolumeSucess.csv')
+        const interval = getRandomFloat(CONFIG.minInterval, CONFIG.maxInterval)
+        console.log(`任务完成，线程暂停${interval}分钟`);
+        await sleep(interval);
+        console.log('暂停结束');
+    } catch (error) {
+        await logWithTime('../logs/Error', `walletName:${wt.Wallet}, walletAddr:${wt.Address}, taskTag:${wt.taskTag}, error:${error}`);
+        wt.time = new Date().toISOString();
+        wt.error = error;
+        delete wt.wallet;
+        await appendObjectToCSV(wt, '../logs/zksyncLargeVolumeFail.csv')
     }
-)();
+}
+
+async function processQueue() {
+    if (walletData.length === 0) return true;
+    
+    const wt = walletData.shift();
+    await processWallet(wt, pwd);
+    return processQueue();
+}
+
+(async function start() {
+    const results = await Promise.all(
+        Array.from({ length: Math.min(CONFIG.CONCURRENCY, walletData.length) }, processQueue)
+    );
+
+    if (results.every(res => res)) {
+        console.log("All wallets have been processed.");
+        // process.exit(0);
+    }
+})();
