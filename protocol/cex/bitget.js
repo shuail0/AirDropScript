@@ -29,7 +29,7 @@ class Bitget {
 
 
         } else {
-            console.log("余额不足，无法提现");
+            throw new Error("余额不足，无法提现");
         }
     };
 
@@ -94,7 +94,7 @@ class Bitget {
                 };
 
             } else {
-                console.log(`子账户：${subBalance.userId} ,没有${currenc}.`);
+                throw new Error(`子账户：${subBalance.userId} ,没有${currenc}.`);
             }
 
         };

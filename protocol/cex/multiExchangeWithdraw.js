@@ -23,7 +23,7 @@ const multExchangeWithdraw = async (params) => {
         default:
             throw new Error(`Exchange ${exchange_name} is not supported`);
     }
-    exchangeInstance.withdraw(Address, tag, currency, amount, chain);
+    await exchangeInstance.withdraw(Address, tag, currency, amount, chain);
 };
 
 
@@ -41,7 +41,7 @@ const assetPooling = async (params) => {
         default:
             throw new Error(`Exchange ${exchange_name} is not supported`);
     }
-    exchangeInstance.assetTransferFromSubAccountToMainAccounAll(currency);
+    await exchangeInstance.assetTransferFromSubAccountToMainAccounAll(currency);
 };
 
 module.exports = { multExchangeWithdraw, assetPooling };

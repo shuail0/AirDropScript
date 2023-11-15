@@ -29,9 +29,10 @@ class OKX {
 
             const withdrawal = await this.exchange.privatePostAssetWithdrawal(params);
             console.log("提现结果：", withdrawal);
+            return withdrawal
 
         } else {
-            console.log("Not enough balance for withdrawal.");
+            throw new Error("Not enough balance for withdrawal.");
         }
     };
 
@@ -129,7 +130,7 @@ class OKX {
                 await new Promise(resolve => setTimeout(resolve, 1000));
 
             } catch (error) {
-                console.error(`子账户：${subAcct['subAcct']} 划转失败，失败原因：${error}`);
+                throw new Error (`子账户：${subAcct['subAcct']} 划转失败，失败原因：${error}`);
             };
         }
         return transferInfos;
