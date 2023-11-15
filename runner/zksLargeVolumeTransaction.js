@@ -42,55 +42,49 @@ async function checkGasPrice() {
     }
 }
 
-async function executeTask(taskTag, wt, ...args) {
-    const taskName = `task${taskTag}`;
-
+// 执行函数
+const executeTask = async (taskTag, params) => {
+    // 转换taskTag为字符串形式
+    const taskName = 'task' + taskTag;
+    // 检查任务是否存在
     if (typeof tasks[taskName] === 'function') {
-        console.log(`地址：${wt.Address} 开始执行任务：${taskName}`);
-        await tasks[taskName](wt, ...args);
+        console.log('地址：', params.Address,' 开始执行任务：', taskName)
+        await tasks[taskName](params);
     } else {
         console.log(`Task ${taskName} not found!`);
+
     }
-}
+};
 
-async function processWallet(wt, ...args) {
-    await checkGasPrice();
-    try {
-        const pky = decryptUsingAESGCM(wt.a, wt.e, wt.i, wt.s, pwd)
-        wt.wallet = new Wallet(pky, provider, ethereumProvider);
-        await executeTask(wt.taskTag, wt); 
-        await logWithTime('../logs/Sucess', `walletName:${wt.Wallet}, walletAddr:${wt.Address}, taskTag:${wt.taskTag}`);
-        wt.time = new Date().toISOString();
-        delete wt.wallet;
-        await appendObjectToCSV(wt, '../logs/zksyncLargeVolumeSucess.csv')
-        const interval = getRandomFloat(CONFIG.minInterval, CONFIG.maxInterval)
-        console.log(`任务完成，线程暂停${interval}分钟`);
-        await sleep(interval);
-        console.log('暂停结束');
-    } catch (error) {
-        await logWithTime('../logs/Error', `walletName:${wt.Wallet}, walletAddr:${wt.Address}, taskTag:${wt.taskTag}, error:${error}`);
-        wt.time = new Date().toISOString();
-        wt.error = error;
-        delete wt.wallet;
-        await appendObjectToCSV(wt, '../logs/zksyncLargeVolumeFail.csv')
+
+;(
+    async () => {
+        console.log('开始循环...')
+        for (wt of walletData) {
+            await checkGasPrice();
+            const pky = decryptUsingAESGCM(wt.a, wt.e, wt.i, wt.s, pwd)
+            wt.wallet = new Wallet(pky, provider, ethereumProvider);
+            
+            try {
+                await executeTask(wt.taskTag, wt); // 根据taskTag执行对应的任务。
+                await logWithTime('../logs/Sucess', `walletName:${wt.Wallet}, walletAddr:${wt.Address}, taskTag:${wt.taskTag}`);
+                wt.time = new Date().toISOString();
+                delete wt.wallet;
+                await appendObjectToCSV(wt, '../logs/zksyncLargeVolumeSucess.csv')
+                const interval = getRandomFloat(CONFIG.minInterval, CONFIG.maxInterval)
+                console.log(`任务完成，线程暂停${interval}分钟`);
+                await sleep(interval);
+                console.log('暂停结束');
+            } catch (error) {
+                await logWithTime('../logs/Error', `walletName:${wt.Wallet}, walletAddr:${wt.Address}, taskTag:${wt.taskTag}, error:${error}`);
+                wt.time = new Date().toISOString();
+                wt.error = error;
+                delete wt.wallet;
+                await appendObjectToCSV(wt, '../logs/zksyncLargeVolumeFail.csv')
+            };
+        };
     }
-}
+)();
 
-async function processQueue() {
-    if (walletData.length === 0) return true;
-    
-    const wt = walletData.shift();
-    await processWallet(wt, pwd);
-    return processQueue();
-}
 
-(async function start() {
-    const results = await Promise.all(
-        Array.from({ length: Math.min(CONFIG.CONCURRENCY, walletData.length) }, processQueue)
-    );
 
-    if (results.every(res => res)) {
-        console.log("All wallets have been processed.");
-        // process.exit(0);
-    }
-})();
