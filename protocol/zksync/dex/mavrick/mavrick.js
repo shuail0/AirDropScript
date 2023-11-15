@@ -240,7 +240,7 @@ class Mavrick {
         return await response.wait();
     };
 
-    async positionApprove(tokenId) {
+    async positionApprove(wallet,tokenId) {
         const positionContract = this.getPositionContract(wallet);
         const response = await positionContract.approve(this.routerAddr, tokenId);
         return await response.wait();
