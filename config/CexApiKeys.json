@@ -1,17 +1,17 @@
 {
     "binance": {
-      "api_key": "your_binance_api_key_here",
-      "api_secret": "your_binance_api_secret_here"
+      "apiKey": "your_binance_api_key_here",
+      "secret": "your_binance_api_secret_here"
     },
     "okx": {
-      "api_key": "",
-      "api_secret": "",
-      "password": ""
+      "apiKey": "your_okx_api_key_here",
+      "secret": "your_okx_api_secret_here",
+      "password": "your_okx_api_password_here"
     },
     "bitget": {
-      "api_key": "bg_793cebdbeaf738b7b2bbcde1b3b8c654",
-      "api_secret": "19191ffc4c2675c1c579049dd9047a1401c57920221e5bb1266b2e9f08953a84",
-      "password": "aassdd123"
+      "apiKey": "your_bitget_api_key_here",
+      "secret": "your_bitget_api_secret_here",
+      "password": "your_bitget_api_password_here"
     }
   }
   
