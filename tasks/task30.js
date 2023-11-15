@@ -76,7 +76,7 @@ module.exports = async (params) => {
     // 将资金充值到交易所
 
     // 计算保留金额
-    const reserveAmount = getRandomFloat(0.002, 0.0025) // 预留资金0.002-0.0025之间
+    const reserveAmount = getRandomFloat(0.02, 0.022) // 预留资金0.02-0.022之间
 
     const ethBalance = fixedToFloat(await getBalance(wallet));
 
