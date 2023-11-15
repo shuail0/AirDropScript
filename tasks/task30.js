@@ -33,11 +33,12 @@ const retry = async (fn, args = [], retries = 3, interval = 5) => {
 module.exports = async (params) => {
     const {wallet, exchangeAddr} = params;
     console.log('开始查询账户ETH余额')
-    const baseETHBalance = fixedToFloat(await getBalance(wallet));
+    const baseETHBalance =  fixedToFloat(await getBalance(wallet));
     console.log('ETH查询成功，余额：', baseETHBalance);
 
     // // 提币
-    await retry(multExchangeWithdraw, [params], 2, 5);  // 提币，最多重试1次
+    console.log('开始提币')
+    await multExchangeWithdraw(params);
     let sleepTime = getRandomFloat(10, 15)
     console.log(`提币成功，等待${sleepTime}分钟后查询钱包余额;`)
     await sleep(sleepTime);  // 等待10分钟
@@ -46,7 +47,7 @@ module.exports = async (params) => {
     while (true) {
         try {
             const ethBalance = await getBalance(wallet);
-            if (fixedToFloat(ethBalance) < 0.001 ){ // 如果账户余额小于1个ETH
+            if (fixedToFloat(ethBalance) < 1 ){ // 如果账户余额小于1个ETH
                 console.log('当前钱包余额:',fixedToFloat(ethBalance),',账户余额小于1ETH， 等待5分钟后再次查询；');
                 await sleep(5);
             } else {
@@ -60,41 +61,36 @@ module.exports = async (params) => {
         };
     };
 
-    try {
 
-        // 执行任务
-        console.log('程序开始执行task31');
-        await tasks.task31(params);
-        console.log('task31执行完成，程序开始执行task32');
-        await tasks.task32(params);
-        console.log('task32执行完成，程序开始执行task33');
-        await tasks.task33(params);
-        console.log('task31执行完成，程序开始执行task34');
-        await tasks.task34(params);
-        console.log('task34执行完成，将资金充值至交易所中');
+    // 执行任务
+    console.log('程序开始执行task31');
+    await tasks.task31(params);
+    console.log('task31执行完成，程序开始执行task32');
+    await tasks.task32(params);
+    console.log('task32执行完成，程序开始执行task33');
+    await tasks.task33(params);
+    console.log('task33执行完成，程序开始执行task34');
+    await tasks.task34(params);
+    console.log('task34执行完成，将资金充值至交易所中');
 
-        // 将资金充值到交易所
+    // 将资金充值到交易所
 
-        // 计算保留金额
-        const reserveAmount = getRandomFloat(0.002, 0.0025) // 预留资金0.002-0.0025之间
+    // 计算保留金额
+    const reserveAmount = getRandomFloat(0.002, 0.0025) // 预留资金0.002-0.0025之间
 
-        const ethBalance = fixedToFloat(await getBalance(wallet));
+    const ethBalance = fixedToFloat(await getBalance(wallet));
 
-        const transferAmount = floatToFixed((ethBalance - reserveAmount - baseETHBalance));
-        
-        await tokenTrasfer(wallet,exchangeAddr, transferAmount);
+    const transferAmount = floatToFixed((ethBalance - reserveAmount));
 
+    console.log('交互任务执行完毕，当前账户ETH余额:', ethBalance, '，预留余额：', reserveAmount, ', 转回交易所金额：', fixedToFloat(transferAmount));
+    // 向交易所地址转账
+    await tokenTrasfer(wallet,exchangeAddr, transferAmount);
+    console.log('已将资金存入交易所，切换新账户。')
+    // sleepTime = 10
+    // console.log(`充值成功，等待${sleepTime}分钟后将余额归集至主账户;`)
+    // await sleep(sleepTime);  // 等待10分钟
 
-        sleepTime = 10
-        console.log(`充值成功，等待${sleepTime}分钟后将余额归集至主账户;`)
-        await sleep(sleepTime);  // 等待10分钟
-
-        // // 归集资金
-        // assetPooling(params);
-        
-    } catch (error) {
-        
-    }
-
+    // // 归集资金
+    // assetPooling(params);
 
 };

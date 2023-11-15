@@ -11,22 +11,6 @@ const coinAddress = require('../config/tokenAddress.json').zkSync
 
 const Mavrick  = require('../protocol/zksync/dex/mavrick/mavrick');
 const { ethers } = require('ethers');
-const retry = async (fn, args = [], retries = 3, interval = 5) => {
-    for (let i = 0; i < retries; i++) {
-        try {
-            return await fn(...args);
-        } catch (error) {
-            console.error(`Error on attempt ${i + 1}:`, error.message);
-            if (i < retries - 1) {
-                console.log(`Waiting for ${interval} seconds before retrying...`);
-                await sleep(interval);
-            } else {
-                console.error('No more retries left.');
-                throw error;
-            }
-        }
-    }
-}
 
 
 module.exports = async (params) => {
@@ -39,9 +23,10 @@ module.exports = async (params) => {
 
     const poolFee = 0.02 / 100;  // 池子手续费
     const width = 0.02; // Bin的宽度，这里是2%
-    wETH.amount = floatToFixed(0.95, wETH.decimal)
+    wETH.amount = floatToFixed(1, wETH.decimal)
     USDC.amount = floatToFixed(0, USDC.decimal)
 
+    const loopNum = 1  // 反复存取次数不算mint。
     const mavrick = new Mavrick();
 
     // 获取池信息
@@ -74,13 +59,16 @@ module.exports = async (params) => {
 
     // 取出所有流动性
     console.log('开始授权')
-    await mavrick.positionApprove(lastPositionId);
+    await mavrick.positionApprove(wallet, lastPositionId);
     console.log('取出所有流动性')
     const tx = await mavrick.decreaseETHLiquidity(wallet, tokenA.address, tokenB.address, poolFee, width, lastPositionId, tick);
-    console.log('取出成功，交易哈希：',ttx.transactionHash)
+    console.log('取出成功，交易哈希：',tx.transactionHash)
+
+
+
 
     // 反复存取 4次
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < loopNum; i++) {
         console.log('开始循环增加流动性')
         const mintInfo = await mavrick.mintETHLiquidityPosition(wallet, poolInfo.poolAddress, 0, 0, tick, tokenA.amount, tokenB.amount, wETH.amount);
         console.log('创建成功，交易哈希：',mintInfo.transactionHash);
@@ -91,8 +79,8 @@ module.exports = async (params) => {
             // 取出所有流动性
         console.log('取出所有流动性')
         const tx = await mavrick.decreaseETHLiquidity(wallet, tokenA.address, tokenB.address, poolFee, width, lastPositionId, tick);
-        console.log('取出成功，交易哈希：',ttx.transactionHash)
-        if (i < (5-1)){
+        console.log('取出成功，交易哈希：',tx.transactionHash)
+        if (i < loopNum){
             const sleepTime = getRandomFloat(1, 3);
             console.log('移除流动性成功，随机暂停', sleepTime, '分钟后重新添加流动性');
             await sleep(sleepTime);

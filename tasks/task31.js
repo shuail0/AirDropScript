@@ -12,36 +12,20 @@ const { getBalance, tokenTrasfer, fetchToken, tokenApprove } = require('../base/
 const PancakeSwap = require('../protocol/zksync/dex/pancakeswap/pancakeswap');
 const coinAddress = require('../config/tokenAddress.json').zkSync
 
-const retry = async (fn, args = [], retries = 3, interval = 5) => {
-    for (let i = 0; i < retries; i++) {
-        try {
-            return await fn(...args);
-        } catch (error) {
-            console.error(`Error on attempt ${i + 1}:`, error.message);
-            if (i < retries - 1) {
-                console.log(`Waiting for ${interval} seconds before retrying...`);
-                await sleep(interval);
-            } else {
-                console.error('No more retries left.');
-                throw error;
-            }
-        }
-    }
-}
-
 
 module.exports = async (params) => {
     const {wallet} = params;
     // 参数配置
-
     const poolFee = 500;
 
     // 获取参数信息
     const tokenA = await fetchToken(coinAddress.WETH, wallet);
     const tokenB = await fetchToken(coinAddress.USDC, wallet);
 
-    tokenA.amount = floatToFixed(0.95, tokenA.decimal)
+    tokenA.amount = floatToFixed(1, tokenA.decimal)
     tokenB.amount = floatToFixed(0, tokenB.decimal)
+    const loopNum = 1  // 反复存取次数不算mint。
+
 
     const pancake = new PancakeSwap();
 
@@ -79,8 +63,9 @@ module.exports = async (params) => {
     // 取出所有流动性
     await pancake.decreaseETHLiquidity(wallet, lastPositionId, 1);
 
-    // 反复存取 4次
-    for (let i = 0; i < 4; i++) {
+
+    // 反复存取
+    for (let i = 0; i < loopNum; i++) {
         console.log('开始增加流动性')
         await pancake.increaseLiquidityToETHPool(wallet, lastPositionId, token0.amount, token1.amount, tokenA.amount);
         const sleepTime = getRandomFloat(1, 3);
@@ -89,7 +74,7 @@ module.exports = async (params) => {
             // 取出所有流动性
         console.log('取出所有流动性')
         await pancake.decreaseETHLiquidity(wallet, lastPositionId, 1);
-        if (i < (5-1)){
+        if (i < (loopNum)){
             const sleepTime = getRandomFloat(1, 3);
             console.log('移除流动性成功，随机暂停', sleepTime, '分钟后重新添加流动性');
             await sleep(sleepTime);

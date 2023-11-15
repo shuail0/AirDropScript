@@ -11,23 +11,6 @@ const { getBalance, tokenTrasfer, fetchToken, tokenApprove } = require('../base/
 const Izumi  = require('../protocol/zksync/dex/izumi/izumi');
 const coinAddress = require('../config/tokenAddress.json').zkSync
 
-const retry = async (fn, args = [], retries = 3, interval = 5) => {
-    for (let i = 0; i < retries; i++) {
-        try {
-            return await fn(...args);
-        } catch (error) {
-            console.error(`Error on attempt ${i + 1}:`, error.message);
-            if (i < retries - 1) {
-                console.log(`Waiting for ${interval} seconds before retrying...`);
-                await sleep(interval);
-            } else {
-                console.error('No more retries left.');
-                throw error;
-            }
-        }
-    }
-}
-
 
 module.exports = async (params) => {
     const {wallet} = params;
@@ -38,8 +21,10 @@ module.exports = async (params) => {
     const tokenA = await fetchToken(coinAddress.WETH, wallet);
     const tokenB = await fetchToken(coinAddress.USDC, wallet);
 
-    tokenA.amount = floatToFixed(0.95, tokenA.decimal)
+    tokenA.amount = floatToFixed(1, tokenA.decimal)
     tokenB.amount = floatToFixed(0, tokenB.decimal)
+    const loopNum = 1  // 反复存取次数不算mint。
+
 
     const izumi = new Izumi();
 
@@ -66,20 +51,21 @@ module.exports = async (params) => {
     console.log('开始创建LP仓位')
 
     const mintInfo = await izumi.mintETHLiquidityPosition(wallet, tokenX.address, tokenY.address, poolFee, tokenX.amount, tokenY.amount, tickLower, tickUpper);
-    console.log(mintInfo)
+    console.log(mintInfo.transactionHash)
 
     console.log('获取仓位信息')
 
     const positionIds = await izumi.getLPPositionIds(wallet);
     const lastPositionId = positionIds[positionIds.length - 1]; // 获取最后一个仓位的ID
 
-    const positionInfo = await izumi.getLPPositionInfo(wallet,lastPositionId);
+    // const positionInfo = await izumi.getLPPositionInfo(wallet,lastPositionId);
     // // 取出所有流动性
     console.log('取出所有流动性')
     await izumi.decreaseETHLiquidity(wallet, lastPositionId, 1, tokenB.address);
-
-    // 反复存取 5次
-    for (let i = 0; i < 2; i++) {
+    
+    
+    // 反复存取
+    for (let i = 0; i < loopNum; i++) {
         console.log('开始循环增加流动性')
         await izumi.increaseLiquidityToETHPool(wallet, lastPositionId, tokenX.amount, tokenY.amount, tokenA.amount);
         const sleepTime = getRandomFloat(1, 3);
@@ -88,7 +74,7 @@ module.exports = async (params) => {
             // 取出所有流动性
         console.log('取出所有流动性')
         await izumi.decreaseETHLiquidity(wallet, lastPositionId, 1, tokenB.address);
-        if (i < (5-1)){
+        if (i < (loopNum)){
             const sleepTime = getRandomFloat(1, 3);
             console.log('移除流动性成功，随机暂停', sleepTime, '分钟后重新添加流动性');
             await sleep(sleepTime);
