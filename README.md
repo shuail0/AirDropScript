@@ -2,7 +2,17 @@
 
 # 更新记录
 
+## 2023/11/28 更新
 
+- 新增zeroLend项目和对应任务 task35.js
+- 将task31、task32、task33、task34四个任务的ETH交互金额调整为余额-0.02ETH。
+- task30增加task35执行步骤。
+zksync Era大额交互执行: 
+   1. zksync大额交互账户配置模板在data目录下的zks大额交互模板中，按照模板进行配置。
+   2. 配置task统一配置为30，tasks会依次运行task31、task32、task33、task34、task35。
+   3. 交易所API账户配置在config目录下的CexApiKeys.json文件。
+   4. 程序运行配置在config目录下的ZksLargeVolumeTrasactionConfig.json文件。
+   5. 大额交互运行程序为runner目录下的zksLargeVolumeTransaction.js文件。
 
 ## 2023/11/13 更新
 
