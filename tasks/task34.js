@@ -15,8 +15,8 @@ const coinAddress = require('../config/tokenAddress.json').zkSync
 module.exports = async (params) => {
     const {wallet} = params;
 
-    // 随机交易数量
-    let amount = floatToFixed(1);
+    const ethBalance = await getBalance(wallet);  // 查询余额
+    let amount = ethBalance.sub(floatToFixed(0.02));  // 预留0.02ETH作为gas
 
     const loopNum = 2  // 反复存取次数。
     // 反复存取 5次

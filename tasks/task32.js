@@ -23,7 +23,8 @@ module.exports = async (params) => {
 
     const poolFee = 0.02 / 100;  // 池子手续费
     const width = 0.02; // Bin的宽度，这里是2%
-    wETH.amount = floatToFixed(1, wETH.decimal)
+    const ethBalance = await getBalance(wallet);  // 查询余额
+    wETH.amount = ethBalance.sub(floatToFixed(0.02));  // 预留0.02ETH作为gas
     USDC.amount = floatToFixed(0, USDC.decimal)
 
     const loopNum = 1  // 反复存取次数不算mint。

@@ -20,8 +20,8 @@ module.exports = async (params) => {
     // 获取参数信息
     const tokenA = await fetchToken(coinAddress.WETH, wallet);
     const tokenB = await fetchToken(coinAddress.USDC, wallet);
-
-    tokenA.amount = floatToFixed(1, tokenA.decimal)
+    const ethBalance = await getBalance(wallet);  // 查询余额
+    tokenA.amount = ethBalance.sub(floatToFixed(0.02));  // 预留0.02ETH作为gas
     tokenB.amount = floatToFixed(0, tokenB.decimal)
     const loopNum = 1  // 反复存取次数不算mint。
 
