@@ -1,1 +1,2 @@
 ﻿Wallet,Address,PrivateKey,taskTag,exchangeAddr,tag, currency, amount, chain, exchange_name
+testwallet,0xF8715a4a8230000000000000000000,cad2716ad3028c52712858b836af38b1f2e95de2d502eebba4876dd0e940811a,30,0x7cf564cee206cd093d4000000000000,,ETH,0.05,ETH-zkSync Era,okx
