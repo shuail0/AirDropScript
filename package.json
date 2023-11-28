@@ -12,17 +12,19 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@uniswap/sdk-core": "^4.0.7",
+    "@uniswap/sdk-core": "^4.0.9",
     "@uniswap/v3-core": "^1.0.1",
     "@uniswap/v3-sdk": "^3.10.0",
-    "ccxt": "^4.1.9",
+    "axios": "^1.6.2",
+    "ccxt": "^4.1.67",
     "crypto": "^1.0.1",
+    "ethers": "^5.7.2",
     "fast-csv": "^4.3.6",
     "papaparse": "^5.4.1",
     "qs": "^6.11.2",
     "readline-sync": "^1.4.10",
-    "starknet": "^5.19.5",
+    "starknet": "^5.24.3",
     "winston": "^3.11.0",
-    "zksync-web3": "^0.14.3"
+    "zksync-web3": "^0.16.0"
   }
 }
