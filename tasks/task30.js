@@ -71,7 +71,9 @@ module.exports = async (params) => {
     await tasks.task33(params);
     console.log('task33执行完成，程序开始执行task34');
     await tasks.task34(params);
-    console.log('task34执行完成，将资金充值至交易所中');
+    console.log('task34执行完成，程序开始执行task35');
+    await tasks.task35(params);
+    console.log('task35执行完成，将资金充值至交易所中');
 
     // 将资金充值到交易所
 
