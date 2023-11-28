@@ -23,17 +23,17 @@ class Izumi {
         this.limitOrderManagerAddress = '0x430972C4AF4703F7ce7B95C03735ae1504dD0Dd6'
         // this.BoxAddress = ''
 
-        // this.factoryABI = '0x7FD55801c066AeB0bD848c2BA8AEc821AF700A41'
-        // this.swapX2YModuleABI = '0x19ed8bB72F93B87A0605fAcc116019039757e95A'
-        // this.swapY2XModuleABI = '0x4A7Df45560899606f1fa5aE7475816ecBbf66A68'
-        // this.liquidityModuleABI = '0x38D526f278189Cb6983Cf8bc58BBFAea7D2c3B22'
-        // this.limitOrderModuleABI = '0x47798d598891708ceD5Bd425b9bf3C56AfA473F0'
-        // this.flashModuleABI = '0x1a3CC65Fe937C7dDd110cB65b281D7075766CA02'
-        // this.quoterWithoutLimitABI = '0xE93D1d35a63f7C6b51ef46a27434375761a7Db28'
-        // this.quoterWithin10000TicksABI = '0xA8101060508f3A7fB9a98425a7fb765DB14ae224'
-        // this.swapABI = '0x3040EE148D09e5B92956a64CDC78b49f48C0cDdc'
+        // this.factoryABI = ''
+        // this.swapX2YModuleABI = ''
+        // this.swapY2XModuleABI = ''
+        // this.liquidityModuleABI = ''
+        // this.limitOrderModuleABI = ''
+        // this.flashModuleABI = ''
+        // this.quoterWithoutLimitABI = ''
+        // this.quoterWithin10000TicksABI = ''
+        // this.swapABI = ''
         this.liquidityManagerABI = require('./abi/liquidityManage.json');
-        // this.limitOrderManagerABI = '0x430972C4AF4703F7ce7B95C03735ae1504dD0Dd6'
+        // this.limitOrderManagerABI = ''
         this.poolAbi = require('./abi/poolAbi.json');
     };
 
@@ -281,47 +281,4 @@ class Izumi {
     };
 
 }
-
 module.exports = Izumi;
-
-// const zskrpc = "https://mainnet.era.zksync.io"
-// const ethrpc = "https://eth-mainnet.g.alchemy.com/v2/qRnk4QbaEmXJEs5DMnhitC0dSow-qATl"
-// const provider = new Provider(zskrpc);
-// const ethereumProvider = new ethers.getDefaultProvider(ethrpc);
-// const walletPath = '/Users/lishuai/Documents/crypto/bockchainbot/TestWalletData.csv';
-
-// const wETHAddress = '0x5AEa5775959fBC2557Cc8789bC1bf90A239D9a91';
-// const usdcAddress = '0x3355df6D4c9C3035724Fd0e3914dE96A5a83aaf4';
-// const usdplusAddress = '0x8E86e46278518EFc1C5CEd245cBA2C7e3ef11557';
-// const poolFee = 2000;
-// const amount = floatToFixed(100, 6)
-// const amountA = floatToFixed(0.001, 18)
-// const amountB = floatToFixed(0, 6)
-
-
-
-// const walletData = convertCSVToObjectSync(walletPath);
-// const wallet = new Wallet(walletData[0]['PrivateKey'], provider, ethereumProvider);
-// const izumi = new Izumi()
-
-
-// izumi.getPoolInfo(wallet, wETHAddress, usdcAddress, poolFee).then(console.log)
-// pancake.getQuote(wallet, usdcAddress, wETHAddress, poolFee, amount).then(console.log)
-
-// pancake.swapEthToToken(wallet, wETHAddress, usdcAddress, poolFee, amount).then(console.log)
-// tokenApprove(wallet, usdcAddress, pancake.v3SwapRouterAddress, amount);
-// pancake.swapTokenToEth(wallet, usdcAddress, wETHAddress, poolFee, amount).then(console.log);
-
-
-// tokenApprove(wallet, usdcAddress, izumi.liquidityManagerAddress, amount);
-// izumi.mintLiquidityPosition(wallet, usdcAddress, wETHAddress, poolFee, amountB, amountA, 202200, 202240).then(console.log)
-
-
-// izumi.getLPPositionIds(wallet).then(console.log)
-// izumi.getLPPositionInfo(wallet, 187494).then(console.log)
-// izumi.decreaseETHLiquidity(wallet, 187494, 0.5, usdcAddress).then(console.log);
-
-// izumi.increaseLiquidityToETHPool(wallet, 187494, amountB, amountA, amountA).then(console.log);
-// izumi.decreaseETHAndTokenLiquidity(wallet, '122011', 1).then(console.log);
-
-

@@ -3,8 +3,7 @@ const { getContract } = require('../../../../base/utils');
 /**
  * 项目链接：https://app.reactorfusion.xyz/
  * 项目文档：https://docs.reactorfusion.xyz/
- * 已完成功能： 存取款（ETH、ERC20Token）、借贷、还款
- * 未完成功能： 抵押品开关、 负债金额查询
+ * 已完成功能： 存取款（ETH、ERC20Token）、借贷、还款、抵押品开关、 负债金额查询
  */
 
 
