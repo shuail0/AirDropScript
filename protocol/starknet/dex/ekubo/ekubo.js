@@ -2,7 +2,7 @@
  * 项目名: ekubo
  * 项目地址：https://ekubo.org/
  * 项目文档：https://docs.ekubo.org/about-ekubo/introduction
- * 已经完成接口： 增加流动性
+ * 已经完成接口： 增加流动性、移除流动性
  */
 const { uint256 } = require('starknet');
 const { getApproveCallData, tokenTransfer, gettokenTransferCallData } = require('../../../../base/coin/stkToken.js');
