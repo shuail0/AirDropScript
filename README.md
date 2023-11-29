@@ -2,6 +2,18 @@
 
 # 更新记录
 
+## 2023/11/29 更新
+- 基础工具更新: 将starknet交易的最大gas调整为预估gas+10%， stkToken.js增加getTrasferCallData函数。
+- 项目更新: 新增nostra、ekubo两个项目，myswap新增CL增加和移除流动性。
+- 新增任务：增加task70、task71、task72、task73、task74四个任务.
+   - task70: starknet大额交互执行任务，从交易所中提币-> 执行taks71-74 4个任务 -> 将资金重新存入交易所。
+   - task31： myswap单边增加ETH-USDC池流动性程序，每次加入账户ETH-0.02，反复增加2次。
+   - task32： ekubo单边增加ETH-USDC池流动性程序，每次加入账户ETH-0.02，反复增加2次。
+   - task33： zklend大额交互程序，每次存入账户ETH-0.02ETH，反复存取2次。
+   - taks34:  nostra大额交互程序，每次存入账户ETH-0.02ETH，反复存取2次。
+- 其他调整： 将引用的starknet包版本从5.24.3换回5.19.5版本。
+
+
 ## 2023/11/28 更新
 
 - 新增zeroLend项目和对应任务 task35.js
