@@ -63,6 +63,21 @@ function getApproveCallData(tokenAddr, spender, amount) {
     }
 }
 
+function gettokenTransferCallData(tokenAddr, recipient, amount) {
+    const contractCallData = new CallData(abi)
+    const calldata = contractCallData.compile('transfer',{
+        recipient,
+        amount: bigNumbetToUint256(amount)
+    }
+       )
+    return {
+        contractAddress: tokenAddr,
+        entrypoint: 'transfer',
+        calldata: calldata
+        
+    }
+}
+
 async function tokenTransfer(account, tokenAddr, toAddr, amount) {
     amount = bigNumbetToUint256(amount);
     const contract = getTokenContract(tokenAddr, account); // Changed from `wallet` to `account`
@@ -78,4 +93,5 @@ module.exports = {
     tokenApprove,
     getApproveCallData,
     tokenTransfer,
+    gettokenTransferCallData
 };
