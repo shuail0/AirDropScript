@@ -1,0 +1,1212 @@
+[
+    {
+      "name": "UpgradableImpl",
+      "type": "impl",
+      "interface_name": "myswapv3::contract::upgradable::IUpgradable"
+    },
+    {
+      "name": "myswapv3::contract::upgradable::IUpgradable",
+      "type": "interface",
+      "items": [
+        {
+          "name": "upgrade",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "chash",
+              "type": "core::starknet::class_hash::ClassHash"
+            }
+          ],
+          "outputs": [],
+          "state_mutability": "external"
+        },
+        {
+          "name": "migrate_storage",
+          "type": "function",
+          "inputs": [],
+          "outputs": [],
+          "state_mutability": "external"
+        }
+      ]
+    },
+    {
+      "name": "SnakeCaseNftImpl",
+      "type": "impl",
+      "interface_name": "myswapv3::contract::nft::SnakeCaseNftTrait"
+    },
+    {
+      "name": "core::bool",
+      "type": "enum",
+      "variants": [
+        {
+          "name": "False",
+          "type": "()"
+        },
+        {
+          "name": "True",
+          "type": "()"
+        }
+      ]
+    },
+    {
+      "name": "core::integer::u256",
+      "type": "struct",
+      "members": [
+        {
+          "name": "low",
+          "type": "core::integer::u128"
+        },
+        {
+          "name": "high",
+          "type": "core::integer::u128"
+        }
+      ]
+    },
+    {
+      "name": "core::array::Span::<core::felt252>",
+      "type": "struct",
+      "members": [
+        {
+          "name": "snapshot",
+          "type": "@core::array::Array::<core::felt252>"
+        }
+      ]
+    },
+    {
+      "name": "myswapv3::contract::nft::SnakeCaseNftTrait",
+      "type": "interface",
+      "items": [
+        {
+          "name": "supports_interface",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "interface_id",
+              "type": "core::felt252"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "core::bool"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "balance_of",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "account",
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "core::integer::u256"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "owner_of",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "token_id",
+              "type": "core::integer::u256"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "get_approved",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "token_id",
+              "type": "core::integer::u256"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "is_approved_for_all",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "owner",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "operator",
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "core::bool"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "token_uri",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "token_id",
+              "type": "core::integer::u256"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "core::array::Array::<core::felt252>"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "set_approval_for_all",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "operator",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "approved",
+              "type": "core::bool"
+            }
+          ],
+          "outputs": [],
+          "state_mutability": "external"
+        },
+        {
+          "name": "transfer_from",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "from",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "to",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "token_id",
+              "type": "core::integer::u256"
+            }
+          ],
+          "outputs": [],
+          "state_mutability": "external"
+        },
+        {
+          "name": "safe_transfer_from",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "from",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "to",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "token_id",
+              "type": "core::integer::u256"
+            },
+            {
+              "name": "data",
+              "type": "core::array::Span::<core::felt252>"
+            }
+          ],
+          "outputs": [],
+          "state_mutability": "external"
+        },
+        {
+          "name": "total_supply",
+          "type": "function",
+          "inputs": [],
+          "outputs": [
+            {
+              "type": "core::integer::u256"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "token_by_index",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "index",
+              "type": "core::integer::u256"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "core::integer::u256"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "token_of_owner_by_index",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "owner",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "index",
+              "type": "core::integer::u256"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "core::integer::u256"
+            }
+          ],
+          "state_mutability": "view"
+        }
+      ]
+    },
+    {
+      "name": "NftImpl",
+      "type": "impl",
+      "interface_name": "myswapv3::contract::nft::NftTrait"
+    },
+    {
+      "name": "myswapv3::contract::nft::NftTrait",
+      "type": "interface",
+      "items": [
+        {
+          "name": "supportsInterface",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "interfaceId",
+              "type": "core::felt252"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "core::bool"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "name",
+          "type": "function",
+          "inputs": [],
+          "outputs": [
+            {
+              "type": "core::felt252"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "symbol",
+          "type": "function",
+          "inputs": [],
+          "outputs": [
+            {
+              "type": "core::felt252"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "balanceOf",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "account",
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "core::integer::u256"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "ownerOf",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "tokenId",
+              "type": "core::integer::u256"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "getApproved",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "tokenId",
+              "type": "core::integer::u256"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "isApprovedForAll",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "owner",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "operator",
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "core::bool"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "tokenURI",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "token_id",
+              "type": "core::integer::u256"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "core::array::Array::<core::felt252>"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "tokenUri",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "token_id",
+              "type": "core::integer::u256"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "core::array::Array::<core::felt252>"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "approve",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "to",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "token_id",
+              "type": "core::integer::u256"
+            }
+          ],
+          "outputs": [],
+          "state_mutability": "external"
+        },
+        {
+          "name": "setApprovalForAll",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "operator",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "approved",
+              "type": "core::bool"
+            }
+          ],
+          "outputs": [],
+          "state_mutability": "external"
+        },
+        {
+          "name": "transferFrom",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "from",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "to",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "tokenId",
+              "type": "core::integer::u256"
+            }
+          ],
+          "outputs": [],
+          "state_mutability": "external"
+        },
+        {
+          "name": "safeTransferFrom",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "from",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "to",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "tokenId",
+              "type": "core::integer::u256"
+            },
+            {
+              "name": "data",
+              "type": "core::array::Span::<core::felt252>"
+            }
+          ],
+          "outputs": [],
+          "state_mutability": "external"
+        },
+        {
+          "name": "totalSupply",
+          "type": "function",
+          "inputs": [],
+          "outputs": [
+            {
+              "type": "core::integer::u256"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "tokenByIndex",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "index",
+              "type": "core::integer::u256"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "core::integer::u256"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "tokenOfOwnerByIndex",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "owner",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "index",
+              "type": "core::integer::u256"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "core::integer::u256"
+            }
+          ],
+          "state_mutability": "view"
+        }
+      ]
+    },
+    {
+      "name": "NftPositionsMetaOwner",
+      "type": "impl",
+      "interface_name": "myswapv3::contract::nft::INftPositionsMetaOwner"
+    },
+    {
+      "name": "myswapv3::contract::nft::INftPositionsMetaOwner",
+      "type": "interface",
+      "items": [
+        {
+          "name": "set_nft_meta_contract",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "contract",
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ],
+          "outputs": [],
+          "state_mutability": "external"
+        },
+        {
+          "name": "get_nft_meta_contract",
+          "type": "function",
+          "inputs": [],
+          "outputs": [
+            {
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ],
+          "state_mutability": "view"
+        }
+      ]
+    },
+    {
+      "name": "NftPositionsStorageMgr",
+      "type": "impl",
+      "interface_name": "myswapv3::helpers::storage_mgr::IStorageMgr"
+    },
+    {
+      "name": "myswapv3::helpers::storage_mgr::IStorageMgr",
+      "type": "interface",
+      "items": [
+        {
+          "name": "set_storage_version",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "version",
+              "type": "core::integer::u32"
+            }
+          ],
+          "outputs": [],
+          "state_mutability": "external"
+        },
+        {
+          "name": "get_storage_version",
+          "type": "function",
+          "inputs": [],
+          "outputs": [
+            {
+              "type": "core::integer::u32"
+            }
+          ],
+          "state_mutability": "view"
+        }
+      ]
+    },
+    {
+      "name": "NftPositionsMgrImpl",
+      "type": "impl",
+      "interface_name": "myswapv3::contract::nft::INftPositionsMgr"
+    },
+    {
+      "name": "myswapv3::contract::nft::PositionParams",
+      "type": "struct",
+      "members": [
+        {
+          "name": "token0",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "token1",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "fee",
+          "type": "core::integer::u32"
+        },
+        {
+          "name": "tick_lower",
+          "type": "core::integer::u32"
+        },
+        {
+          "name": "tick_upper",
+          "type": "core::integer::u32"
+        },
+        {
+          "name": "liquidity",
+          "type": "core::integer::u128"
+        },
+        {
+          "name": "fee_growth_inside0_last_x128",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "fee_growth_inside1_last_x128",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "tokens_owed0",
+          "type": "core::integer::u128"
+        },
+        {
+          "name": "tokens_owed1",
+          "type": "core::integer::u128"
+        }
+      ]
+    },
+    {
+      "name": "myswapv3::contract::nft::MintParams",
+      "type": "struct",
+      "members": [
+        {
+          "name": "recipient",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "token0",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "token1",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "fee",
+          "type": "core::integer::u32"
+        },
+        {
+          "name": "tick_lower",
+          "type": "core::integer::u32"
+        },
+        {
+          "name": "tick_upper",
+          "type": "core::integer::u32"
+        },
+        {
+          "name": "amount0_desired",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "amount1_desired",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "amount0_min",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "amount1_min",
+          "type": "core::integer::u256"
+        }
+      ]
+    },
+    {
+      "name": "myswapv3::contract::nft::CollectParams",
+      "type": "struct",
+      "members": [
+        {
+          "name": "token_id",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "recipient",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "amount0_max",
+          "type": "core::integer::u128"
+        },
+        {
+          "name": "amount1_max",
+          "type": "core::integer::u128"
+        }
+      ]
+    },
+    {
+      "name": "myswapv3::contract::nft::IncreaseLiquidityParams",
+      "type": "struct",
+      "members": [
+        {
+          "name": "token_id",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "amount0_desired",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "amount1_desired",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "amount0_min",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "amount1_min",
+          "type": "core::integer::u256"
+        }
+      ]
+    },
+    {
+      "name": "myswapv3::contract::nft::DecreaseLiquidityParams",
+      "type": "struct",
+      "members": [
+        {
+          "name": "token_id",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "liquidity",
+          "type": "core::integer::u128"
+        },
+        {
+          "name": "amount0_min",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "amount1_min",
+          "type": "core::integer::u256"
+        }
+      ]
+    },
+    {
+      "name": "myswapv3::contract::nft::INftPositionsMgr",
+      "type": "interface",
+      "items": [
+        {
+          "name": "positions",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "token_id",
+              "type": "core::integer::u256"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "myswapv3::contract::nft::PositionParams"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "mint",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "params",
+              "type": "myswapv3::contract::nft::MintParams"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "(core::integer::u256, core::integer::u128, core::integer::u256, core::integer::u256)"
+            }
+          ],
+          "state_mutability": "external"
+        },
+        {
+          "name": "collect",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "params",
+              "type": "myswapv3::contract::nft::CollectParams"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "(core::integer::u128, core::integer::u128)"
+            }
+          ],
+          "state_mutability": "external"
+        },
+        {
+          "name": "burn",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "token_id",
+              "type": "core::integer::u256"
+            }
+          ],
+          "outputs": [],
+          "state_mutability": "external"
+        },
+        {
+          "name": "increase_liquidity",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "params",
+              "type": "myswapv3::contract::nft::IncreaseLiquidityParams"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "(core::integer::u128, core::integer::u256, core::integer::u256)"
+            }
+          ],
+          "state_mutability": "external"
+        },
+        {
+          "name": "decrease_liquidity",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "params",
+              "type": "myswapv3::contract::nft::DecreaseLiquidityParams"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "(core::integer::u256, core::integer::u256)"
+            }
+          ],
+          "state_mutability": "external"
+        }
+      ]
+    },
+    {
+      "name": "NftPositionsStorageImpl",
+      "type": "impl",
+      "interface_name": "myswapv3::contract::nft::INftPositionsStorage"
+    },
+    {
+      "name": "myswapv3::contract::nft::PositionParamsPacked",
+      "type": "struct",
+      "members": [
+        {
+          "name": "poolkey",
+          "type": "core::felt252"
+        },
+        {
+          "name": "tick_liq",
+          "type": "core::felt252"
+        },
+        {
+          "name": "fee_growth_inside0_last_x128",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "fee_growth_inside1_last_x128",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "tokens_owed",
+          "type": "core::felt252"
+        },
+        {
+          "name": "tokens_owed0",
+          "type": "core::integer::u128"
+        }
+      ]
+    },
+    {
+      "name": "myswapv3::contract::nft::INftPositionsStorage",
+      "type": "interface",
+      "items": [
+        {
+          "name": "is_packed",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "token_id",
+              "type": "core::integer::u256"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "core::bool"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "list_packed",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "from_id",
+              "type": "core::integer::u256"
+            },
+            {
+              "name": "until_id",
+              "type": "core::integer::u256"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "core::array::Array::<core::integer::u256>"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "read_packed_position",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "token_id",
+              "type": "core::integer::u256"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "myswapv3::contract::nft::PositionParamsPacked"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "read_original_position",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "token_id",
+              "type": "core::integer::u256"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "myswapv3::contract::nft::PositionParams"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "reset_packed_pos",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "token_id",
+              "type": "core::integer::u256"
+            }
+          ],
+          "outputs": [],
+          "state_mutability": "external"
+        }
+      ]
+    },
+    {
+      "name": "constructor",
+      "type": "constructor",
+      "inputs": [
+        {
+          "name": "owner",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "amm",
+          "type": "core::starknet::contract_address::ContractAddress"
+        }
+      ]
+    },
+    {
+      "kind": "struct",
+      "name": "myswapv3::contract::nft::NftPositionManagerContract::IncreaseLiquidity",
+      "type": "event",
+      "members": [
+        {
+          "kind": "data",
+          "name": "token_id",
+          "type": "core::integer::u256"
+        },
+        {
+          "kind": "data",
+          "name": "liquidity",
+          "type": "core::integer::u128"
+        },
+        {
+          "kind": "data",
+          "name": "amount0",
+          "type": "core::integer::u256"
+        },
+        {
+          "kind": "data",
+          "name": "amount1",
+          "type": "core::integer::u256"
+        }
+      ]
+    },
+    {
+      "kind": "struct",
+      "name": "myswapv3::contract::nft::NftPositionManagerContract::DecreaseLiquidity",
+      "type": "event",
+      "members": [
+        {
+          "kind": "data",
+          "name": "token_id",
+          "type": "core::integer::u256"
+        },
+        {
+          "kind": "data",
+          "name": "liquidity",
+          "type": "core::integer::u128"
+        },
+        {
+          "kind": "data",
+          "name": "amount0",
+          "type": "core::integer::u256"
+        },
+        {
+          "kind": "data",
+          "name": "amount1",
+          "type": "core::integer::u256"
+        }
+      ]
+    },
+    {
+      "kind": "struct",
+      "name": "myswapv3::contract::nft::NftPositionManagerContract::Collect",
+      "type": "event",
+      "members": [
+        {
+          "kind": "data",
+          "name": "token_id",
+          "type": "core::integer::u256"
+        },
+        {
+          "kind": "data",
+          "name": "recipient",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "kind": "data",
+          "name": "amount0",
+          "type": "core::integer::u256"
+        },
+        {
+          "kind": "data",
+          "name": "amount1",
+          "type": "core::integer::u256"
+        }
+      ]
+    },
+    {
+      "kind": "struct",
+      "name": "myswapv3::contract::nft::NftPositionManagerContract::Transfer",
+      "type": "event",
+      "members": [
+        {
+          "kind": "data",
+          "name": "from",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "kind": "data",
+          "name": "to",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "kind": "data",
+          "name": "token_id",
+          "type": "core::integer::u256"
+        }
+      ]
+    },
+    {
+      "kind": "struct",
+      "name": "myswapv3::contract::nft::NftPositionManagerContract::Approval",
+      "type": "event",
+      "members": [
+        {
+          "kind": "data",
+          "name": "owner",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "kind": "data",
+          "name": "approved",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "kind": "data",
+          "name": "token_id",
+          "type": "core::integer::u256"
+        }
+      ]
+    },
+    {
+      "kind": "struct",
+      "name": "myswapv3::contract::nft::NftPositionManagerContract::ApprovalForAll",
+      "type": "event",
+      "members": [
+        {
+          "kind": "data",
+          "name": "owner",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "kind": "data",
+          "name": "operator",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "kind": "data",
+          "name": "approved",
+          "type": "core::bool"
+        }
+      ]
+    },
+    {
+      "kind": "enum",
+      "name": "myswapv3::contract::nft::NftPositionManagerContract::Event",
+      "type": "event",
+      "variants": [
+        {
+          "kind": "nested",
+          "name": "IncreaseLiquidity",
+          "type": "myswapv3::contract::nft::NftPositionManagerContract::IncreaseLiquidity"
+        },
+        {
+          "kind": "nested",
+          "name": "DecreaseLiquidity",
+          "type": "myswapv3::contract::nft::NftPositionManagerContract::DecreaseLiquidity"
+        },
+        {
+          "kind": "nested",
+          "name": "Collect",
+          "type": "myswapv3::contract::nft::NftPositionManagerContract::Collect"
+        },
+        {
+          "kind": "nested",
+          "name": "Transfer",
+          "type": "myswapv3::contract::nft::NftPositionManagerContract::Transfer"
+        },
+        {
+          "kind": "nested",
+          "name": "Approval",
+          "type": "myswapv3::contract::nft::NftPositionManagerContract::Approval"
+        },
+        {
+          "kind": "nested",
+          "name": "ApprovalForAll",
+          "type": "myswapv3::contract::nft::NftPositionManagerContract::ApprovalForAll"
+        }
+      ]
+    }
+  ]
