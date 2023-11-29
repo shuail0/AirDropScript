@@ -81,8 +81,14 @@ function addSecondsToCurrentTimestamp(secondsToAdd) {
 }
 
 const multiCallContract = async (account, multiCallData) => {
-    const multiCall = await account.execute(multiCallData);
-    const tx = await account.waitForTransaction(multiCall.transaction_hash);
+    
+    const { suggestedMaxFee: estimatedFee } = await account.estimateInvokeFee(multiCallData);  // 预估gas
+    const Response = await account.execute(
+        multiCallData,
+        undefined,
+        { maxFee: estimatedFee * 11n / 10n }  // 在预估的gas上增加10%
+    );
+    const tx = await account.waitForTransaction(Response.transaction_hash);
     return tx.transaction_hash;
 };
 
