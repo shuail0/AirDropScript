@@ -18,7 +18,7 @@ module.exports = async (params) => {
     const poolFee = '170141183460469235273462165868118016'  // 0.05%池子， 计算公式 0.05%*(2**128)
     const tickSpacing = 1000;
 
-    const loopNum = 1 // 重复次数
+    const loopNum = 2 // 重复次数
     const ETH = await fetchToken(coinAddress.ETH, account);
     const USDC = await fetchToken(coinAddress.USDC, account);
     // // 查询账户余额
@@ -51,14 +51,16 @@ module.exports = async (params) => {
         let tx, sleepTime;
 
 
-        // mint LP 仓位
+        // // mint LP 仓位
         console.log('开始创建LP仓位', 'tickLower:', tickLower, 'tickUpper:', tickUpper, 'ETH数量', fixedToFloat(ETH.amount, ETH.decimal), 'USDC数量：',  fixedToFloat(USDC.amount, USDC.decimal))
         tx = await ekubo.mintLiquidityPosition(account, ETH.address, USDC.address, poolFee, tickSpacing, tickLower, tickUpper, ETH.amount, USDC.amount);
         sleepTime = getRandomFloat(1, 3);
         console.log('mint成功，交易哈希：', tx, ',随机暂停', sleepTime, '分钟后移除流动性');
         await sleep(sleepTime);
         // 获取最后一个仓位信息
+        // console.log('开始获取仓位信息')
         const Positions = await ekubo.getLpPositions(account);
+        // console.log(Positions)
         const lastPositionId = Positions[Positions.length - 1]['id']; // 获取最后一个仓位的ID
 
         // // 移除流动性 + 销毁NFT

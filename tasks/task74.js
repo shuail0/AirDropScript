@@ -18,7 +18,7 @@ module.exports = async (params) => {
     const ethBalance = await getBalance(account, coinAddress.ETH);
     ETH.amount = ethBalance.sub(floatToFixed(0.02)) // 预留0.02ETH作为gas费
     
-    const loopNum = 1  // 反复存取次数。
+    const loopNum = 2  // 反复存取次数。
 
 
     const nostra = new Nostra();
