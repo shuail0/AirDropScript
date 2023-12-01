@@ -1,2 +1,2 @@
-﻿Wallet,Address,PrivateKey,taskTag,exchangeAddr,tag, currency, amount, chain, exchange_name
-testwallet,0xF8715a4a8230000000000000000000,cad2716ad3028c52712858b836af38b1f2e95de2d502eebba4876dd0e940811a,30,0x7cf564cee206cd093d4000000000000,,ETH,0.05,ETH-zkSync Era,okx
+﻿Wallet,Address,s,i,e,a,taskTag,exchangeAddr,tag,currency,amount,chain,exchange_name
+testwallet,0xd5608621aef573904401edbbfdb2140b00000000,750733d964fae4fdfaf426707559ca9e,243aafe9145e8f7fa04a57c2,0976224518657499599a02228a441fc7d338b70698a24e0ca007ea8d4b487e4c4dfe905f49cc613393142d0e06cfa8282191689c0a2248d255d589eccd6b29e8,a1fd90bac893390be3e29afb7995db4a,30,0xa736ffcc34d85fc11e926553decfcb6e00000000,,ETH,1.5,ETH-zkSync Era,okx
