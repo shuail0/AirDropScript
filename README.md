@@ -1,6 +1,9 @@
 # AirDropScript
 
 # 更新记录
+## 2023/11/29 更新
+- 项目更新： 增加zkSwap、spacefi两个项目
+- 新增任务：增加task15、task16两个项目
 
 ## 2023/11/29 更新
 - 基础工具更新: 将starknet交易的最大gas调整为预估gas+10%， stkToken.js增加getTrasferCallData函数。
