@@ -1,3 +1,12 @@
+/**
+ *  项目名称： zksNetwork
+ * 项目链接：https://zks.network/
+ * 项目文档：
+ * GitHub：
+ * 已完成功能： registerDomain, isDomainAvailable   
+ * 
+ */
+
 const { getContract } = require('../../../../base/utils');
 
 class ZksNetwork {

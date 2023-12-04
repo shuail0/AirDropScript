@@ -1,3 +1,12 @@
+/**
+ * 项目名称：izumi
+ * 项目链接：https://izumi.finance/trade/swap
+ * 项目文档：https://docs.izumi.finance/
+ * GitHub：https://github.com/IzumiFinance/
+ * 已完成功能： mintLiquidityPosition, increaseLiquidity, decreaseLiquidity
+ * 
+ */
+
 const path = require('path');
 const ethers = require('ethers');
 const { convertCSVToObjectSync, getContract, floatToFixed } = require('../../../../base/utils');

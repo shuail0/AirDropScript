@@ -1,3 +1,12 @@
+
+/**
+ * 项目名称：PancakeSwap
+ * 项目链接：https://pancakeswap.finance/
+ * 项目文档：https://docs.pancakeswap.finance/
+ * GitHub：https://github.com/pancakeswap
+ * 已完成功能： swapEthToToken, swapTokenToToken, swapTokenToEth, mintLiquidityPosition, increaseLiquidity, decreaseLiquidity
+ * 
+ */
 const path = require('path');
 const ethers = require('ethers');
 const { convertCSVToObjectSync, getContract, floatToFixed } = require('../../../../base/utils');

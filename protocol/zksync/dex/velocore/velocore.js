@@ -1,3 +1,11 @@
+/**
+ * 项目名称： Velocore
+ * 项目链接：https://velocore.xyz/
+ * 项目文档：https://docs.velocore.xyz/
+ * GitHub：
+ * 已完成功能： swapEthToToken, swapTokenToToken, swapTokenToEth
+ * 
+ */
 const ethers = require('ethers');
 // const Dex = require('../../../module/dex.js');
 const { getContract } = require('../../../../base/utils');

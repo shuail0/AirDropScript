@@ -1,7 +1,15 @@
+/**
+ * 项目名称：ezkalibur
+ * 项目链接：https://ezkalibur.com/
+ * 项目文档：https://app.gitbook.com/o/rGi5L9T2u2PeY9QDrzvp/s/HNQ8zWiQWYZ9V6sWTXuc/
+ * GitHub：https://github.com/ezkalibur
+ * 已完成功能： swapEthToToken, swapTokenToToken, swapTokenToEth
+ * 
+ */
+
 const path = require('path');
 const ethers = require('ethers');
 const { defaultAbiCoder } = require('@ethersproject/abi');
-// const Dex = require('../../../module/dex.js');
 const { getContract } = require('../../../../base/utils');
 
 class Ezkalibur {

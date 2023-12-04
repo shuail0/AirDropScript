@@ -1,3 +1,12 @@
+/**
+ * 项目名称：Maverick
+ * 项目链接：https://www.mav.xyz/
+ * 项目文档：https://docs.mav.xyz/
+ * GitHub：
+ * 已完成功能： swapEthToToken, swapTokenToToken, swapTokenToEth, mintLiquidityPosition, increaseLiquidity, decreaseLiquidity
+ * 
+ */
+
 const path = require('path');
 const ethers = require('ethers');
 const { getContract, floatToFixed, convertCSVToObjectSync } = require('../../../../base/utils');

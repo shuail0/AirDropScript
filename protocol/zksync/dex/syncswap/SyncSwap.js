@@ -1,3 +1,12 @@
+/**
+ * 项目名称： SyncSwap
+ * 项目链接：https://syncswap.xyz/pools
+ * 项目文档：https://syncswap.gitbook.io/syncswap/
+ * GitHub：https://github.com/syncswap
+ * 已完成功能： swapEthToToken, swapTokenToToken, swapTokenToEth
+ * 
+ */
+
 const path = require('path');
 const ethers = require('ethers');
 const { defaultAbiCoder } = require('ethers').utils;

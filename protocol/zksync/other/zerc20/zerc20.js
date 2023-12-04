@@ -1,6 +1,6 @@
 /**
  * 链接： https://zerc20.cash/
- * 
+ * 已完成功能： mint
  */
 
 const { getContract,floatToFixed } = require('../../../../base/utils');
