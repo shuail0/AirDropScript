@@ -190,4 +190,81 @@ const saveLog = (projectName, message) => {
     logger.info(`${currentTime} ${message}`);
   };
 
-module.exports = { getContract, floatToFixed, fixedToFloat, convertCSVToObjectSync, sleep, getRandomFloat, saveLog, isValidPrivateKey,generateRandomDomain, multiplyBigNumberWithDecimal, getRandomElement, toBeHex, nearestUsableTick, saveObjectToCSV, appendObjectToCSV, decryptUsingAESGCM }
+
+
+  function readCSVAndCalculateAverageGas(csvFilePath, numBlocks) {
+    if (fs.existsSync(csvFilePath)) {
+        const fileContent = fs.readFileSync(csvFilePath, 'utf8');
+        const parsed = Papa.parse(fileContent, { 
+            header: true,
+            transformHeader: header => header.trim() // 在这里修剪每个头部字段
+        });
+        const data = parsed.data;
+
+        if (data.length < numBlocks + 1) {
+            console.log('Not enough data to calculate average.');
+            return null;
+        }
+
+        const lastRows = data.slice(-numBlocks - 1, -1); // 忽略最后一行，可能为空
+        let totalGasPrice = 0;
+        let validRowCount = 0;
+
+        for (const row of lastRows) {
+            if (row['Base Fee (Gwei)'] && !isNaN(parseFloat(row['Base Fee (Gwei)']))) {
+                const gasPrice = parseFloat(row['Base Fee (Gwei)']);
+                totalGasPrice += gasPrice;
+                validRowCount++;
+            } else {
+                console.log(`Invalid or missing gas price in row: ${JSON.stringify(row)}`);
+            }
+        }
+
+        if (validRowCount === 0) {
+            console.log('No valid gas price data found.');
+            return null;
+        }
+
+        const averageGasPrice = totalGasPrice / validRowCount;
+        const lastRow = data[data.length - 2]; // 倒数第二行
+        const lastGasPrice = parseFloat(lastRow['Base Fee (Gwei)']);
+
+        if (isNaN(lastGasPrice)) {
+            console.log('Invalid gas price in the last row.');
+            return null;
+        }
+
+        return {
+            lastGasPrice: lastGasPrice,
+            averageGasPrice: averageGasPrice
+        };
+    } else {
+        console.log('CSV file not found.');
+        return null;
+    }
+}
+
+async function monitorGasPrices(csvFilePath, numBlocks, sleepInterval) {
+  while (true) {
+      console.log("Checking gas prices...");
+      const gasData = readCSVAndCalculateAverageGas(csvFilePath, numBlocks);
+
+      if (gasData) {
+          console.log(`Current Gas Price: ${gasData.lastGasPrice} Gwei, Average: ${gasData.averageGasPrice} Gwei`);
+          if (gasData.lastGasPrice < gasData.averageGasPrice) {
+              console.log(`Gas price is below average. Exiting loop.`);
+              break;
+          } else {
+              console.log(`Gas price is not below average. Waiting for ${sleepInterval} minute.`);
+          }
+      } else {
+          console.log(`Unable to calculate gas prices. Retrying in ${sleepInterval} minute...`);
+      }
+
+      await sleep(sleepInterval);
+  }
+}
+
+
+
+module.exports = { getContract, floatToFixed, fixedToFloat, convertCSVToObjectSync, sleep, getRandomFloat, saveLog, isValidPrivateKey,generateRandomDomain, multiplyBigNumberWithDecimal, getRandomElement, toBeHex, nearestUsableTick, saveObjectToCSV, appendObjectToCSV, decryptUsingAESGCM, monitorGasPrices }
