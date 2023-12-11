@@ -5,7 +5,7 @@
  * 3. 取出ETH
  */
 
-const Reactorfusion = require('../protocol/zksync/lending/reactorfusion/rectorfusion');
+const Reactorfusion = require('../protocol/zksync/lending/reactorfusion/reactorfusion.js');
 const { fetchToken, getBalance, tokenApprove } = require('../base/coin/token.js')
 const { floatToFixed, fixedToFloat, getRandomFloat, sleep } = require('../base/utils.js')
 const ethers = require('ethers');

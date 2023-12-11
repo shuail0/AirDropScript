@@ -8,7 +8,7 @@
 const tasks = require('.');
 const { sleep, getRandomFloat, floatToFixed, nearestUsableTick, fixedToFloat } = require('../base/utils');
 const { getBalance, tokenTrasfer, fetchToken, tokenApprove } = require('../base/coin/token');
-const Reactorfusion = require('../protocol/zksync/lending/reactorfusion/rectorfusion');
+const Reactorfusion = require('../protocol/zksync/lending/reactorfusion/reactorfusion');
 const coinAddress = require('../config/tokenAddress.json').zkSync
 
 
