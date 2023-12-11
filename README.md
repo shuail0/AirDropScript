@@ -1,6 +1,11 @@
 # AirDropScript
 
 # 更新记录
+
+## 2023/12/11 更新
+- 项目更新： 增加rhino、spacefi、taort、impermax等项目
+- 新增任务：增加task17、task18、19三个任务
+
 ## 2023/11/29 更新
 - 项目更新： 增加zkSwap、spacefi两个项目
 - 新增任务：增加task15、task16两个项目
