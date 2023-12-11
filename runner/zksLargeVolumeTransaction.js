@@ -7,10 +7,11 @@ const {
   saveLog,
   getRandomFloat,
   decryptUsingAESGCM,
+  monitorGasPrices
 } = require("../base/utils");
 const tasks = require("../tasks");
 const ethers = require("ethers");
-const CONFIG = require("../config/st");
+const CONFIG = require("../config/ZksLargeVolumeTrasactionConfig.json");
 const readlineSync = require("readline-sync");
 const fs = require("fs");
 const crypto = require("crypto");
@@ -71,10 +72,10 @@ const executeTask = async (taskTag, params) => {
   for (wt of walletData) {
     // await checkGasPrice(); // 固定最大gas
     // 循环获取gas
-    const csvFilePath = "/Users/lishuai/Documents/crypto/bockchainbot/AirDropScript/data/gasPrices.csv";
+    const csvFilePath = "../data/gasPrices.csv";
     // 调用函数并传入参数
     await monitorGasPrices(csvFilePath, 4000, 0.1);
-    
+
     const pky = decryptUsingAESGCM(wt.a, wt.e, wt.i, wt.s, pwd);
     wt.wallet = new Wallet(pky, provider, ethereumProvider);
 
