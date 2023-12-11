@@ -261,7 +261,7 @@ async function monitorGasPrices(csvFilePath, numBlocks, sleepInterval) {
           console.log(`Unable to calculate gas prices. Retrying in ${sleepInterval} minute...`);
       }
 
-      await sleep(sleepInterval);
+      await sleep(0.1);
   }
 }
 
