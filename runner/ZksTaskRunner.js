@@ -54,19 +54,19 @@ async function executeTask(taskTag, wt, ...args) {
 }
 
 async function processWallet(wt, ...args) {
-    // await checkGasPrice();
+    await checkGasPrice();
     try {
         const pky = decryptUsingAESGCM(wt.a, wt.e, wt.i, wt.s, pwd)
         wt.wallet = new Wallet(pky, provider, ethereumProvider);
         await executeTask(wt.taskTag, wt); 
-        // await logWithTime('../logs/Sucess', `walletName:${wt.Wallet}, walletAddr:${wt.Address}, taskTag:${wt.taskTag}`);
+        await logWithTime('../logs/Sucess', `walletName:${wt.Wallet}, walletAddr:${wt.Address}, taskTag:${wt.taskTag}`);
         wt.time = new Date().toISOString();
         delete wt.wallet;
-        // await appendObjectToCSV(wt, '../logs/zksyncSucess.csv')
+        await appendObjectToCSV(wt, '../logs/zksyncSucess.csv')
         const interval = getRandomFloat(CONFIG.minInterval, CONFIG.maxInterval)
-        // console.log(`任务完成，线程暂停${interval}分钟`);
-        // await sleep(interval);
-        // console.log('暂停结束');
+        console.log(`任务完成，线程暂停${interval}分钟`);
+        await sleep(interval);
+        console.log('暂停结束');
     } catch (error) {
         await logWithTime('../logs/Error', `walletName:${wt.Wallet}, walletAddr:${wt.Address}, taskTag:${wt.taskTag}, error:${error}`);
         wt.time = new Date().toISOString();
