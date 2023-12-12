@@ -46,10 +46,10 @@ async function executeTask(taskTag, wt, ...args) {
     const taskName = `task${taskTag}`;
 
     if (typeof tasks[taskName] === 'function') {
-        // console.log(`地址：${wt.Address} 开始执行任务：${taskName}`);
+        console.log(`地址：${wt.Address} 开始执行任务：${taskName}`);
         await tasks[taskName](wt, ...args);
     } else {
-        // console.log(`Task ${taskName} not found!`);
+        console.log(`Task ${taskName} not found!`);
     }
 }
 
@@ -91,6 +91,6 @@ async function processQueue() {
 
     if (results.every(res => res)) {
         console.log("All wallets have been processed.");
-        // process.exit(0);
+        process.exit(0);
     }
 })();
