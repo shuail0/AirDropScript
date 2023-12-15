@@ -1,4 +1,5 @@
 const ccxt = require("ccxt");
+const { sleep } = require("../../base/utils");
 
 class OKX {
     constructor(apiKeys) {
@@ -9,30 +10,33 @@ class OKX {
         const network = chain.split('-').pop();
         const currencies = await this.exchange.fetchCurrencies();
         const withdrawalFee = currencies[currency].networks[network].fee;
-        const balance = await this.exchange.privateGetAssetBalances();  // 获取资金账户余额
-        const freeBalance = parseFloat(balance.data.find(item => item.ccy === currency)?.availBal || 0);  // 获取可用余额，如果余额可用则返回余额，如果无法获取返回0
-        console.log(`可用 ${currency} 余额：${freeBalance}`);
+        while (true) {
+            const balance = await this.exchange.privateGetAssetBalances();  // 获取资金账户余额
+            const freeBalance = parseFloat(balance.data.find(item => item.ccy === currency)?.availBal || 0);  // 获取可用余额，如果余额可用则返回余额，如果无法获取返回0
+            
+            if (freeBalance >= (parseFloat(amount) + parseFloat(withdrawalFee))) {
+                console.log(`可用 ${currency} 余额：${freeBalance},正在将 ${amount} ${currency} 提现到钱包地址 ${walletAddress} 提币链 ${chain}`);
+                const params = {
+                    ccy: currency,
+                    amt: amount,
+                    dest: 4,
+                    toAddr: walletAddress,
+                    fee: withdrawalFee,
+                    chain: chain
+                };
+                if (tag) {
+                    params.toAddr = `${walletAddress}:${tag}`;
+                }
 
-        if (freeBalance >= (parseFloat(amount) + parseFloat(withdrawalFee))) {
-            console.log(`正在将 ${amount} ${currency} 提现到钱包地址 ${walletAddress} 提币链 ${chain}`);
-            const params = {
-                ccy: currency,
-                amt: amount,
-                dest: 4,
-                toAddr: walletAddress,
-                fee: withdrawalFee,
-                chain: chain
-            };
-            if (tag) {
-                params.toAddr = `${walletAddress}:${tag}`;
+                const withdrawal = await this.exchange.privatePostAssetWithdrawal(params);
+                console.log("提现结果：", withdrawal);
+                return withdrawal
+
+            } else {
+                // throw new Error("Not enough balance for withdrawal.");
+                console.log(`可用 ${currency} 余额不足，当前可用余额：${freeBalance}，提现金额：${amount}，手续费：${withdrawalFee}，等待10分钟后重试`);
+                await sleep(10);
             }
-
-            const withdrawal = await this.exchange.privatePostAssetWithdrawal(params);
-            console.log("提现结果：", withdrawal);
-            return withdrawal
-
-        } else {
-            throw new Error("Not enough balance for withdrawal.");
         }
     };
 
@@ -130,7 +134,7 @@ class OKX {
                 await new Promise(resolve => setTimeout(resolve, 1000));
 
             } catch (error) {
-                throw new Error (`子账户：${subAcct['subAcct']} 划转失败，失败原因：${error}`);
+                throw new Error(`子账户：${subAcct['subAcct']} 划转失败，失败原因：${error}`);
             };
         }
         return transferInfos;
