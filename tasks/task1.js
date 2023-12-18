@@ -8,7 +8,7 @@
  */
 
 const Velocore = require('../protocol/zksync/dex/velocore/velocore');
-const { fetchToken, getBalance, checkUSDCApprove } = require('../base/coin/token.js')
+const { fetchToken, getBalance, checkApprove } = require('../base/coin/token.js')
 const { floatToFixed, fixedToFloat, getRandomFloat } = require('../base/utils.js')
 const ethers = require('ethers');
 
@@ -43,7 +43,7 @@ module.exports = async (params) => {
 
     usdcBalance = await getBalance(wallet, usdc.address);
     console.log('USDC余额：', usdcBalance.toString(), '开始检查授权...');
-    await checkUSDCApprove(wallet, usdc.address, velocore.routerAddr, usdcBalance)
+    await checkApprove(wallet, usdc.address, velocore.routerAddr, usdcBalance)
 
     tx = await velocore.swapTokenToEth(wallet, usdc.address, wETH.address, usdcBalance);
     console.log('交易成功 txHash:', tx.transactionHash)

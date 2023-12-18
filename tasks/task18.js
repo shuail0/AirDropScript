@@ -6,7 +6,7 @@
  */
 
 const Tarot = require("../protocol/zksync/other/taort/tarot.js");
-const { fetchToken, getBalance, tokenApprove, checkUSDCApprove } = require("../base/coin/token.js");
+const { fetchToken, getBalance, tokenApprove, checkApprove } = require("../base/coin/token.js");
 
 const {
     floatToFixed,
@@ -49,7 +49,7 @@ module.exports = async (params) => {
     await sleep(2);
     const poolTokenBalance = await getBalance(wallet, poolToken);
     console.log( "poolToken余额：",  fixedToFloat(poolTokenBalance), "开始检查授权..." );
-    await checkUSDCApprove(wallet, poolToken, tarot.routerAddr, poolTokenBalance);
+    await checkApprove(wallet, poolToken, tarot.routerAddr, poolTokenBalance);
 
     tx = await tarot.withdrawEth(wallet, poolToken, poolTokenBalance);
     console.log("交易成功 txHash:", tx.transactionHash);

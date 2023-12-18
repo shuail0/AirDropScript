@@ -8,7 +8,7 @@
  */
 
 const Mavrick = require('../protocol/zksync/dex/mavrick/mavrick');
-const { getSwapTokenAddress, fetchToken, getBalance, tokenApprove, checkUSDCApprove } = require('../base/coin/token.js')
+const { getSwapTokenAddress, fetchToken, getBalance, tokenApprove, checkApprove } = require('../base/coin/token.js')
 const { floatToFixed, fixedToFloat, sleep, getRandomFloat, saveLog } = require('../base/utils.js')
 const ethers = require('ethers');
 
@@ -42,7 +42,7 @@ module.exports = async (params) => {
     usdcBalance = await getBalance(wallet, usdc.address);
     console.log('USDC余额：', fixedToFloat(usdcBalance, 6), '开始授权...');
     
-    await checkUSDCApprove(wallet, usdc.address, mavrick.routerAddr, usdcBalance);
+    await checkApprove(wallet, usdc.address, mavrick.routerAddr, usdcBalance);
 
     tx = await mavrick.swapTokenToEth(wallet, usdc.address, wETH.address, usdcBalance, '0x41C8cf74c27554A8972d3bf3D2BD4a14D8B604AB');
     console.log('交易成功 txHash:', tx.transactionHash)

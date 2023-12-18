@@ -7,7 +7,7 @@
  */
 
 const Ezkalibur = require('../protocol/zksync/dex/ezkalibur/ezkalibur');
-const { getSwapTokenAddress, fetchToken, getBalance, tokenApprove, checkUSDCApprove } = require('../base/coin/token.js')
+const { getSwapTokenAddress, fetchToken, getBalance, tokenApprove, checkApprove } = require('../base/coin/token.js')
 const { floatToFixed, fixedToFloat,sleep, getRandomFloat, saveLog  } = require('../base/utils.js')
 const ethers = require('ethers');
 const coinAddress = require('../config/tokenAddress.json').zkSync
@@ -41,7 +41,7 @@ module.exports = async (params) => {
 
     // // 查询USDC余额
     console.log('获得USDC数量：', fixedToFloat(usdcAmount, usdc.decimal), '开始检查授权...');
-    await checkUSDCApprove(wallet, usdc.address, ezkalibur.routerAddr, usdcAmount);
+    await checkApprove(wallet, usdc.address, ezkalibur.routerAddr, usdcAmount);
     
     tx = await ezkalibur.swapTokenToEth(wallet, usdc.address, wETH.address, usdcAmount);
     console.log('交易成功 txHash:', tx.transactionHash)

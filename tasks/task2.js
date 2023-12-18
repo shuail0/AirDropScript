@@ -8,7 +8,7 @@
  */
 
 const SyncSwap = require('../protocol/zksync/dex/syncswap/SyncSwap');
-const { getSwapTokenAddress, fetchToken, getBalance, tokenApprove, checkUSDCApprove } = require('../base/coin/token.js')
+const { getSwapTokenAddress, fetchToken, getBalance, tokenApprove, checkApprove } = require('../base/coin/token.js')
 const { floatToFixed, fixedToFloat,sleep, getRandomFloat, saveLog  } = require('../base/utils.js')
 const ethers = require('ethers');
 
@@ -40,7 +40,7 @@ module.exports = async (params) => {
     // 查询USDC余额
     usdcBalance = await getBalance(wallet, usdc.address);
     console.log('USDC余额：', fixedToFloat(usdcBalance, 6), '开始检查授权...');
-    await checkUSDCApprove(wallet, usdc.address, syncswap.routerAddr, usdcBalance);
+    await checkApprove(wallet, usdc.address, syncswap.routerAddr, usdcBalance);
 
     tx = await syncswap.swapTokenToEth(wallet, usdc.address, wETH.address, usdcBalance);
     console.log('交易成功 txHash:', tx.transactionHash)

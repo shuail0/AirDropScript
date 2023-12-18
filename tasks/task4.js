@@ -8,7 +8,7 @@
  */
 
 const Mute = require('../protocol/zksync/dex/mute/mute.js');
-const { fetchToken, getBalance, checkUSDCApprove } = require('../base/coin/token.js')
+const { fetchToken, getBalance, checkApprove } = require('../base/coin/token.js')
 const { floatToFixed, fixedToFloat, getRandomFloat  } = require('../base/utils.js')
 const ethers = require('ethers');
 
@@ -42,7 +42,7 @@ module.exports = async (params) => {
     usdcBalance = await getBalance(wallet, usdc.address);
 
     console.log('USDC余额：', fixedToFloat(usdcBalance, 6), '开始授权...');
-    await checkUSDCApprove(wallet, usdc.address, mute.routerAddr, usdcBalance);
+    await checkApprove(wallet, usdc.address, mute.routerAddr, usdcBalance);
 
     tx = await mute.swapTokenToEth(wallet, usdc.address, wETH.address, usdcBalance);
     console.log('交易成功 txHash:', tx.transactionHash)
