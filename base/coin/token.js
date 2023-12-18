@@ -54,7 +54,7 @@ const tokenTrasfer = async (wallet, address, amount,tokenAddr='0x000000000000000
 };
 
 // 检查授权，对于授权小于交易所需的数量，需要授权10倍的数量
-async function checkUSDCApprove(wallet, tokenAddr, spender, approveValue) {
+async function checkApprove(wallet, tokenAddr, spender, approveValue) {
     const allowance = await getAllowance(wallet, tokenAddr, spender);
     if (allowance.lt(approveValue)) {
         console.log('授权不足，开始授权')
@@ -65,4 +65,4 @@ async function checkUSDCApprove(wallet, tokenAddr, spender, approveValue) {
     }
 }
 
-module.exports = { getSwapTokenAddress, fetchToken, getBalance, tokenApprove, tokenTrasfer, getAllowance, checkUSDCApprove }
+module.exports = { getSwapTokenAddress, fetchToken, getBalance, tokenApprove, tokenTrasfer, getAllowance, checkApprove }
