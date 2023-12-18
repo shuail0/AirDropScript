@@ -8,7 +8,7 @@
  */
 
 const Mavrick = require('../protocol/zksync/dex/mavrick/mavrick');
-const { getSwapTokenAddress, fetchToken, getBalance, tokenApprove } = require('../base/coin/token.js')
+const { getSwapTokenAddress, fetchToken, getBalance, tokenApprove, checkUSDCApprove } = require('../base/coin/token.js')
 const { floatToFixed, fixedToFloat, sleep, getRandomFloat, saveLog } = require('../base/utils.js')
 const ethers = require('ethers');
 const coinAddress = require('../config/tokenAddress.json').zkSync
@@ -43,10 +43,9 @@ module.exports = async (params) => {
     const usdcAmount = ethers.BigNumber.from(usdcLogs[0].data); // 获得的USDC数量
 
     // // 查询USDC余额
-    console.log('获得USDC数量：', fixedToFloat(usdcAmount, usdc.decimal), '开始授权...');
+    console.log('获得USDC数量：', fixedToFloat(usdcAmount, usdc.decimal), '开始检查授权...');
+    await checkUSDCApprove(wallet, usdc.address, mavrick.routerAddr, usdcAmount);
 
-    await tokenApprove(wallet, usdc.address, mavrick.routerAddr, usdcAmount);
-    console.log('授权成功，开始交易')
     tx = await mavrick.swapTokenToEth(wallet, usdc.address, wETH.address, usdcAmount, '0x41C8cf74c27554A8972d3bf3D2BD4a14D8B604AB');
     console.log('交易成功 txHash:', tx.transactionHash)
 

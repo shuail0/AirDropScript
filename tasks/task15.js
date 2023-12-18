@@ -8,7 +8,7 @@
 
 
 const zkswap = require('../protocol/zksync/dex/zkswap/zkswap.js');
-const { getSwapTokenAddress, fetchToken, getBalance, tokenApprove } = require('../base/coin/token.js')
+const { getSwapTokenAddress, fetchToken, getBalance, tokenApprove, checkUSDCApprove } = require('../base/coin/token.js')
 const { floatToFixed, fixedToFloat,sleep, getRandomFloat, saveLog  } = require('../base/utils.js')
 const ethers = require('ethers');
 const { Wallet, Provider } = require('zksync-web3');
@@ -80,10 +80,8 @@ module.exports = async (params) => {
 
     // 查询USDC余额，兑换回ETH
     usdcBalance = await getBalance(wallet, usdc.address);
-    console.log('USDC余额：', usdcBalance.toString(), '开始授权...');
-
-    await tokenApprove(wallet, usdc.address, zkswapdex.RouterAddress, usdcBalance);
-    console.log('授权成功，开始交易');
+    console.log('USDC余额：', usdcBalance.toString(), '开始检查授权...');
+    await checkUSDCApprove(wallet, usdc.address, zkswapdex.RouterAddress, usdcBalance);
     
     tx = await zkswapdex.swapExactTokensForETH(wallet, usdc.address, wETH.address, usdcBalance);
     console.log('交易成功 txHash:', tx.transactionHash);

@@ -10,6 +10,7 @@ const {
     fetchToken,
     getBalance,
     tokenApprove,
+    checkUSDCApprove
 } = require("../base/coin/token.js");
 const {
     floatToFixed,
@@ -59,12 +60,13 @@ module.exports = async (params) => {
 
     await sleep(2);
     const poolTokenBalance = await getBalance(wallet, poolToken);
-    console.log("poolToken余额：", fixedToFloat(poolTokenBalance), "开始授权impermaxrouter合约使用poolToken");
+    console.log("poolToken余额：", fixedToFloat(poolTokenBalance), "开始检查授权impermaxrouter合约使用poolToken");
+    await checkUSDCApprove(wallet, poolToken, impermax.routerAddr, poolTokenBalance);
 
     // 授权impermaxrouter合约使用poolToken  
-    await tokenApprove(wallet, poolToken, impermax.routerAddr, poolTokenBalance);
+    // await tokenApprove(wallet, poolToken, impermax.routerAddr, poolTokenBalance);
 
-    console.log("授权成功,开始取出ETH");
+    // console.log("授权成功,开始取出ETH");
 
 
     tx = await impermax.withdrawEth(wallet, poolToken, poolTokenBalance);

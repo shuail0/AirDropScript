@@ -9,7 +9,7 @@
  */
 
 const Mavrick = require('../protocol/zksync/dex/mavrick/mavrick');
-const { getSwapTokenAddress, fetchToken, getBalance, tokenApprove } = require('../base/coin/token.js');
+const { getSwapTokenAddress, fetchToken, getBalance, checkUSDCApprove } = require('../base/coin/token.js');
 const { floatToFixed, fixedToFloat,sleep, getRandomFloat, saveLog  } = require('../base/utils.js');
 const Overnight = require('../protocol/zksync/other/overnight/overnight');
 const ethers = require('ethers');
@@ -46,27 +46,24 @@ module.exports = async (params) => {
     await sleep(1);
 
     // // 查询USDC余额
-    console.log('获得USDC数量：', fixedToFloat(usdcAmount, usdc.decimal), '开始授权...');
-    // // 查询USDC余额
-    await tokenApprove(wallet, usdc.address, overnight.exchangeAddr, usdcAmount);
-    console.log('授权成功，开始mint USD+')
+    console.log('获得USDC数量：', fixedToFloat(usdcAmount, usdc.decimal), '开始检查授权...');
+    await checkUSDCApprove(wallet, usdc.address, overnight.exchangeAddr, usdcAmount);
+    console.log('开始Mint USD+...');
     tx = await overnight.mint(wallet, usdcAddress, usdcAmount);
     console.log('交易成功，hash：',tx.transactionHash)
     
     await sleep(1);
     const usdPlusBalance = await getBalance(wallet, usdPluse.address);
-    console.log('USD+余额：', usdPlusBalance.toString(), '开始授权...');
-    await tokenApprove(wallet, usdPluse.address, mavrick.routerAddr, usdPlusBalance);
-    console.log('授权成功，将USD+换成USDC')
+    console.log('USD+余额：', fixedToFloat(usdPlusBalance), '开始检查授权...');
+    await checkUSDCApprove(wallet, usdPluse.address, mavrick.routerAddr, usdPlusBalance);
     tx = await mavrick.swapTokenToToken(wallet, usdPluse.address, usdc.address, usdPlusBalance, '0xaca5d8805d6f160eb46e273e28169ddbf703ecdc');
     console.log('交易成功 txHash:', tx.transactionHash);
     usdcLogs = tx.logs.filter(log => log.address.toLowerCase() === usdc.address.toLowerCase() && ("0x" + log.topics[2].slice(-40)).toLowerCase() === wallet.address.toLowerCase());
     usdcAmount = ethers.BigNumber.from(usdcLogs[0].data); // 获得的USDC数量
 
     await sleep(0.5);
-    console.log('获得USDC数量：', fixedToFloat(usdcAmount, usdc.decimal), '开始授权...');
-    await tokenApprove(wallet, usdc.address, mavrick.routerAddr, usdcAmount);
-    console.log('授权成功，将USDC换成ETH')
+    console.log('获得USDC数量：', fixedToFloat(usdcAmount, usdc.decimal), '开始检查授权...');
+    await checkUSDCApprove(wallet, usdc.address, mavrick.routerAddr, usdcAmount);
     tx = await mavrick.swapTokenToEth(wallet, usdc.address, wETH.address, usdcAmount, '0x41c8cf74c27554a8972d3bf3d2bd4a14d8b604ab');
     console.log('交易成功 txHash:', tx.transactionHash)
 
