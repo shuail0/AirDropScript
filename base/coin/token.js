@@ -1,4 +1,4 @@
-const { Wallet } = require('ethers');
+const { Wallet, BigNumber } = require('ethers');
 const { getContract } = require('../utils.js');
 const abi = require('./erc20.json');
 
@@ -29,6 +29,10 @@ const getBalance = async (wallet, tokenAddr='0x000000000000000000000000000000000
     return await wallet.getBalance(tokenAddr);
 };
 
+const getAllowance = async (wallet, tokenAddr, spender) => {
+    const tokenContract = getContract(tokenAddr, abi, wallet);
+    return await tokenContract.allowance(wallet.address, spender);
+};
 
 // 授权
 const tokenApprove = async (Wallet, tokenAddr, spender, approveValue) => {
@@ -36,6 +40,8 @@ const tokenApprove = async (Wallet, tokenAddr, spender, approveValue) => {
     const txApprove = await tokenContract.approve(spender, approveValue);
     return await txApprove.wait();
 };
+
+
 
 // erc20代币转账
 const tokenTrasfer = async (wallet, address, amount,tokenAddr='0x0000000000000000000000000000000000000000') => {
@@ -47,4 +53,16 @@ const tokenTrasfer = async (wallet, address, amount,tokenAddr='0x000000000000000
     return await transfer.wait()
 };
 
-module.exports = { getSwapTokenAddress, fetchToken, getBalance, tokenApprove, tokenTrasfer }
+// 检查授权，对于授权小于交易所需的数量，需要授权10倍的数量
+async function checkUSDCApprove(wallet, tokenAddr, spender, approveValue) {
+    const allowance = await getAllowance(wallet, tokenAddr, spender);
+    if (allowance.lt(approveValue)) {
+        console.log('授权不足，开始授权')
+        await tokenApprove(wallet, tokenAddr, spender, approveValue.mul(BigNumber.from(10)));
+        console.log('授权成功，开始交易')
+    } else {
+        console.log('授权充足，开始交易')
+    }
+}
+
+module.exports = { getSwapTokenAddress, fetchToken, getBalance, tokenApprove, tokenTrasfer, getAllowance, checkUSDCApprove }
