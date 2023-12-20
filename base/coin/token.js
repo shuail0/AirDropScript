@@ -24,9 +24,15 @@ const fetchToken = async (tokenAddr, provider) => {
     return tokenInfo
 };
 
-// 获取代币余额信息, 默认0地址是zks的ETH的地址
+// 获取代币余额信息, 默认0地址是zks的ETH的地址，仅限于zksync网络
 const getBalance = async (wallet, tokenAddr='0x0000000000000000000000000000000000000000') => {
-    return await wallet.getBalance(tokenAddr);
+    return await wallet.getBalance(tokenAddr, 'latest');
+};
+
+// 获取erc20代币余额信息,用于非zksync网络
+const getErc20Balance = async (wallet, tokenAddr) => {
+    const tokenContract = getContract(tokenAddr, abi, wallet);
+    return await tokenContract.balanceOf(wallet.address);
 };
 
 const getAllowance = async (wallet, tokenAddr, spender) => {
@@ -43,7 +49,7 @@ const tokenApprove = async (Wallet, tokenAddr, spender, approveValue) => {
 
 
 
-// erc20代币转账
+// erc20代币转账，仅限于zksync网络
 const tokenTrasfer = async (wallet, address, amount,tokenAddr='0x0000000000000000000000000000000000000000') => {
     const transfer = await wallet.transfer({
         to: address,
@@ -65,4 +71,4 @@ async function checkApprove(wallet, tokenAddr, spender, approveValue) {
     }
 }
 
-module.exports = { getSwapTokenAddress, fetchToken, getBalance, tokenApprove, tokenTrasfer, getAllowance, checkApprove }
+module.exports = { getSwapTokenAddress, fetchToken, getBalance, tokenApprove, tokenTrasfer, getAllowance, checkApprove, getErc20Balance }
