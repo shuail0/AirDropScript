@@ -1,13 +1,51 @@
 {
     "zkSync": {
-        "ETH":"0x0000000000000000000000000000000000000000",
-        "WETH":"0x5aea5775959fbc2557cc8789bc1bf90a239d9a91",
-        "USDC":"0x3355df6D4c9C3035724Fd0e3914dE96A5a83aaf4",
-        "USDT":"0x493257fD37EDB34451f62EDf8D2a0C418852bA4C"
+        "ETH": "0x0000000000000000000000000000000000000000",
+        "WETH": "0x5aea5775959fbc2557cc8789bc1bf90a239d9a91",
+        "USDC": "0x3355df6D4c9C3035724Fd0e3914dE96A5a83aaf4",
+        "USDT": "0x493257fD37EDB34451f62EDf8D2a0C418852bA4C"
     },
     "starkNet": {
-        "ETH":"0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7",
-        "WBTC":"0",
-        "USDC":"0x53c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8"
+        "ETH": "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7",
+        "WBTC": "0",
+        "USDC": "0x53c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8"
+    },
+    "Ethereum": {
+        "USDC": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+
+    },
+    "Arbitrum": {
+        "USDC": "0xff970a61a04b1ca14834a43f5de4533ebddb5cc8"
+
+    },
+    "Optimism": {
+        "USDC": "0x7f5c764cbc14f9669b88837ca1490cca17c31607"
+    },
+    "Base": {
+        "USDC": ""
+    },
+    "Linea": {
+        "USDC": ""
+    },
+    "BSC": {
+        "USDT": "0x55d398326f99059fF775485246999027B3197955"
+    },
+    "Avalanche": {
+        "USDC": "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E"
+    },
+    "Polygon": {
+        "USDC": "0x2791bca1f2de4661ed88a30c99a7a9449aa84174"
+    },
+    "Fantom": {
+        "USDC": "0x28a92dde19D9989F39A49905d7C9C2FAc7799bDf"
+    },
+    "Metis": {
+        "USDC": "0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000"
+    },
+    "Kava": {
+        "USDT": "0xAad094F6A75A14417d39f04E690fC216f080A41a"
+    },
+    "Mantle": {
+        "USDC": "0xAad094F6A75A14417d39f04E690fC216f080A41a"
     }
 }
