@@ -2,6 +2,19 @@
 
 # 更新记录
 
+## 2023/12/20 更新
+
+- 基础功能更新： 
+   - 新增Layerzero运行主程序： LayerZeroRunner.js (在runner目录下) 和配置文件 LayerZeroRunnerConfig.json（在config目录下）；
+   - 新增RPC配置管理文件 RpcConfig.json， 目前已经在layerzero中使用，后续将应用只其它链中; 
+   - token地址配置文件 tokenAddress.json， 目前已经在layerzero中使用，后续将应用只其它链中;
+   - token.js新增: getErc20Balance方法，用于非zksync网络查询erc20代币余额信息
+- 项目更新： 新增Stargate项目
+- 新增任务：
+   - task100: stargate跨ETH任务，任务将ETH从余额最多的链随机跨链其他链中（保留部分余额作为gas），仅原生Token为ETH的链可用。配置链可以在第18行代码修改。
+   - task101: stargate跨USDC任务，任务将USDC余额最多的链随机跨链其他链中，stargat在op、arb、polygon链中的token为USDC.e，存入资金时需要注意币种。配置链可以在第26行代码修改， 预留金额可以在第20行修改.
+
+
 ## 2023/12/18 更新
 - 基础功能更新： token.js新增checkApprove函数,用于检查授权和授权erc20token。
 - zksync周活任务更新： 将approve逻辑从用多少授权多少，调整为每次交易前查询授权金额，若授权额度小于交易金额，则授权交易金额的10倍额度。
