@@ -1,7 +1,0 @@
-{
-    "maxGasPrice": 100,
-    "walletPath": "/Users/lishuai/Documents/crypto/bockchainbot/testwallet.csv",
-    "CONCURRENCY": 5,
-    "minInterval": 0,
-    "maxInterval": 0
-}
