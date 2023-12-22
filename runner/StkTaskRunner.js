@@ -2,14 +2,14 @@ const { convertCSVToObjectSync, fixedToFloat, sleep, decryptUsingAESGCM, saveLog
 const tasks = require('../tasks');
 const ethers = require('ethers');
 const CONFIG = require('../config/StkTaskRunnerConfig.json');
+const RPC = require('../config/RpcConfig.json');
 const {Provider, Account, constants, RpcProvider} = require('starknet');
 const readlineSync = require('readline-sync');
 const fs = require('fs');
 const crypto = require('crypto');
 
-const provider = new Provider({ sequencer: { network: constants.NetworkName.SN_MAIN } });
-// const provider = new RpcProvider({ nodeUrl: CONFIG.stkrpc});
-const ethereumProvider = new ethers.getDefaultProvider(CONFIG.ethrpc);
+const provider = new RpcProvider({ nodeUrl: RPC['StarkNet']});
+const ethereumProvider = new ethers.getDefaultProvider(RPC['Ethereum']);
 const walletData = convertCSVToObjectSync(CONFIG.walletPath);
 const pwd = readlineSync.question('Please enter your password: ', {
     hideEchoBack: true
@@ -104,6 +104,6 @@ async function processQueue() {
 
     if (results.every(res => res)) {
         console.log("All wallets have been processed.");
-        process.exit(0);
+        // process.exit(0);
     }
 })();

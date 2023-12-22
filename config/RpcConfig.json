@@ -11,5 +11,6 @@
     "Fantom": "https://fantom.blockpi.network/v1/rpc/public",
     "Metis": "https://metis-pokt.nodies.app",
     "Kava": "https://evm.kava.io",
-    "Mantle": "https://1rpc.io/mantle"
+    "Mantle": "https://1rpc.io/mantle",
+    "StarkNet": "https://starknet.blockpi.network/v1/rpc/831cf85927e12d7b77239b7b423dd5b72aa18eef"
 }
