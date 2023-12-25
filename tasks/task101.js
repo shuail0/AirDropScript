@@ -23,21 +23,30 @@ const {
 module.exports = async (params) => {
     const { pky } = params;
     // const chains = ['Ethereum','BSC','Avalanche','Polygon','Arbitrum','Optimism','Fantom','Metis','Base','Linea','Kava','Mantle']; // 配置链信息
-    const chains = ['Polygon','Arbitrum','Optimism','Fantom']; // 配置链信息
+    const chains = ['Polygon', 'Arbitrum', 'Optimism', 'Base']; // 配置链信息
+
+
     const tokenName = 'USDC'; // 要跨链的token
 
-    
+
 
     // const reseveAmount = floatToFixed(0.001, 18); // 保留金额
     let walletInfo = {};
     // 遍历所有链
     for (let i = 0; i < chains.length; i++) {
         const chain = chains[i];
-        const wallet = new ethers.Wallet(pky, new ethers.getDefaultProvider(RPC[chain]));
-        const tokenInfo = await fetchToken(tokenAddresss[chain][tokenName],wallet);
-        const balance = await getErc20Balance(wallet, tokenInfo.address);
-        console.log('chain: ', chain, ' balance:', fixedToFloat(balance, tokenInfo.decimal));
-        walletInfo[chain] = { wallet, tokenInfo, balance };
+        try {
+            const wallet = new ethers.Wallet(pky, new ethers.getDefaultProvider(RPC[chain]));
+            const tokenInfo = await fetchToken(tokenAddresss[chain][tokenName], wallet);
+            const balance = await getErc20Balance(wallet, tokenInfo.address);
+            console.log('chain: ', chain, ' balance:', fixedToFloat(balance, tokenInfo.decimal));
+            walletInfo[chain] = { wallet, tokenInfo, balance };
+        } catch (error) {
+
+            console.log(`查询${chain} 链失败，跳过此链error: `, error);
+        
+
+        }
     }
     // 找出余额最多的链
     let maxChain = Object.keys(walletInfo).reduce((a, b) => walletInfo[a].balance.gte(walletInfo[b].balance) ? a : b);

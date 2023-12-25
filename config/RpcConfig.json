@@ -1,7 +1,7 @@
 {
     "Ethereum": "https://eth-mainnet.g.alchemy.com/v2/qRnk4QbaEmXJEs5DMnhitC0dSow-qATl",
     "Arbitrum": "https://arb-mainnet.g.alchemy.com/v2/hTLNUfDl0TcShbip5qvKgN2hjEFNztW_",
-    "Optimism": "https://optimism.llamarpc.com",
+    "Optimism": "https://optimism-mainnet.infura.io/v3/42c8d81980394461a640bfb855f972e2",
     "Base": "https://mainnet.base.org",
     "Linea": "https://1rpc.io/linea",
     "zkSync": "https://mainnet.era.zksync.io",
