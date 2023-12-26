@@ -2,6 +2,10 @@
 
 # 更新记录
 
+## 2023/12/26 更新
+- 新增任务：
+   - task0: zksync 官桥任务，将账户中的ETH除预留gas外全部跨链至zksync中。
+
 ## 2023/12/22 更新
 - 基础功能更新：
    - 将StkTaskRunnet.js程序的RPC获取方式改为从RpcConfig.json获取
