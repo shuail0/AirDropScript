@@ -37,7 +37,7 @@ module.exports = async (params) => {
 
     // 查询账户余额
     const bEthBalance = await getBalance(wallet, xBank.XBankAddr);
-    console.log('bEth余额：', bEthBalance, '开始赎回')
+    console.log('xEth余额：', bEthBalance, '开始赎回')
 
     // 提取ETH
     tx = await xBank.withdraw(wallet, bEthBalance);
