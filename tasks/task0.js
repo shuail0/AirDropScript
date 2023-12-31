@@ -34,8 +34,7 @@ module.exports = async (params) => {
     if (bridgeGasFee.gt(ethBalance)) {
         throw new Error('当前账户余额小于所需支付的Gas费用');
     }
-    // const bridgeAmount = ethBalance.sub(bridgeGasFee);
-    const bridgeAmount = ethers.utils.parseEther('0.01');
+    const bridgeAmount = ethBalance.sub(bridgeGasFee);
 
 
     // 存入资金（跨链）
