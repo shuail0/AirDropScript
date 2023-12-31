@@ -8,17 +8,21 @@
 
 
 const ethers = require('ethers');
+const zksync = require('zksync-web3');
 
 module.exports = async (params) => {
 
 
     const { wallet } = params;
+    const { providerL1: ethprovider } = wallet;
 
-    // // 查询账户余额
+    // 查询账户余额
     console.log('开始查询账户L1 ETH余额.')
     const ethBalance = await wallet.getBalanceL1();
     console.log(`成功查询账户ETH余额，余额：${ethers.utils.formatEther(ethBalance).toString()}`);
     // 计算预留gas
+    const gasPrice = parseFloat(ethers.utils.formatUnits(await ethprovider.getGasPrice(), 'gwei'));
+    console.log('gasPrice:', gasPrice);
     const gasLimit = ethers.BigNumber.from(149210);
     const gasPriceMultiplier = 1.8;
     const gasPriceInteger = ethers.utils.parseUnits((gasPrice * gasPriceMultiplier).toFixed(4), 'gwei');
@@ -26,6 +30,13 @@ module.exports = async (params) => {
 
 
     console.log('预留gas：', ethers.utils.formatEther(bridgeGasFee).toString())
+    // 检查余额是否充足
+    if (bridgeGasFee.gt(ethBalance)) {
+        throw new Error('当前账户余额小于所需支付的Gas费用');
+    }
+    // const bridgeAmount = ethBalance.sub(bridgeGasFee);
+    const bridgeAmount = ethers.utils.parseEther('0.01');
+
 
     // 存入资金（跨链）
     const deposit = await wallet.deposit({
