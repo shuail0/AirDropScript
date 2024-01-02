@@ -37,7 +37,7 @@ module.exports = async (params) => {
     // // 提币
     console.log('开始提币')
     await multExchangeWithdraw(params);
-    let sleepTime = getRandomFloat(10, 15)
+    let sleepTime = getRandomFloat(5, 10)
     console.log(`提币成功，等待${sleepTime}分钟后查询钱包余额;`)
     await sleep(sleepTime);  // 等待10分钟
 
@@ -46,8 +46,8 @@ module.exports = async (params) => {
         try {
             const ethBalance = await getBalance(wallet);
             if (fixedToFloat(ethBalance) < 0.5) { // 如果账户余额小于1个ETH
-                console.log('当前钱包余额:', fixedToFloat(ethBalance), ',账户余额小于1ETH， 等待5分钟后再次查询；');
-                await sleep(5);
+                console.log('当前钱包余额:', fixedToFloat(ethBalance), ',账户余额小于1ETH， 等待1分钟后再次查询；');
+                await sleep(1);
             } else {
                 console.log('当前钱包余额:', fixedToFloat(ethBalance), ',账户余额大于1ETH， 程序继续运行；');
                 break;
