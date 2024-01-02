@@ -14,10 +14,13 @@
    - task102： coreDao跨链：随机向coreDao跨链0.01-0.1USDC，余额不足时从Uniswap买入0.0001ETH的USDC
    - task103： Harmony跨链：随机向Harmony跨链0.01-0.1USDC，余额不足时从Uniswap买入0.0001ETH的USDC
 
-- 任务调整： 将引用的starknet包版本从5.24.3换回5.19.5版本。
-   - taks34:  
-   - taks34:  
-   - taks34:  
+- 任务调整：
+   - task30: 增加task36、task37、task38的调用，并且调整随机逻辑。
+   - task31： pancake交互：将任务调整为创建LP仓位，并且存取流动性1次。
+   - taks32:  Mavrick交互：将任务调整为创建LP仓位，并且存取流动性1次。。
+   - task33： izumi交互：将任务调整为创建LP仓位，并且存取流动性1次。。
+   - task34： reactor交互：将存取款循环次数调整为1次。
+   - task35： zeroLend交互：将存取款循环次数调整为1次。
 
 
 
