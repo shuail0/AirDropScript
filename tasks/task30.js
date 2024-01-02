@@ -45,7 +45,7 @@ module.exports = async (params) => {
     while (true) {
         try {
             const ethBalance = await getBalance(wallet);
-            if (fixedToFloat(ethBalance) < 1) { // 如果账户余额小于1个ETH
+            if (fixedToFloat(ethBalance) < 0.5) { // 如果账户余额小于1个ETH
                 console.log('当前钱包余额:', fixedToFloat(ethBalance), ',账户余额小于1ETH， 等待5分钟后再次查询；');
                 await sleep(5);
             } else {
