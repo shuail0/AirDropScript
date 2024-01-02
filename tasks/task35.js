@@ -18,7 +18,7 @@ module.exports = async (params) => {
 
     const ethBalance = await getBalance(wallet);  // 查询余额
     const amount = ethBalance.sub(floatToFixed(0.02));  // 预留0.02ETH作为gas
-    const loopNum = 2;
+    const loopNum = 1;
 
     const zerolend = new ZeroLend();
 

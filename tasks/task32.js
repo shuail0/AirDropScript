@@ -68,25 +68,25 @@ module.exports = async (params) => {
 
 
 
-    // 反复存取 4次
-    for (let i = 0; i < loopNum; i++) {
-        console.log('开始循环增加流动性')
-        const mintInfo = await mavrick.mintETHLiquidityPosition(wallet, poolInfo.poolAddress, 0, 0, tick, tokenA.amount, tokenB.amount, wETH.amount);
-        console.log('创建成功，交易哈希：',mintInfo.transactionHash);
+    // // 反复存取 4次
+    // for (let i = 0; i < loopNum; i++) {
+    //     console.log('开始循环增加流动性')
+    //     const mintInfo = await mavrick.mintETHLiquidityPosition(wallet, poolInfo.poolAddress, 0, 0, tick, tokenA.amount, tokenB.amount, wETH.amount);
+    //     console.log('创建成功，交易哈希：',mintInfo.transactionHash);
 
-        const sleepTime = getRandomFloat(1, 3);
-        console.log('增加流动性成功，随机暂停', sleepTime, '分钟后移除流动性');
-        await sleep(sleepTime);
-            // 取出所有流动性
-        console.log('取出所有流动性')
-        const tx = await mavrick.decreaseETHLiquidity(wallet, tokenA.address, tokenB.address, poolFee, width, lastPositionId, tick);
-        console.log('取出成功，交易哈希：',tx.transactionHash)
-        if (i < loopNum){
-            const sleepTime = getRandomFloat(1, 3);
-            console.log('移除流动性成功，随机暂停', sleepTime, '分钟后重新添加流动性');
-            await sleep(sleepTime);
-        };
-    };
+    //     const sleepTime = getRandomFloat(1, 3);
+    //     console.log('增加流动性成功，随机暂停', sleepTime, '分钟后移除流动性');
+    //     await sleep(sleepTime);
+    //         // 取出所有流动性
+    //     console.log('取出所有流动性')
+    //     const tx = await mavrick.decreaseETHLiquidity(wallet, tokenA.address, tokenB.address, poolFee, width, lastPositionId, tick);
+    //     console.log('取出成功，交易哈希：',tx.transactionHash)
+    //     if (i < loopNum){
+    //         const sleepTime = getRandomFloat(1, 3);
+    //         console.log('移除流动性成功，随机暂停', sleepTime, '分钟后重新添加流动性');
+    //         await sleep(sleepTime);
+    //     };
+    // };
 
 
 };

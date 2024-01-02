@@ -58,8 +58,12 @@ module.exports = async (params) => {
         };
     };
 
-    const taskList = [31, 32, 33, 34, 35];
-    const shuffleTaskList = shuffleArray(taskList)
+    const taskList1 = [31, 32, 33, 34, 35];
+    const shuffleTaskList1 = shuffleArray(taskList1)
+    const taskList2 = [34, 35, 36, 37, 38];
+    const shuffleTaskList2 = shuffleArray(taskList2)
+    const shuffleTaskList = [...shuffleTaskList1, ...shuffleTaskList2]
+
     // 打印任务列表
     console.log('任务列表：', shuffleTaskList);
 
