@@ -139,8 +139,10 @@ class SithSwap {
          */
         const approveCallData = getApproveCallData(tokenIn, this.routerAddr, amountIn);
         const swapCallData = this.getSwapTokenToTokenCallData(account, tokenIn, tokenOut,amountIn, isStable);
-        const multiCallData = [approveCallData, swapCallData];
-        return await multiCallContract(account, multiCallData);
+        console.log(swapCallData)
+        process.exit()
+        // const multiCallData = [approveCallData, swapCallData];
+        // return await multiCallContract(account, multiCallData);
     };
 
     // async addLiquidityToPool(account, tokenA, tokenB, amountA, amountB) {

@@ -6,4 +6,15 @@
     "payable": true,
     "stateMutability": "payable",
     "type": "function"
-  }]
+  },
+
+  {
+    "constant": false,
+    "inputs": [{"name":"signature","type":"bytes"}],
+    "name": "mint",
+    "outputs": [],
+    "payable": true,
+    "stateMutability": "payable",
+    "type": "function"
+}
+]

@@ -1,0 +1,200 @@
+[
+  {
+    "name": "UpgradeableImpl",
+    "type": "impl",
+    "interface_name": "openzeppelin::upgrades::interface::IUpgradeable"
+  },
+  {
+    "name": "openzeppelin::upgrades::interface::IUpgradeable",
+    "type": "interface",
+    "items": [
+      {
+        "name": "upgrade",
+        "type": "function",
+        "inputs": [
+          {
+            "name": "new_class_hash",
+            "type": "core::starknet::class_hash::ClassHash"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      }
+    ]
+  },
+  {
+    "name": "Starki",
+    "type": "impl",
+    "interface_name": "starki_contract::starki::IStarki"
+  },
+  {
+    "name": "starki_contract::starki::IStarki",
+    "type": "interface",
+    "items": [
+      {
+        "name": "inscribe",
+        "type": "function",
+        "inputs": [
+          {
+            "name": "user_data",
+            "type": "core::array::Array::<core::integer::u64>"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::integer::u8"
+          }
+        ],
+        "state_mutability": "external"
+      }
+    ]
+  },
+  {
+    "name": "OwnableImpl",
+    "type": "impl",
+    "interface_name": "openzeppelin::access::ownable::interface::IOwnable"
+  },
+  {
+    "name": "openzeppelin::access::ownable::interface::IOwnable",
+    "type": "interface",
+    "items": [
+      {
+        "name": "owner",
+        "type": "function",
+        "inputs": [],
+        "outputs": [
+          {
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "name": "transfer_ownership",
+        "type": "function",
+        "inputs": [
+          {
+            "name": "new_owner",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "name": "renounce_ownership",
+        "type": "function",
+        "inputs": [],
+        "outputs": [],
+        "state_mutability": "external"
+      }
+    ]
+  },
+  {
+    "name": "constructor",
+    "type": "constructor",
+    "inputs": []
+  },
+  {
+    "kind": "struct",
+    "name": "openzeppelin::access::ownable::ownable::OwnableComponent::OwnershipTransferred",
+    "type": "event",
+    "members": [
+      {
+        "kind": "data",
+        "name": "previous_owner",
+        "type": "core::starknet::contract_address::ContractAddress"
+      },
+      {
+        "kind": "data",
+        "name": "new_owner",
+        "type": "core::starknet::contract_address::ContractAddress"
+      }
+    ]
+  },
+  {
+    "kind": "enum",
+    "name": "openzeppelin::access::ownable::ownable::OwnableComponent::Event",
+    "type": "event",
+    "variants": [
+      {
+        "kind": "nested",
+        "name": "OwnershipTransferred",
+        "type": "openzeppelin::access::ownable::ownable::OwnableComponent::OwnershipTransferred"
+      }
+    ]
+  },
+  {
+    "kind": "struct",
+    "name": "openzeppelin::upgrades::upgradeable::UpgradeableComponent::Upgraded",
+    "type": "event",
+    "members": [
+      {
+        "kind": "data",
+        "name": "class_hash",
+        "type": "core::starknet::class_hash::ClassHash"
+      }
+    ]
+  },
+  {
+    "kind": "enum",
+    "name": "openzeppelin::upgrades::upgradeable::UpgradeableComponent::Event",
+    "type": "event",
+    "variants": [
+      {
+        "kind": "nested",
+        "name": "Upgraded",
+        "type": "openzeppelin::upgrades::upgradeable::UpgradeableComponent::Upgraded"
+      }
+    ]
+  },
+  {
+    "kind": "struct",
+    "name": "starki_contract::starki::Starki::InscribeEvent",
+    "type": "event",
+    "members": [
+      {
+        "kind": "key",
+        "name": "user",
+        "type": "core::starknet::contract_address::ContractAddress"
+      },
+      {
+        "kind": "key",
+        "name": "block_number",
+        "type": "core::integer::u64"
+      },
+      {
+        "kind": "key",
+        "name": "block_time",
+        "type": "core::integer::u64"
+      },
+      {
+        "kind": "data",
+        "name": "data",
+        "type": "core::array::Array::<core::integer::u64>"
+      }
+    ]
+  },
+  {
+    "kind": "enum",
+    "name": "starki_contract::starki::Starki::Event",
+    "type": "event",
+    "variants": [
+      {
+        "kind": "flat",
+        "name": "OwnableEvent",
+        "type": "openzeppelin::access::ownable::ownable::OwnableComponent::Event"
+      },
+      {
+        "kind": "flat",
+        "name": "UpgradeableEvent",
+        "type": "openzeppelin::upgrades::upgradeable::UpgradeableComponent::Event"
+      },
+      {
+        "kind": "nested",
+        "name": "InscribeEvent",
+        "type": "starki_contract::starki::Starki::InscribeEvent"
+      }
+    ]
+  }
+]
