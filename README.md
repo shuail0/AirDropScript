@@ -2,6 +2,25 @@
 
 # 更新记录
 
+## 2024/1/2 更新
+- 项目更新: 新增basilisk、xbank、woofi、Uniswap、harmonybridge、corebridge。
+- 新增任务：增加task20、task21、task22、task36、task37、task38、task102、task10。
+   - task20: woofi交互：在指定范围随机将一定数量的ETH兑换为USDC,将获得的USDC兑换为ETH。存取ETH。
+   - task21： basilisk交互：存取ETH
+   - task22： xBank交互：存取ETH
+   - task36： pancake交互：向最近创建的LP仓位存取流动性1次。
+   - taks37:  Mavrick交互：向最近创建的LP仓位存取流动性1次。
+   - task38： izumi交互：向最近创建的LP仓位存取流动性1次。
+   - task102： coreDao跨链：随机向coreDao跨链0.01-0.1USDC，余额不足时从Uniswap买入0.0001ETH的USDC
+   - task103： Harmony跨链：随机向Harmony跨链0.01-0.1USDC，余额不足时从Uniswap买入0.0001ETH的USDC
+
+- 任务调整： 将引用的starknet包版本从5.24.3换回5.19.5版本。
+   - taks34:  
+   - taks34:  
+   - taks34:  
+
+
+
 ## 2023/12/26 更新
 - 新增任务：
    - task0: zksync 官桥任务，将账户中的ETH除预留gas外全部跨链至zksync中。
