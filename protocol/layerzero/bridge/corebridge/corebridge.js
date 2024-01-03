@@ -51,6 +51,23 @@ class CoreBridge {
         );
         return await tx.wait()
     }
+        // ERC20跨链
+        async bridge(wallet, soureChain,  tokenAddr, amount) {
+            const bridge = this.getBridgeContract(wallet, contractAddress[soureChain]);
+            const bridgeFee = await this.estimateBridgeFee(wallet, soureChain);
+            const tx = await bridge.bridge(
+                tokenAddr,
+                amount,
+                wallet.address,
+                {
+                    refundAddress: wallet.address,
+                    zroPaymentAddress: '0x0000000000000000000000000000000000000000'
+                },
+                '0x',
+                {value: bridgeFee}
+            );
+            return await tx.wait()
+        }
 
 }
 module.exports = CoreBridge;
