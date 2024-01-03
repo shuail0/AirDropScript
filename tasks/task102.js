@@ -18,8 +18,7 @@ const tokenAddresss = require('../config/tokenAddress.json');
 
 module.exports = async (params) => {
     const { pky } = params;
-    // const chains = ['Arbitrum', 'Optimism']; // 配置链信息
-    const chains = ['Optimism']; // 配置链信息
+    const chains = ['Arbitrum', 'Optimism']; // 配置链信息
 
     // // 设定随机的ETH数量
     const minAmount = 0.01  // 最小交易数量
