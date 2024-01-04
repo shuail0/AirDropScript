@@ -21,8 +21,8 @@ module.exports = async (params) => {
     const chains = ['Arbitrum', 'Optimism']; // 配置链信息
 
     // // 设定随机的USDC数量
-    const minAmount = 10  // 最小交易数量
-    const maxAmount = 20 // 最大交易数量
+    const minAmount = 0.01  // 最小交易数量
+    const maxAmount = 0.1 // 最大交易数量
 
     let walletInfo = {};
     let USDC, USDCBalance, ETHbalance;
