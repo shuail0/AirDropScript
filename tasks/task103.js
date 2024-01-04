@@ -1,12 +1,10 @@
 /**
- * tasks100: stargate ETH跨链程序  
- * 1. 列表中所有账户的ETH余额信息
- * 2. 找出余额最多的链，作为转出链
- * 3. 用转出链的ETH购买范围内的goerli链的GETH。
- * 4. 账户需要有至少0.003ETH的余额，用于支付gas费用，如果余额不足，跳过该账户。
+ * tasks103: Harmony跨链程序  
+ * 1. 列表中所有账户的NativeUSDC余额信息
+ * 2. 找出余额最多的链，作为转出链，跨链至Harmony
+ * 3. 如果余额不足，从UniSwap中买入0.0001ETH的USDC
  * 
  */
-
 
 const ethers = require("ethers");
 const RPC = require('../config/RpcConfig.json');
@@ -15,23 +13,25 @@ const HarmonyBridge = require('../protocol/layerzero/bridge/harmonybridge/harmon
 const UniSwap = require("../protocol/ethereum/dex/uniswap/uniswap.js");
 const { getErc20Balance, fetchToken, checkApprove } = require("../base/coin/token.js");
 const tokenAddresss = require('../config/tokenAddress.json');
+const { pro } = require("ccxt");
 
 
 module.exports = async (params) => {
     const { pky } = params;
-    const chains = ['Arbitrum', 'Optimism']; // 配置链信息
+    const chains = ['Arbitrum']; // 配置链信息
     // // 设定随机的ETH数量
     const minAmount = 0.01  // 最小交易数量
     const maxAmount = 0.1 // 最大交易数量
   
     let walletInfo = {};
+    let USDC, USDCBalance, ETHbalance;
     // // 遍历所有链
     for (let i = 0; i < chains.length; i++) {
         const chain = chains[i];
         const wallet = new ethers.Wallet(pky, new ethers.getDefaultProvider(RPC[chain]));
-        const USDC = await fetchToken(tokenAddresss[chain]['USDC'], wallet);
-        const USDCBalance = await getErc20Balance(wallet, USDC.address);    
-        const ETHbalance = await wallet.getBalance();
+        USDC = await fetchToken(tokenAddresss[chain]['USDC'], wallet);
+        USDCBalance = await getErc20Balance(wallet, USDC.address);    
+        ETHbalance = await wallet.getBalance();
         walletInfo[chain] = { wallet, ETHbalance, USDCBalance, tokenInfo: USDC };
         console.log('chain: ', chain, ' ETHbalance:', fixedToFloat(ETHbalance, 18), 'USDCBalance:', fixedToFloat(USDCBalance, USDC.decimal));
     }
@@ -48,8 +48,8 @@ module.exports = async (params) => {
     if (walletInfo[maxChain].USDCBalance.lte(amount)) {
         console.log('USDC余额不足， 从UniSwap中买入USDC');
         const uniswap = new UniSwap();
-        const WETH = await fetchToken(await uniswap.getWETH9Address(walletInfo[maxChain].wallet), walletInfo[maxChain].tokenInfo.wallet);
-        const tx = await uniswap.swapEthToToken(walletInfo[maxChain].wallet, WETH.address, USDC.address, 500,floatToFixed(0.005, 18));
+        const WETH = await fetchToken(await uniswap.getWETH9Address(walletInfo[maxChain].wallet), walletInfo[maxChain].wallet);
+        const tx = await uniswap.swapEthToToken(walletInfo[maxChain].wallet, WETH.address, USDC.address, 500,floatToFixed(0.0001, 18));
         console.log('买入成功tx:', tx.transactionHash);
     }
 
