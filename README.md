@@ -3,7 +3,10 @@
 # 更新记录
 
 ## 2024/1/8 更新
-- 项目更新： 新增
+- 项目更新： 新增zkBridge、robot项目
+- 新增任务： 新增task23、task104
+   - task23: robot交互：领取抽奖券
+   - task104: zkBridge交互： zkBridge随机跨ETH程序，随机数量为范围内随机。
 
 ## 2024/1/2 更新
 - 项目更新: 新增basilisk、xbank、woofi、Uniswap、harmonybridge、corebridge。
