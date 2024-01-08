@@ -165,3 +165,5 @@ test/
 test/
 logs/
 data/
+
+.DS_Store
