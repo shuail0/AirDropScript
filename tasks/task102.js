@@ -18,7 +18,8 @@ const tokenAddresss = require('../config/tokenAddress.json');
 
 module.exports = async (params) => {
     const { pky } = params;
-    const chains = ['Arbitrum', 'Optimism']; // 配置链信息
+    // const chains = ['Arbitrum', 'Optimism']; // 配置链信息
+    const chains = ['Arbitrum']; // 配置链信息
 
     // // 设定随机的USDC数量
     const minAmount = 0.01  // 最小交易数量
@@ -58,12 +59,12 @@ module.exports = async (params) => {
     await checkApprove(walletInfo[maxChain].wallet, walletInfo[maxChain].tokenInfo.address, coreBridge.contractAddress[maxChain], amount);
 
     let tx;
-    if (maxChain == 'Optimism') {
-        tx = await coreBridge.bridge(walletInfo[maxChain].wallet, maxChain, walletInfo[maxChain].tokenInfo.address, amount);
+    // if (maxChain == 'Optimism') {
+    tx = await coreBridge.bridge(walletInfo[maxChain].wallet, maxChain, walletInfo[maxChain].tokenInfo.address, amount);
 
-    } else {
-        tx = await coreBridge.bridgeERC20(walletInfo[maxChain].wallet, maxChain, walletInfo[maxChain].tokenInfo.address, amount);
-    }
+    // } else {
+    //     tx = await coreBridge.bridgeERC20(walletInfo[maxChain].wallet, maxChain, walletInfo[maxChain].tokenInfo.address, amount);
+    // }
     console.log('跨链成功tx:', tx.transactionHash)
 
 
