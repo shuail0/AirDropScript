@@ -1,8 +1,8 @@
 /**
- * 项目名称：core bridge
- * 项目链接：https://bridge.coredao.org/
- * 项目文档：https://bridge.coredao.org/documentation
- * GitHub：https://github.com/LayerZero-Labs/wrapped-asset-bridge
+ * 项目名称：zkBridge
+ * 项目链接：https://zkbridge.com/token
+ * 项目文档：https://docs.zkbridge.com/
+ * GitHub：
  * 已完成功能： 
  * 
  */
@@ -28,29 +28,23 @@ class zkBridge {
     }
 
     // 预估跨链费用
-    async estimateBridgeFee(wallet, soureChain, useZro = true, adapterParams = '0x') {
-        const bridge = this.getBridgeContract(wallet, contractAddress[soureChain])
-        const bridgeFee = await bridge.estimateBridgeFee(useZro, adapterParams)
-        return bridgeFee.nativeFee.add(bridgeFee.zroFee)
+    async estimateBridgeFee(wallet, soureChain, dstChainId, amount) {
+        const bridge = this.getBridgeContract(wallet, contractAddress[soureChain].contract);
+        const bridgeFee = await bridge.estimateFee(1, dstChainId, amount) // 第一个参数是poolid，这里写死1
+        return bridgeFee;
     }
 
-    // ERC20跨链
-    async bridgeERC20(wallet, soureChain,  tokenAddr, amount) {
-        const bridge = this.getBridgeContract(wallet, contractAddress[soureChain]);
-        const bridgeFee = await this.estimateBridgeFee(wallet, soureChain);
-        const tx = await bridge.bridge(
-            tokenAddr,
+    // ETH跨链
+    async bridgeETH(wallet, soureChain, dstChain, amount) {
+        const bridge = this.getBridgeContract(wallet, contractAddress[soureChain].contract);
+        const bridgeFee = await this.estimateBridgeFee(wallet, soureChain, contractAddress[dstChain].chainId, amount);
+        const tx = await bridge.transferETH(
+            contractAddress[dstChain].chainId,
             amount,
             wallet.address,
-            {
-                refundAddress: wallet.address,
-                zroPaymentAddress: '0x0000000000000000000000000000000000000000'
-            },
-            '0x',
-            {value: bridgeFee}
+            { value: amount.add(bridgeFee) }
         );
         return await tx.wait()
     }
-
 }
 module.exports = zkBridge;
