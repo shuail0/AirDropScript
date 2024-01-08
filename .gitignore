@@ -164,3 +164,4 @@ node_modules
 test/
 test/
 logs/
+data/
