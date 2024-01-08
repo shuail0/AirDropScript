@@ -17,7 +17,7 @@ module.exports = async (params) => {
     const { pky } = params;
     const chains = ['Arbitrum', 'Optimism', 'Base', 'Linea']; // 配置链信息
 
-    const reseveAmount = floatToFixed(0.001, 18); // 保留金额
+    const reseveAmount = floatToFixed(0.0035, 18); // 保留金额
     let walletInfo = {};
     // 遍历所有链
     for (let i = 0; i < chains.length; i++) {
