@@ -38,6 +38,10 @@ module.exports = async (params) => {
     }
     // // 找出余额最多的链
     let maxChain = Object.keys(walletInfo).reduce((a, b) => walletInfo[a].USDCBalance.gte(walletInfo[b].USDCBalance) ? a : b);
+    // 如果余额等于0，选择ETH余额最多的链
+    if (walletInfo[maxChain].USDCBalance.lte(0)) {
+        maxChain = Object.keys(walletInfo).reduce((a, b) => walletInfo[a].ETHbalance.gte(walletInfo[b].ETHbalance) ? a : b);
+    };
     console.log('余额最大链: ', maxChain, ' balance:', fixedToFloat(walletInfo[maxChain].USDCBalance, walletInfo[maxChain].tokenInfo.decimal));
     // // 随机跨链金额
     let amount = floatToFixed(getRandomFloat(minAmount, maxAmount, walletInfo[maxChain].tokenInfo.decimal), walletInfo[maxChain].tokenInfo.decimal);
