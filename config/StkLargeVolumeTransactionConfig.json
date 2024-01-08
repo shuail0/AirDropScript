@@ -1,7 +1,7 @@
 {
     "ethrpc": "https://eth-mainnet.g.alchemy.com/v2/qRnk4QbaEmXJEs5DMnhitC0dSow-qATl",
-    "maxGasPrice": 20,
-    "walletPath": "/Users/lishuai/Documents/crypto/bockchainbot/StkTestWalletData的副本.csv",
+    "maxGasPrice": 50,
+    "walletPath": "/Users/lishuai/Documents/crypto/bockchainbot/AirDropScript/data/stk大额交互模板.csv",
     "CONCURRENCY": 1,
     "minInterval": 0.5,
     "maxInterval": 15
