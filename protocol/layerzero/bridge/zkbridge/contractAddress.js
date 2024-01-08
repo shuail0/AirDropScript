@@ -1,0 +1,16 @@
+module.exports = {
+    "BSC": "",
+    "Ethereum": "",
+    "Avalanche": "",
+    "Optimism": "",
+    "Arbitrum": "0xc9d0b733adaa1f851639ca47a9a2d8a6c8572bdb",
+    "Polygon": "",
+    "COREDAO": "",
+    "Fantom": "",
+    "Metis": "",
+    "Base": "",
+    "Linea": "",
+    "Kava": "",
+    "Mantle": "",
+    "Scroll": "",
+}

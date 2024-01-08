@@ -1,7 +1,7 @@
 const { convertCSVToObjectSync, fixedToFloat, sleep, appendObjectToCSV, saveLog, getRandomFloat, decryptUsingAESGCM } = require('../base/utils');
 const tasks = require('../tasks');
 const ethers = require('ethers');
-const CONFIG = require('../config/LayeZeroRunnerConfig.json');
+const CONFIG = require('../config/LayerZeroRunnerConfig.json');
 const RPC = require('../config/RpcConfig.json');
 const readlineSync = require('readline-sync');
 const fs = require('fs');

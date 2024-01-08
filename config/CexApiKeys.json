@@ -4,9 +4,9 @@
       "secret": "your_binance_api_secret_here"
     },
     "okx": {
-      "apiKey": "your_okx_api_key_here",
-      "secret": "your_okx_api_secret_here",
-      "password": "your_okx_api_password_here"
+      "apiKey": "82f7e7e6-cab9-4f36-9a94-25f27f0f3171",
+      "secret": "0287088C545B8BA082B6D5CD42A513AD",
+      "password": "AAssdd.123"
     },
     "bitget": {
       "apiKey": "your_bitget_api_key_here",

@@ -51,14 +51,14 @@ class Mavrick {
     };
 
 
-    getExactInputSingleCallData(wallet, tokenIn, tokenOut, amount, pool, min) {
+    getExactInputSingleCallData(wallet, tokenIn, tokenOut, amount, pool, min, recipient) {
         const router = this.getRouter(wallet);
         return router.interface.encodeFunctionData('exactInputSingle', [
             [
                 tokenIn,
                 tokenOut,
                 pool,
-                wallet.address,
+                recipient,
                 1e13,
                 amount,
                 min,
@@ -227,20 +227,20 @@ class Mavrick {
 
     async swapEthToToken(wallet, tokenIn, tokenOut, amount, pool, min = ethers.BigNumber.from(0)) {
         const router = this.getRouter(wallet);
-        const callData = this.getExactInputSingleCallData(wallet, tokenIn, tokenOut, amount, pool, min);
+        const callData = this.getExactInputSingleCallData(wallet, tokenIn, tokenOut, amount, pool, min, wallet.address);
         const response = await router.multicall([callData], { value: amount });
         return await response.wait();
     };
     async swapTokenToToken(wallet, tokenIn, tokenOut, amount, pool, min = ethers.BigNumber.from(0)) {
         const router = this.getRouter(wallet);
-        const callData = this.getExactInputSingleCallData(wallet, tokenIn, tokenOut, amount, pool, min);
+        const callData = this.getExactInputSingleCallData(wallet, tokenIn, tokenOut, amount, pool, min, wallet.address);
         const response = await router.multicall([callData]);
         return await response.wait();
     };
 
-    async swapTokenToEth(wallet, tokenIn, tokenOut, amount, pool, min = ethers.BigNumber.from(0)) {
+    async swapTokenToEth(wallet, tokenIn, tokenOut, amount, pool, min = ethers.BigNumber.from(0), ) {
         const router = this.getRouter(wallet);
-        const callData = this.getExactInputSingleCallData(wallet, tokenIn, tokenOut, amount, pool, min);
+        const callData = this.getExactInputSingleCallData(wallet, tokenIn, tokenOut, amount, pool, min, '0x0000000000000000000000000000000000000000');
         const unwrapWETH9CallData = router.interface.encodeFunctionData('unwrapWETH9', [
             floatToFixed(0),
             wallet.address

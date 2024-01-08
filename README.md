@@ -2,6 +2,9 @@
 
 # 更新记录
 
+## 2024/1/8 更新
+- 项目更新： 新增
+
 ## 2024/1/2 更新
 - 项目更新: 新增basilisk、xbank、woofi、Uniswap、harmonybridge、corebridge。
 - 新增任务：增加task20、task21、task22、task36、task37、task38、task102、task10。
