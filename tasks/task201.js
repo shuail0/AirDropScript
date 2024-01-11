@@ -16,7 +16,7 @@ module.exports = async (params) => {
      // 领取奖励
     const claimResult = await robots.claimRaffleRewards(wallet.address);
     console.log(`领取地址: ${wallet.address}`);
-    console.log(`领取结果: ${claimResult["1"]}`);
+    console.log(`领取结果: ${claimResult}`);
 
     // 随机暂停
     const sleepTime = getRandomFloat(1, 2) * 60 * 1000;
