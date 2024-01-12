@@ -2,6 +2,19 @@
 
 # 更新记录
 
+## 2024/1/12 更新
+- 基础功能更新：
+   - 新增签到运行主程序CheckInRunner.js（runner目录下）和配置文件ChekInRunnerConfig.json(config目录下)。
+   - 新增调用合约的基础函数funcs.js (在base目录下)。
+- 新增项目：新增web3go、rebot、qna3、carv四个项目。
+- 新增任务：增加task200、task201、task202、task203、task204。
+   - task200: 签到主要任务，这个任务可以调用其他的签到任务
+   - task201: rebot交互任务，包含领取奖励和领取新的奖券，第一次运行只能领取抽奖券，第二天开始可以领取奖励和奖券
+   - task202: QnA3 签到程序，每天执行签到。同时程序也支持投票需要时可以投票。后续需要claim奖励，奖励只能在BSC网络claim。
+   - task203: web3Go签到， 初次运行需要mint一个pass（程序注释了），后续只需要签到即可
+   - task204: Carv签到， 手工Mint完ID就可以签到，每天可以签到一次，每次签到roin、opBNB、zkSync三条链。
+
+
 ## 2024/1/8 更新
 - 项目更新： 新增zkBridge、robot项目
 - 新增任务： 新增task23、task104
