@@ -1,38 +1,19 @@
 const path = require('path');
 const ethers = require('ethers');
 const { getContract } = require('../../../../base/utils');
-const fakeUa = require('fake-useragent');
-const { url } = require('inspector');
 const axios = require('axios');
+const randomUseragent = require('random-useragent');
+const { HttpsProxyAgent } = require('https-proxy-agent');
 
 
-class web3go {
-    constructor(){
+class Web3Go {
+    constructor(wallet, proxy) {
         this.contractAddr = '0xa4Aff9170C34c0e38Fed74409F5742617d9E80dc';
         this.contractAbi = require('./ABI/reiki.json');
-    }
-    getWeb3goContract(wallet, contractAddr=this.contractAddr, contractAbi=this.contractAbi){
-        return getContract(contractAddr, contractAbi, wallet);
-     }
-
-    async mintPass(wallet){
-        const contract = this.getWeb3goContract(wallet);
-        const params = {
-            gasPrice: await wallet.getGasPrice(),
-            gasLimit: await contract.estimateGas.safeMint(wallet.address)
-        };
-
-        const response = await contract.safeMint(
-            wallet.address,
-            params
-        );
-        return await response.wait();
-    };
-
-    async claim(address){
-        const address = wallet.address;
-        const userAgent = fakeUa();
-        const headers = {
+        this.wallet = wallet;
+        this.agent = new HttpsProxyAgent(proxy);
+        this.baseUrl = 'https://reiki.web3go.xyz';
+        this.headers = {
             'Accept': 'application/json, text/plain, */*',
             'Accept-Language': 'en-US,en;q=0.9,ru-RU;q=0.8,ru;q=0.7',
             'Origin': 'https://reiki.web3go.xyz',
@@ -43,34 +24,66 @@ class web3go {
             'sec-fetch-dest': 'empty',
             'sec-fetch-mode': 'cors',
             'sec-fetch-site': 'same-origin',
-            'user-agent': userAgent,
+            'user-agent': randomUseragent.getRandom(),
         };
-        const axiosConfig = { headers: headers };
-        const nonceResponse = await axios.post('https://reiki.web3go.xyz/api/account/web3/web3_nonce', {
-        address: address
-    }, axiosConfig);
+    }
+
+    getWeb3goContract(contractAddr = this.contractAddr, contractAbi = this.contractAbi) {
+        return getContract(contractAddr, contractAbi, this.wallet);
+     }
+
+    async mintPass() {
+        const contract = this.getWeb3goContract();
+        const params = {
+            gasPrice: await this.wallet.getGasPrice(),
+            gasLimit: await contract.estimateGas.safeMint(this.wallet.address)
+        };
+
+        const response = await contract.safeMint(
+            this.wallet.address,
+            params
+        );
+        return await response.wait();
+    };
+
+    async login() {
+        const nonceResponse = await axios.post(`${this.baseUrl}/api/account/web3/web3_nonce`, {
+            address: this.wallet.address
+        }, { httpAgent: this.agent, httpsAgent: this.agent, headers: this.headers });
 
         const nonce = nonceResponse.data.nonce;
-        const msg = `reiki.web3go.xyz wants you to sign in with your Ethereum account:\n${address}\n\n${nonce}\n\nURI: https://reiki.web3go.xyz\nVersion: 1\nChain ID: 56\nNonce: ${nonce}\nIssued At: ${new Date().toISOString()}`;
-        const signature = await wallet.signMessage(msg);
+        const msg = `reiki.web3go.xyz wants you to sign in with your Ethereum account:\n${this.wallet.address}\n\n${nonce}\n\nURI: https://reiki.web3go.xyz\nVersion: 1\nChain ID: 56\nNonce: ${nonce}\nIssued At: ${new Date().toISOString()}`;
+        const signature = await this.wallet.signMessage(msg);
 
-        const challengeResponse = await axios.post('https://reiki.web3go.xyz/api/account/web3/web3_challenge', {
-            address: address,
+        const challengeResponse = await axios.post(`${this.baseUrl}/api/account/web3/web3_challenge`, {
+            address: this.wallet.address,
             nonce: nonce,
             challenge: JSON.stringify({ msg: msg }),
             signature: signature
-        }, axiosConfig);
+        }, { httpAgent: this.agent, httpsAgent: this.agent, headers: this.headers });
+        this.headers['Authorization'] = `Bearer ${challengeResponse.data.extra.token}`;
+        return challengeResponse
 
-        const token = challengeResponse.data.extra.token;
+    }
+
+    async claim() {
 
         const date = new Date().toISOString().split('T')[0];
-        const checkInResponse = await axios.put(`https://reiki.web3go.xyz/api/checkin?day=${date}`, {}, {
-        headers: { ...axiosConfig.headers, 'Authorization': `Bearer ${token}` }
-    }); 
-        return await checkInResponse.status();
+        const checkInResponse = await axios.put(`${this.baseUrl}/api/checkin?day=${date}`, {},
+            { httpAgent: this.agent, httpsAgent: this.agent, headers: this.headers }
+        );
+        return await checkInResponse.data;
+    }
+
+    // 查询金叶子信息
+    async fetchProfile() {
+        const url = `${this.baseUrl}/api/profile`;
+        const response = await axios.get(url, { httpAgent: this.agent, httpsAgent: this.agent, headers: this.headers });
+        return response.data;
     }
 }
 
 
 
-module.exports = web3go;
+
+module.exports = Web3Go;
