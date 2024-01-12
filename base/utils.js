@@ -190,6 +190,25 @@ const saveLog = (projectName, message) => {
     logger.info(`${currentTime} ${message}`);
   };
 
+    // 将字符串转换为64个字符的十六进制数据
+  function formHexData(string) {
+    // 确保数据是一个字符串
+    if (typeof string !== 'string') {
+        throw new Error('Input must be a string.');
+    }
+    // 如果字符前面有0x，去掉它
+    if (string.startsWith('0x')) {
+        string = string.slice(2);
+    }
+
+    // 如果字符串长度超过 64 个字符，则抛出错误
+    if (string.length > 64) {
+        throw new Error('String length exceeds 64 characters.');
+    }
+
+    // 在字符串前面添加零以达到 64 个字符的长度
+    return '0'.repeat(64 - string.length) + string;
+}
 
 
   function readCSVAndCalculateAverageGas(csvFilePath, numBlocks) {
@@ -266,5 +285,4 @@ async function monitorGasPrices(csvFilePath, numBlocks, sleepInterval) {
 }
 
 
-
-module.exports = { getContract, floatToFixed, fixedToFloat, convertCSVToObjectSync, sleep, getRandomFloat, saveLog, isValidPrivateKey,generateRandomDomain, multiplyBigNumberWithDecimal, getRandomElement, toBeHex, nearestUsableTick, saveObjectToCSV, appendObjectToCSV, decryptUsingAESGCM, monitorGasPrices }
+module.exports = { getContract, floatToFixed, fixedToFloat, convertCSVToObjectSync, sleep, getRandomFloat, saveLog, isValidPrivateKey,generateRandomDomain, multiplyBigNumberWithDecimal, getRandomElement, toBeHex, nearestUsableTick, saveObjectToCSV, appendObjectToCSV, decryptUsingAESGCM, monitorGasPrices, formHexData }
