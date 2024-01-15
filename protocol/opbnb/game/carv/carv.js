@@ -61,23 +61,19 @@ class Carv {
             text: message,
             signature: signature
         };
-        console.log(json_data);
-
         const url = `${this.baseUrl}/protocol/login`;
 
         try {
-            const response = await axios.post(url, json_data, { httpAgent: this.agent, httpsAgent: this.agent, headers: this.headers });
+            const response = await axios.post(url, json_data, { httpAgent: this.agent, httpsAgent: this.agent, headers: this.headers, timeout: 5000 });
             const token = response.data.data.token;
 
             // // 对返回的token进行base64编码
             // 设置请求头
 
             const bearer = "bearer " + Buffer.from(`eoa:${token}`).toString('base64');
-            this.headers = {
-                ...this.headers,
-                'Authorization': bearer,
-                'Content-Type': 'application/json'
-            };
+           
+            this.headers['Authorization'] = bearer,
+            this.headers['Content-Type'] = 'application/json'
             return bearer;
         } catch (error) {
             console.error('Error fetching bearer token:', error.message);
@@ -95,12 +91,12 @@ class Carv {
         };
         const url = `${this.baseUrl}/airdrop/mint/carv_soul`;
         // 发送 POST 请求
-        const response = await axios.post(url, jsonData, { httpAgent: this.agent, httpsAgent: this.agent, headers: this.headers });
+        const response = await axios.post(url, jsonData, { httpAgent: this.agent, httpsAgent: this.agent, headers: this.headers, timeout: 5000 });
         return response.data.data;
     }
 
     // 签到
-    async checkIn( checkInData) {
+    async checkIn(checkInData) {
         const { permit, signature, contract } = checkInData
         const { account, amount, ymd } = permit
         // 构建交易数据
