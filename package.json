@@ -17,7 +17,7 @@
     "@uniswap/v3-sdk": "^3.10.0",
     "axios": "^1.6.2",
     "bignumber.js": "^1.1.0",
-    "ccxt": "^4.1.67",
+    "ccxt": "^4.2.16",
     "crypto": "^1.0.1",
     "ethers": "^5.7.2",
     "fast-csv": "^4.3.6",

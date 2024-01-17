@@ -25,18 +25,18 @@ module.exports = async (params) => {
      const wETH = await fetchToken(wETHAddress, wallet);//又不显示，有什么用呢？或者说怎么使用这里面获得的信息？比如decimal？
      
 
-    // 查询账户WETH余额
+    //查询账户WETH余额
 
-    // const wethBalance = await getBalance(wallet, wETHAddress);
-    // console.log('weth余额：', fixedToFloat(wethBalance,18), '开始检查授权...');
-    // await checkApprove(wallet, wETHAddress, fWethAddr, wethBalance);
+    const wethBalance = await getBalance(wallet, wETHAddress);
+    console.log('weth余额：', fixedToFloat(wethBalance,18), '开始检查授权...');
+    await checkApprove(wallet, wETHAddress, fWethAddr, wethBalance);
 
     
         
-    // let tx = await zkfox.deposit(wallet, wethBalance);
-    // console.log('transaction successful:',tx.transactionHash);
+    let tx = await zkfox.deposit(wallet, wethBalance);
+    console.log('transaction successful:',tx.transactionHash);
 
-    // await sleep(2);
+    await sleep(2);
 
     //查询账户fWeth余额
     const fWethBalance = await getBalance(wallet, zkfox.fWethAddr);
