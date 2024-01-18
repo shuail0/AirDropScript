@@ -2,6 +2,28 @@
 
 # 更新记录
 
+## 2024/1/18 更新
+- 基础功能更新
+   - funcs.js: 新增add10PercentGasPrice函数，用来获取当前gas+10%的函数，方便发送交易时增加gas。
+   - requestHelper.js: 新增sendRequest函数，用于发送网络请求，请求默认设置5秒的timeout。
+- 配置更新：
+   - ChekInRunnerConfig.json ： 更换代理提供商，将代理IP更换为3分钟换一次IP
+- 新增项目： smartlayer
+- 任务调整：
+   - task200: 新增代理检测，如果代理失效暂停3分钟后再重新检测，直至成功. 同时增加任务执行日志功能。
+   - task201: 优化代码
+   - task202: 优化代码
+   - task203: 优化代码
+   - task204: 调整执行逻辑，将Carv任务更改为只做roin网络的签到
+- 新增任务：
+   - task205: Carv opBNB网络签到
+   - task206: Carv zkSync网络签到
+   - task207: smartlayer 任务执行程序
+   - task251: smartlayer获取钱包持有的猫咪，并保存至本地，第一次跑smartlayer需要执行一次，每个钱包只做一次。
+   - task252: web3go mintPass 任务， 第一次跑web3GO 需要先mintPass，每个钱包只做一次。
+   - task253: robot获取抽奖券任务，第一次跑robot需要执行一次，每个钱包只做一次。
+
+
 ## 2024/1/12 更新
 - 基础功能更新：
    - 新增签到运行主程序CheckInRunner.js（runner目录下）和配置文件ChekInRunnerConfig.json(config目录下)。
