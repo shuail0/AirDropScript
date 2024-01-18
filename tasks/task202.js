@@ -13,15 +13,14 @@ const QnA3 = require('../protocol/bsc/ai/qna3/qna3.js');
 
 module.exports = async (params) => {
 
-    const proxy = 'http://sdpxicu7:xIN3wAWiYT9HwnKV@proxy.proxy-cheap.com:31112'
-    const { pky } = params;
+    const { pky, proxy } = params;
     const chain = 'opBNB'
 
     const wallet = new ethers.Wallet(pky, new ethers.getDefaultProvider(RPC[chain]));
 
     const qna3 = new QnA3(wallet, proxy);
     // 登陆
-    await qna3login();
+    await qna3.login();
     // 获取用户信息
     const graphlData = await qna3.fetchGraphqlData();
     if (graphlData.userDetail.checkInStatus.todayCount === 0) {

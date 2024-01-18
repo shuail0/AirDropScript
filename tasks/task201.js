@@ -26,7 +26,7 @@ module.exports = async (params) => {
         console.log('领取失败：', error);
 
     }
-
+    
     // 随机暂停
     const sleepTime = getRandomFloat(1, 2) * 60 * 1000;
     console.log('随机暂停：', sleepTime / 1000, '秒');
