@@ -15,6 +15,7 @@ const contractAddress = require('./contractAddress.js');
 const randomUseragent = require('random-useragent');
 const { HttpsProxyAgent } = require('https-proxy-agent');
 const axios = require('axios');
+const {sendRequest} = require('../../../../base/requestHelper');
 
 
 
@@ -56,18 +57,18 @@ class QnA3 {
             'signature': this.signature
         };
         const url = `${this.baseUrl}/api/v2/auth/login?via=wallet`;
-        try {
-            // 发送 POST 请求
-            const response = await axios.post(url, jsonData, { httpAgent: this.agent, httpsAgent: this.agent, headers: this.headers });
+        const config = {
+            httpAgent: this.agent,
+            httpsAgent: this.agent,
+            headers: this.headers,
+            method: 'post',
+            data: jsonData
+        };
 
-            this.headers['Authorization'] = `bearer ${response.data.data.accessToken}`;
-            return response.data.data;
+        const response = await sendRequest(url, config);
+        this.headers['Authorization'] = `bearer ${response.data.accessToken}`;
+        return response.data;
 
-        } catch (error) {
-            console.log('login error: ', error);
-
-            return null;
-        }
     }
 
     // 签到
@@ -87,8 +88,15 @@ class QnA3 {
         }
         const url = `${this.baseUrl}/api/v2/my/check-in`;
 
-        const response = await axios.post(url, jsonData, { httpAgent: this.agent, httpsAgent: this.agent, headers: this.headers });
+        const config = {
+            httpAgent: this.agent,
+            httpsAgent: this.agent,
+            headers: this.headers,
+            method: 'post',
+            data: jsonData
+        };
 
+        const response = await sendRequest(url, config);
         return response.data;
 
 
@@ -107,24 +115,31 @@ class QnA3 {
             "txHash": transactionInfo.transactionHash
         };
         const url = `${this.baseUrl}/api/v2/activity/vote`;
+        const config = {
+            httpAgent: this.agent,
+            httpsAgent: this.agent,
+            headers: this.headers,
+            method: 'post',
+            data: jsonData
+        };
 
-        try {
-            // 发送 POST 请求
-            const response = await axios.post(url, jsonData, { httpAgent: this.agent, httpsAgent: this.agent, headers: this.headers });
-            return response.data.data;
-
-        } catch (error) {
-            console.log('cvote error: ', error);
-            return null;
-        }
+        const response = await sendRequest(url, config);
+        return response.data.data;
     }
 
     async claim() {
         let url = `${this.baseUrl}/api/v2/my/claim-all`;
         let claimData
         try {
-            // 发送 POST 请求
-            const response = await axios.post(url, {}, { httpAgent: this.agent, httpsAgent: this.agent, headers: this.headers });
+            const config = {
+                httpAgent: this.agent,
+                httpsAgent: this.agent,
+                headers: this.headers,
+                method: 'post',
+                data: {}
+            };
+
+            const response = await sendRequest(url, config);
             claimData = response.data.data
         } catch (error) {
             console.log('claim-all error: ', error);
@@ -146,17 +161,18 @@ class QnA3 {
         const jsonData = {
             "hash": tx.transactionHash
         }
-        try {
-            // 发送 POST 请求
-            const response = await axios.post(url, jsonData, { httpAgent: this.agent, httpsAgent: this.agent, headers: this.headers });
-            const responseData = response.data
-            console.log(responseData)
-            return responseData;
 
-        } catch (error) {
-            console.log('claim error: ', error.data);
-            return null;
-        }
+        const config = {
+            httpAgent: this.agent,
+            httpsAgent: this.agent,
+            headers: this.headers,
+            method: 'post',
+            data: jsonData
+        };
+
+        const response = await sendRequest(url, config);
+        const responseData = response.data
+        return responseData;
 
 
     }
@@ -174,17 +190,18 @@ class QnA3 {
         }
         const url = `${this.baseUrl}/api/v2/graphql`;
 
-        try {
-            // 发送 POST 请求
-            const response = await axios.post(url, jsonData, { httpAgent: this.agent, httpsAgent: this.agent, headers: this.headers });
-            // console.log(response.data.data);
-            return response.data.data;
 
-        } catch (error) {
-            console.log('get graphql error: ', error);
+        const config = {
+            httpAgent: this.agent,
+            httpsAgent: this.agent,
+            headers: this.headers,
+            method: 'post',
+            data: jsonData
+        };
 
-            return null;
-        }
+        const response = await sendRequest(url, config);
+        return response.data.data;
+
 
     }
 

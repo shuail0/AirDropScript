@@ -11,6 +11,7 @@ const { transferETHWithData } = require('../../../../base/funcs');
 const axios = require('axios');
 const randomUseragent = require('random-useragent');
 const { HttpsProxyAgent } = require('https-proxy-agent');
+const { sendRequest } = require('../../../../base/requestHelper');
 
 
 function formHexData(string) {
@@ -63,37 +64,40 @@ class Carv {
         };
         const url = `${this.baseUrl}/protocol/login`;
 
-        try {
-            const response = await axios.post(url, json_data, { httpAgent: this.agent, httpsAgent: this.agent, headers: this.headers, timeout: 5000 });
-            const token = response.data.data.token;
-
-            // // 对返回的token进行base64编码
-            // 设置请求头
-
-            const bearer = "bearer " + Buffer.from(`eoa:${token}`).toString('base64');
-           
-            this.headers['Authorization'] = bearer,
-            this.headers['Content-Type'] = 'application/json'
-            return bearer;
-        } catch (error) {
-            console.error('Error fetching bearer token:', error.message);
-            return null;
-        }
-
+        const config = {
+            httpAgent: this.agent,
+            httpsAgent: this.agent,
+            headers: this.headers,
+            method: 'post',
+            data: json_data
+        };
+        const response = await sendRequest(url, config);
+        const token = response.data.token;
+        const bearer = "bearer " + Buffer.from(`eoa:${token}`).toString('base64');
+        this.headers['Authorization'] = bearer;
+        this.headers['Content-Type'] = 'application/json';
+        return bearer;
     }
 
 
     // 请求可以领取的数量和合约地址
     async fetchAmountData(chainId) {
-        // 请求的 JSON 数据
         const jsonData = {
             'chain_id': chainId,
         };
         const url = `${this.baseUrl}/airdrop/mint/carv_soul`;
-        // 发送 POST 请求
-        const response = await axios.post(url, jsonData, { httpAgent: this.agent, httpsAgent: this.agent, headers: this.headers, timeout: 5000 });
-        return response.data.data;
+
+        const config = {
+            httpAgent: this.agent,
+            httpsAgent: this.agent,
+            headers: this.headers,
+            method: 'post',
+            data: jsonData
+        };
+        const response = await sendRequest(url, config);
+        return response.data;
     }
+
 
     // 签到
     async checkIn(checkInData) {
