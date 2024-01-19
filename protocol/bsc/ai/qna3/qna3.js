@@ -1,22 +1,10 @@
-/**
- * 项目名称：QnA3 AI
- * 项目链接：https://qna3.ai/
- * 项目文档：
- * GitHub：
- * 已完成功能： 签到
- * 
- */
-
-const path = require('path');
-const ethers = require('ethers');
-const { toBeHex, convertCSVToObjectSync, getContract, floatToFixed, multiplyBigNumberWithDecimal, fixedToFloat, formHexData } = require('../../../../base/utils');
+const { toBeHex, getContract, formHexData, sleep } = require('../../../../base/utils');
 const { transferETHWithData } = require('../../../../base/funcs');
 const contractAddress = require('./contractAddress.js');
 const randomUseragent = require('random-useragent');
 const { HttpsProxyAgent } = require('https-proxy-agent');
-const axios = require('axios');
-const {sendRequest} = require('../../../../base/requestHelper');
-
+const { sendRequest } = require('../../../../base/requestHelper');
+const { createTask, getTaskResult } = require('../../../../base/yesCaptCha/yescaptcha.js');
 
 
 
@@ -26,11 +14,11 @@ class QnA3 {
         this.name = 'qna3';
         this.contractAddress = contractAddress;
         this.wallet = wallet;
-
-
         this.checkinContractAbi = require('./abi/qna3.json');
         this.baseUrl = 'https://api.qna3.ai';
         this.agent = new HttpsProxyAgent(proxy);
+        this.websiteKey = '6Lcq80spAAAAADGCu_fvSx3EG46UubsLeaXczBat';
+        this.websiteUrl = 'https://qna3.ai/vote';
         this.headers = {
             'authority': 'api.qna3.ai',
             'accept': 'application/json, text/plain, */*',
@@ -47,12 +35,30 @@ class QnA3 {
     getCheckinContract(chain) {
         return getContract(this.contractAddress[chain], this.checkinContractAbi, this.wallet)
     }
+    async recaptcha(pageAction) {
+        const {taskId} = await createTask(this.websiteUrl, this.websiteKey, 'RecaptchaV3TaskProxyless', pageAction);
+        let result = await getTaskResult(taskId);
+        // 如果result为空，等待0.3分钟后再次请求
+        if (!result) {
+            await sleep(0.3);
+            result = await getTaskResult(taskId);
+        }
+        // 如果再次为空，抛出错误
+        if (!result) {
+            throw new Error(`${pageAction} 人机验证失败`);
+        }
+        const { gRecaptchaResponse } = result.solution
+        return gRecaptchaResponse
+
+
+    }
 
     async login() {
-
+        const gRecaptchaResponse = await this.recaptcha('login');
         const message = 'AI + DYOR = Ultimate Answer to Unlock Web3 Universe';
         this.signature = await this.wallet.signMessage(message);
         const jsonData = {
+            'recaptcha': gRecaptchaResponse,
             'wallet_address': this.wallet.address,
             'signature': this.signature
         };
@@ -73,13 +79,14 @@ class QnA3 {
 
     // 签到
     async checkIn(chain) {
-
+        // const gRecaptchaResponse = await this.recaptcha('checkin');
         const checkinContract = this.getCheckinContract(chain);
         const tx = await checkinContract.checkIn(1);
         const transactionInfo = await tx.wait();
 
         const jsonData = {
             "hash": transactionInfo.transactionHash,
+            // "recaptcha": gRecaptchaResponse,
             "via": chain.toLowerCase()
         };
 
@@ -97,9 +104,7 @@ class QnA3 {
         };
 
         const response = await sendRequest(url, config);
-        return response.data;
-
-
+        return response;
     }
 
     // 投票
@@ -180,7 +185,55 @@ class QnA3 {
     // 获取用户信息
     async fetchGraphqlData() {
         const jsonData = {
-            'query': `query loadUserDetail($cursored: CursoredRequestInput!) {\n  userDetail {\n    checkInStatus {\n      checkInDays\n      todayCount\n    }\n    credit\n    creditHistories(cursored: $cursored) {\n      cursorInfo {\n        endCursor\n        hasNextPage\n      }\n      items {\n        claimed\n        extra\n        id\n        score\n        signDay\n        signInId\n        txHash\n        typ\n      }\n      total\n    }\n    invitation {\n      code\n      inviteeCount\n      leftCount\n    }\n    origin {\n      email\n      id\n      internalAddress\n      userWalletAddress\n    }\n    externalCredit\n    voteHistoryOfCurrentActivity {\n      created_at\n      query\n    }\n    ambassadorProgram {\n      bonus\n      claimed\n      family {\n        checkedInUsers\n        totalUsers\n      }\n    }\n  }\n}`,
+            'query': `query loadUserDetail($cursored: CursoredRequestInput!) {
+                userDetail {
+                  checkInStatus {
+                    checkInDays
+                    todayCount
+                  }
+                  credit
+                  creditHistories(cursored: $cursored) {
+                    cursorInfo {
+                      endCursor
+                      hasNextPage
+                    }
+                    items {
+                      claimed
+                      extra
+                      id
+                      score
+                      signDay
+                      signInId
+                      txHash
+                      typ
+                    }
+                    total
+                  }
+                  invitation {
+                    code
+                    inviteeCount
+                    leftCount
+                  }
+                  origin {
+                    email
+                    id
+                    internalAddress
+                    userWalletAddress
+                  }
+                  voteHistoryOfCurrentActivity {
+                    created_at
+                    query
+                  }
+                  ambassadorProgram {
+                    bonus
+                    claimed
+                    family {
+                      checkedInUsers
+                      totalUsers
+                    }
+                  }
+                }
+              }`,
             'variables': {
                 "cursored": {
                     "after": "",
