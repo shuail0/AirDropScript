@@ -46,23 +46,25 @@ module.exports = async (params) => {
     const { proxy } = params;
     agent = new HttpsProxyAgent(proxy);
 
-    while (true) {
-        console.log('开始测试代理...');
-        try {
-            const reponose = await sendRequest('https://myip.ipip.net', { method: 'get', httpAgent: agent, httpsAgent: agent })
-            console.log('验证成功, ',reponose);
-            break;
-        } catch (error) {
-            console.log('代理失效，等待3分钟后重新验证' )
-            await sleep(3);
 
-        }
-
-    }
     
     // 遍历执行任务
     let taskTag, nowTime;
     for (let i = 0; i < shuffleTaskList.length; i++) {
+        while (true) {
+
+            console.log('开始测试代理...');
+            try {
+                const reponose = await sendRequest('https://myip.ipip.net', { method: 'get', httpAgent: agent, httpsAgent: agent })
+                console.log('验证成功, ',reponose);
+                break;
+            } catch (error) {
+                console.log('代理失效，等待1分钟后重新验证' )
+                await sleep(1);
+    
+            }
+    
+        }
         try {
             taskTag = shuffleTaskList[i];
             // 打印任务标签
@@ -76,7 +78,7 @@ module.exports = async (params) => {
             await appendObjectToCSV({ nowTime, ...params, taskTag: taskTag, error: error }, '../logs/ChekinSubTaskFail.csv')
         }
         // 随机休息5秒钟
-        const interval = getRandomFloat(0.1, 0.2);
+        const interval = getRandomFloat(1, 2);
         console.log(`随机暂停${interval}分钟`);
         await sleep(interval);
     };
