@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-async function sendRequest(url, config, timeout = 5000) {
+async function sendRequest(url, config, timeout = 10000) {
     const source = axios.CancelToken.source();
     const timer = setTimeout(() => {
         source.cancel(`Request timed out after ${timeout} ms`);
