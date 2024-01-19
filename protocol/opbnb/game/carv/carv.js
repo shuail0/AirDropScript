@@ -112,6 +112,32 @@ class Carv {
         return await transferETHWithData(this.wallet, contract, transactionData);
     }
 
+    A() {
+        const t = Date.now() * Math.pow(10, 3)
+          , e = Math.floor(Math.random() * Math.pow(10, 3));
+        return t + e
+    }
+
+    async getSmartAccount() {
+        const id = this.A();
+        const params = {
+            "method": "particle_aa_getSmartAccount",
+            "params": [
+                {
+                    "name": "BICONOMY",
+                    "version": "2.0.0",
+                    "ownerAddress": this.wallet.address
+                }
+            ],
+            "id": id,
+            "jsonrpc": "2.0"
+        }
+        const url = 'https://rpc.particle.network/evm-chain?method=particle_aa_getSmartAccount&chainId=204&projectUuid=64c673d8-30bd-4e02-8be4-f9c5531a79a5&projectKey=cwTncilkSkASDvXWHC6LAfj3UnJOSb0vWmdXmS9C'
+        const response = await axios.post(url, params);
+        return response.data;
+
+    }
+
 }
 
 module.exports = Carv;
