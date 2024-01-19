@@ -6,6 +6,7 @@
 const ethers = require("ethers");
 const RPC = require('../config/RpcConfig.json');
 const Carv = require('../protocol/opbnb/game/carv/carv.js');
+const { sleep } = require("../base/utils.js");
 
 module.exports = async (params) => {
     const { pky, proxy } = params;
@@ -13,6 +14,8 @@ module.exports = async (params) => {
 
     // 登陆
     const carv = new Carv(wallet, proxy);
+    await carv.login();
+    sleep(0.1);
     chainId = 2020;
     console.log('开始获取签到，chainId: ', chainId, '网络: Roin');
     const data = await carv.fetchAmountData(chainId);
