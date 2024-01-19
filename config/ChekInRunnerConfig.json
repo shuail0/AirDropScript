@@ -1,8 +1,8 @@
 {
     "maxGasPrice": 100,
-    "walletPath": "/Users/lishuai/Documents/crypto/bockchainbot/AccountScript/output/test.csv",
-    "proxy": "http://wrtest66781-sess_n17rca36mhxd_3+eu:AsdBBcDtRERy@107.152.46.223:36100",
-    "CONCURRENCY": 2,
-    "minInterval": 1,
-    "maxInterval": 1.5
+    "walletPath": "/Users/lishuai/Documents/crypto/bockchainbot/AccountScript/output/carv.csv",
+    "proxy": "http://wrtest66781-sess_x9p4s3katpxa_1+eu:AsdBBcDtRERy@185.165.190.32:36100",
+    "CONCURRENCY": 1,
+    "minInterval": 0.1,
+    "maxInterval": 0.5
 }
