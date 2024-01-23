@@ -1,14 +1,10 @@
-/*
-    robots交互程序
-        1. 领取前一天的奖励
-
-*/
+/**
+ * task253: robot获取抽奖券任务，初次执行需要执行一次，后续无需执行。
+ */
 
 const Robots = require('../protocol/zksync/game/robot/robots.js');
 const ethers = require('ethers');
 const RPC = require('../config/RpcConfig.json');
-const { getRandomFloat, sleep } = require('../base/utils.js');
-
 
 module.exports = async (params) => {
 
@@ -17,20 +13,6 @@ module.exports = async (params) => {
     const wallet = new ethers.Wallet(pky, new ethers.getDefaultProvider(RPC[chain]));
 
     const robots = new Robots(wallet, proxy);
-    // 领取奖励
-    console.log('开始领取奖励');
-    try {
-        const claimResult = await robots.claimRaffleRewards();
-        console.log('领取结果：', claimResult);
-    } catch (error) {
-        console.log('领取失败：', error);
-
-    }
-
-    // 随机暂停
-    const sleepTime = getRandomFloat(1, 2) * 60 * 1000;
-    console.log('随机暂停：', sleepTime / 1000, '秒');
-    await new Promise((resolve) => setTimeout(resolve, sleepTime));
 
     // 获取抽奖券
     console.log('开始获取抽奖券');

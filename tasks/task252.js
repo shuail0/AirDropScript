@@ -6,10 +6,7 @@
 const Web3Go = require('../protocol/bsc/ai/web3go/web3go.js');
 const ethers = require('ethers');
 const {getRandomFloat, sleep } = require('../base/utils.js');
-const rpc = require('../config/RpcConfig.json');
-const { getContract } = require('../base/utils');
 const RPC = require('../config/RpcConfig.json');
-
 module.exports = async (params) => {
 
     const { pky, proxy } = params;
@@ -18,10 +15,10 @@ module.exports = async (params) => {
 
     const web3go = new Web3Go(wallet, proxy); 
     // 登陆
-    confirm.log('开始登陆');
+    console.log('开始登陆');
     await web3go.login();
     const sleepTime = getRandomFloat(0.1, 0.2);
-    await sleep();
+    await sleep(sleepTime);
     
     //  mintPass，只做一次，所有地址跑完之后注释掉mint程序
     console.log('开始mintPass');
