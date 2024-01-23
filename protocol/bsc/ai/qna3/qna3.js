@@ -54,11 +54,11 @@ class QnA3 {
     }
 
     async login() {
-        const gRecaptchaResponse = await this.recaptcha('login');
+        // const gRecaptchaResponse = await this.recaptcha('login');
         const message = 'AI + DYOR = Ultimate Answer to Unlock Web3 Universe';
         this.signature = await this.wallet.signMessage(message);
         const jsonData = {
-            'recaptcha': gRecaptchaResponse,
+            // 'recaptcha': gRecaptchaResponse,
             'wallet_address': this.wallet.address,
             'signature': this.signature
         };
