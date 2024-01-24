@@ -28,9 +28,9 @@ module.exports = async (params) => {
     }
     
     // 随机暂停
-    const sleepTime = getRandomFloat(1, 2) * 60 * 1000;
-    console.log('随机暂停：', sleepTime / 1000, '秒');
-    await new Promise((resolve) => setTimeout(resolve, sleepTime));
+    const sleepTime = getRandomFloat(0.1, 0.2)
+    console.log('随机暂停：', sleepTime, '分钟');
+    await sleep(sleepTime);
 
     // 获取抽奖券
     console.log('开始获取抽奖券');

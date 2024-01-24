@@ -36,7 +36,9 @@ function shuffleArray(array) {
 
 module.exports = async (params) => {
 
-    const taskList = [201, 202, 203, 204, 205, 206, 207];
+    const taskList = [201, 202, 203, 204, 205, 206];
+    // // const taskList = [204, 205, 206];
+    // const taskList = [203];
 
     const shuffleTaskList = shuffleArray(taskList)
     // 打印任务列表
@@ -47,7 +49,7 @@ module.exports = async (params) => {
     agent = new HttpsProxyAgent(proxy);
 
 
-    
+
     // 遍历执行任务
     let taskTag, nowTime;
     for (let i = 0; i < shuffleTaskList.length; i++) {
@@ -56,14 +58,14 @@ module.exports = async (params) => {
             console.log('开始测试代理...');
             try {
                 const reponose = await sendRequest('https://myip.ipip.net', { method: 'get', httpAgent: agent, httpsAgent: agent })
-                console.log('验证成功, ',reponose);
+                console.log('验证成功, ', reponose);
                 break;
             } catch (error) {
-                console.log('代理失效，等待1分钟后重新验证' )
+                console.log('代理失效，等待1分钟后重新验证')
                 await sleep(1);
-    
+
             }
-    
+
         }
         try {
             taskTag = shuffleTaskList[i];
@@ -73,12 +75,18 @@ module.exports = async (params) => {
             nowTime = new Date().toLocaleString();
             await appendObjectToCSV({ nowTime, ...params, taskTag: taskTag }, '../logs/ChekinSubTaskSucess.csv')
         } catch (error) {
-            nowTime = new Date().toLocaleString();
-
-            await appendObjectToCSV({ nowTime, ...params, taskTag: taskTag, error: error }, '../logs/ChekinSubTaskFail.csv')
+            // 如果是因为超时导致失败，等待1分钟后重新执行
+            if (error.message.includes('Request timed out') || error.message.includes('ssl3_get_record:wrong')) {
+                console.log('代理失效，等待1分钟后重新执行');
+                await sleep(1);
+                i--;
+            } else {
+                nowTime = new Date().toLocaleString();
+                await appendObjectToCSV({ nowTime, ...params, taskTag: taskTag, error: error }, '../logs/ChekinSubTaskFail.csv')
+            }
         }
         // 随机休息5秒钟
-        const interval = getRandomFloat(1, 2);
+        const interval = getRandomFloat(0.1, 0.2);
         console.log(`随机暂停${interval}分钟`);
         await sleep(interval);
     };
