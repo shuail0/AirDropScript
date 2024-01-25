@@ -2,6 +2,15 @@
 
 # 更新记录
 
+## 2024/1/25 更新
+- 基础功能更新：
+   - 新增smart layer执行主程序SmartLayerRunner.js（runner目录下）和配置文件SmartLayerConfig.json(config目录下)，SmartLayerRunner执行主程序会循环执行6次任务操作，每轮账户执行完毕后休息20分钟再次执行下一轮操作。
+- 新增项目： berachain领水。
+- 任务调整：
+   - task207: 增加猫咪升级检查，如果猫咪可以升级，则会自动执行升级。
+- 新增任务：
+   - task254: berachain领水任务。
+   
 ## 2024/1/18 更新
 - 基础功能更新
    - funcs.js: 新增add10PercentGasPrice函数，用来获取当前gas+10%的函数，方便发送交易时增加gas。
