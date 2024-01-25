@@ -119,6 +119,14 @@ class SmartLayer {
         const contract = this.getSmartCatContract();
         return await contract.canLevelUp(catId);
     }
+    // 升级猫咪
+    async leverlUp(catId) {
+        const contract = this.getSmartCatContract();
+        // 增加10%的gasPrice
+        const gasPriceWith10Percent = await add10PercentGasPrice(this.wallet);
+        const response = await contract.levelUp(catId,  { gasPrice: gasPriceWith10Percent });
+        return await response.wait()
+    }
 
     // getLevel
     async getLevel(catId) {
