@@ -193,9 +193,7 @@ class UniSwap {
 
     async swapEthToToken(wallet, tokenIn, tokenOut, fee, amountIn) {
         const router = this.getSwapRouterV3Contract(wallet);
-
         const swapCallData = this.getExactInputSingleCallData(wallet, tokenIn, tokenOut, fee, amountIn, wallet.address);
-        console.log(swapCallData);
         // 预估交易费用
         const gasEstimate = await router.estimateGas.multicall([swapCallData], { value: amountIn });
         const gasPrice = await wallet.provider.getGasPrice();
