@@ -16,7 +16,7 @@ module.exports = async (params) => {
     const carv = new Carv(wallet, proxy);
     await carv.login();
     sleep(0.1);
-    chainId = 2020;
+    const chainId = 2020;
     console.log('开始获取签到，chainId: ', chainId, '网络: Roin');
     const data = await carv.fetchAmountData(chainId);
     console.log('签到成功，chainId: ', data);

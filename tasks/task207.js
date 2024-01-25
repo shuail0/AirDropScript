@@ -27,7 +27,16 @@ module.exports = async (params) => {
         for (catInfo of getCats) {
             // 获取猫咪id
             const catId = catInfo.tokenId;
-
+            // 检查是不是可以升级
+            console.log('检查是不是可以升级');
+            const canLevelUp = await smartLayer.canLevelUp(catId);
+            console.log('检查成功，当前状态:', canLevelUp);
+            if (canLevelUp) {
+                // 升级
+                console.log('开始升级');
+                const levelUpResult = await smartLayer.leverlUp(catId);
+                console.log('levelUpResult:', levelUpResult);
+            }
             // 检查是不是可以喂猫
             console.log('检查是不是可以喂猫');
             const canFeedCat = await smartLayer.canFeedCat(catId);
