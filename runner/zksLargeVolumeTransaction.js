@@ -70,11 +70,7 @@ const executeTask = async (taskTag, params) => {
 (async () => {
   console.log("开始循环...");
   for (wt of walletData) {
-    // await checkGasPrice(); // 固定最大gas
-    // 循环获取gas
-    const csvFilePath = "../data/gasPrices.csv";
-    // 调用函数并传入参数
-    await monitorGasPrices(csvFilePath, 4000, 0.1);
+    await checkGasPrice(); // 固定最大gas
 
     const pky = decryptUsingAESGCM(wt.a, wt.e, wt.i, wt.s, pwd);
     wt.wallet = new Wallet(pky, provider, ethereumProvider);
