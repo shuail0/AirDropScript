@@ -22,8 +22,8 @@ module.exports = async (params) => {
     const ETH = await fetchToken(coinAddress.ETH, account);
     const USDC = await fetchToken(coinAddress.USDC, account);
     // // 查询账户余额
-    // const randomAmount = getRandomFloat(1, 3);
-    ETH.amount = floatToFixed(0.0001) // 预留0.02ETH作为gas费
+    const randomAmount = getRandomFloat(0.0001, 0.0003);
+    ETH.amount = floatToFixed(randomAmount, 18) // 预留0.02ETH作为gas费
     USDC.amount = floatToFixed(0);
 
     const ekubo = new Ekubo();
