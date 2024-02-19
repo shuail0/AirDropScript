@@ -1,43 +1,50 @@
 /**
- * tasks200: 签到项目任务控制程序
- * 1. 遍历执行列表中的钱都任务
- * 2. 每个任务执行完毕后，随机休息0.1-0.2分钟
- * 3. 任务执行完毕后，切换账户
- * 注意： 
- *  - tasks201 首次执行只能先领取抽奖券，第二天再开始领奖励
- *  - task202 后面需要claim积分，需要时再开启，积分只能在BSC领取
- *  - task203 初次运行需要先mintPass，只做一次，所有地址跑完之后注释掉mint程序
- *  - task204 手动mintId后再开始跑程序
- * 
+ * tasks61: stk钱包余额查询
+ *  查询账户资产，程序按照tokens数组中的token进行查询，。
+ *  查询结果将会以csv文件的形式保存在data文件夹下。
  * 
  */
 
 
 const tasks = require('.');
-const { sleep, getRandomFloat, appendObjectToCSV, fixedToFloat } = require('../base/utils');
+const { appendObjectToCSV, fixedToFloat } = require('../base/utils');
 const { fetchToken, getBalance } = require('../base/coin/stkToken');
+const { getTransactionsList } = require('../protocol/starknet/other/voyager/voyager')
 
 const coinAddress = require('../config/tokenAddress.json').starkNet
 
 module.exports = async (params) => {
     const { Wallet, Address, account } = params;
 
-    const tokens = ['ETH'];
+    const tokens = ['ETH']; // 查询的token名称列表
 
-    const BalanceInfo = { Wallet, Address }
-
-
-    // 遍历tokens
-    for (let j = 0; j < tokens.length; j++) {
-        // 获取token
-        const token = await fetchToken(coinAddress[tokens[j]], account);
+    const AccountInfo = { Wallet, Address }
+    // // 查询余额
+    let balancePromises = tokens.map(async (tokenSymbol) => {
+        const token = await fetchToken(coinAddress[tokenSymbol], account);
         const tokenBalance = await getBalance(account, token.address);
-        console.log('余额查询成功：', token['symbol'], '余额：', fixedToFloat(tokenBalance, token.decimal));
-        BalanceInfo[token.symbol] = fixedToFloat(tokenBalance, token.decimal);
-    }
-    console.log(BalanceInfo)
+        return {
+            symbol: token.symbol,
+            balance: fixedToFloat(tokenBalance, token.decimal)
+        };
+    });
+    
+    let balances = await Promise.all(balancePromises);
+    
+    balances.forEach(balanceInfo => {
+        AccountInfo[balanceInfo.symbol] = balanceInfo.balance;
+    });
 
-    await appendObjectToCSV(BalanceInfo, '../data/stkBalances.csv')
+    // 查询交易记录
+    const transactions = await getTransactionsList(Address);
+    // 求transactions的列表中的actual_fee字段的和
+    const gasFee = transactions.reduce((acc, cur) => {
+        return acc + cur.actual_fee;
+    }, 0);
+    AccountInfo.txCount = transactions.length;
+    AccountInfo.usedGasFee = gasFee;    
+
+    await appendObjectToCSV(AccountInfo, '../data/stkBalances.csv')
 
 };
 
