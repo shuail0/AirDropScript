@@ -2,9 +2,11 @@
 
 # 更新记录
 ## 2024/2/19 更新
-- 新增项目： voyager查询账户交易历史
+- 新增项目： voyager查询账户交易历史、staraknet领取空投合约
 - 新增任务： 
    - task61： starknet 查询指定Token的余额、tx数量、花费的GAS(ETH)任务，在代码中的tokens变量设置要查询的token名称（直接增加列表），执行前先检查config/tokenAddres.json文件的starkNet字段有没有要查询的token地址，如果没有需要手动添加。查询结果保存在data目录下的stkBalances.csv文件中。
+   - task62：stk空投数量cha查询，查询完成后将结果保存在data/stkAirdropInfo.csv文件中。
+   - task63：stk空投claime程序,需要用tasks62的查询结果执行作为执行账户。
 
 ## 2024/1/25 更新
 - 基础功能更新：
