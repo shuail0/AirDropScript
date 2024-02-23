@@ -1,6 +1,12 @@
 # AirDropScript
 
 # 更新记录
+
+## 2024/2/23 更新
+- 新增项目： zksync和Ethereum网络余额、tx、消耗gas查询，查询任务使用LayerZero任务执行程序`LayerZeroRunner.js`执行。
+- 新增任务：
+   - task301: zksync网络余额和查询指定Token的余额、tx数量、花费的GAS(ETH)任务，在代码中的tokens变量设置要查询的token名称（直接增加列表），执行前先检查config/tokenAddres.json文件的zkSync字段有没有要查询的token地址，如果没有需要手动添加。查询结果保存在data目录下的zkSyncBalances.csv文件中。
+   - task302: Ethereum网络余额和查询指定Token的余额、tx数量、花费的GAS(ETH)任务，在代码中的tokens变量设置要查询的token名称（直接增加列表），执行前先检查config/tokenAddres.json文件的zkSync字段有没有要查询的token地址，如果没有需要手动添加。网站接口返回的GAS消耗比浏览器查看到的低，这个GAS消耗只能作为参考。查询结果保存在data目录下的zkSyncBalances.csv文件中。 查询时需要打开ClashX的增强模式。
 ## 2024/2/19 更新
 - 新增项目： voyager查询账户交易历史、staraknet领取空投合约
 - 新增任务： 
