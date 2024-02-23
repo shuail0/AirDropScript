@@ -21,8 +21,15 @@ module.exports = async (params) => {
     const wallet = new ethers.Wallet(pky, new ethers.getDefaultProvider(RPC[chain]));
 
     const smartLayer = new SmartLayer(wallet);
-    const airdropAmount = await smartLayer.qureyAirdrop();
-    const airdropInfo = {Wallet, Address: wallet.address, Amount: airdropAmount};
-    console.log(airdropInfo);
-    await appendObjectToCSV(airdropInfo, `../data/SmartLayerAirdropInfo.csv`)
+    try {
+        const airdropAmount = await smartLayer.qureyAirdrop();
+        const airdropInfo = {Wallet, Address: wallet.address, Amount: airdropAmount};
+        console.log(airdropInfo);
+        await appendObjectToCSV(airdropInfo, `../data/SmartLayerAirdropInfo.csv`)
+    } catch (error) {
+        const airdropError = {Wallet, Address: wallet.address, Error: error};
+        console.log(airdropError);
+        await appendObjectToCSV(airdropInfo, `../data/SmartLayerAirdropError.csv`)
+    }
+
 }
