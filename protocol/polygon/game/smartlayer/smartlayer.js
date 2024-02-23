@@ -146,7 +146,21 @@ class SmartLayer {
         return await contract.getPlayInvitesList(catId);
     }
 
+    async qureyAirdrop(){
+        const url = `https://backend.smartlayer.network/airdrop/homebrew-eligibility?address=${this.wallet.address}&withProof=true`;
+        const headers = {
+            'User-Agent': randomUseragent.getRandom()
+        };
+        const response = await axios.get(url, { headers: headers });
+        if (response.data.eligible) {
+            const amount = response.data.details.amount;
+            return amount / 10 ** 18;
+        } else {
+            return 0;
+        }
+        
+    }
+
 
 }
-
 module.exports = SmartLayer;
