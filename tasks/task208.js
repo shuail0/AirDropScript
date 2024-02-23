@@ -8,7 +8,7 @@
 
 const SmartLayer = require('../protocol/polygon/game/smartlayer/smartlayer.js');
 const ethers = require('ethers');
-const { getRandomFloat, sleep, convertCSVToObjectSync } = require('../base/utils.js');
+const { appendObjectToCSV } = require('../base/utils.js');
 const rpc = require('../config/RpcConfig.json');
 const { getContract } = require('../base/utils');
 const RPC = require('../config/RpcConfig.json');
