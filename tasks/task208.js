@@ -12,7 +12,6 @@ const { appendObjectToCSV } = require('../base/utils.js');
 const rpc = require('../config/RpcConfig.json');
 const { getContract } = require('../base/utils');
 const RPC = require('../config/RpcConfig.json');
-const { pro } = require('ccxt');
 
 module.exports = async (params) => {
 
@@ -29,7 +28,7 @@ module.exports = async (params) => {
     } catch (error) {
         const airdropError = {Wallet, Address: wallet.address, Error: error};
         console.log(airdropError);
-        await appendObjectToCSV(airdropInfo, `../data/SmartLayerAirdropError.csv`)
+        await appendObjectToCSV(airdropError, `../data/SmartLayerAirdropError.csv`)
     }
 
 }
