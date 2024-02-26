@@ -17,7 +17,7 @@ const tokenAddress = require('../config/tokenAddress.json')
 
 module.exports = async (params) => {
     const { Wallet, Address, pky } = params;
-    const chains = ['Ethereum', 'Arbitrum', 'Optimism','zkSync']
+    const chains = ['Ethereum', 'Arbitrum', 'Optimism', 'zkSync']
     const chain = 'zkSync'
     const wallet = new ethers.Wallet(pky, new ethers.getDefaultProvider(RPC[chain]));
 
@@ -38,25 +38,35 @@ module.exports = async (params) => {
             balance: fixedToFloat(tokenBalance, token.decimal)
         };
     });
-    
+
     let balances = await Promise.all(balancePromises);
-    
+
     balances.forEach(balanceInfo => {
         AccountInfo[balanceInfo.symbol] = balanceInfo.balance;
     });
 
+    let retryCount = 0;
+    while (retryCount < 5) {
+        try {
+            // // 查询交易记录
+            const transactions = await getTransactionsList(wallet.address);
+            // 筛选出钱包发起的交易
+            const filteredTransactions = transactions.filter(transaction => transaction.from.toLowerCase() === wallet.address.toLowerCase());
+            // // 求transactions的列表中的actual_fee字段的和
+            const gasFee = transactions.reduce((acc, cur) => {
+                return acc + parseFloat(cur.feeInEth);
+            }, 0);
+            AccountInfo.txCount = filteredTransactions.length;
+            AccountInfo.usedGasFee = gasFee;
+            break; // Exit the loop if successful
+        } catch (error) {
+            retryCount++;
+            console.log(`Retry ${retryCount} failed: ${error}`);
+            await sleep(0.5)
+        }
+    }
 
-    // // 查询交易记录
-    const transactions = await getTransactionsList(wallet.address);
-    // 筛选出钱包发起的交易
-    const filteredTransactions = transactions.filter(transaction => transaction.from.toLowerCase() === wallet.address.toLowerCase());
-    // // 求transactions的列表中的actual_fee字段的和
-    const gasFee = transactions.reduce((acc, cur) => {
-        return acc + parseFloat(cur.feeInEth);
-    }, 0);
-    AccountInfo.txCount = filteredTransactions.length;
-    AccountInfo.usedGasFee = gasFee;   
-    console.log(AccountInfo); 
+    console.log(`${chain} accountInfo：`,AccountInfo);
     await appendObjectToCSV(AccountInfo, `../data/${chain}Balances.csv`)
 
 };

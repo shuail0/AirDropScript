@@ -1,5 +1,5 @@
 /**
- * tasks302: ethereum balance query
+ * tasks303: Aribtrum balance query
  *  查询账户资产，程序按照tokens数组中的token进行查询，。
  *  查询结果将会以csv文件的形式保存在data文件夹下。
  * 
@@ -11,7 +11,7 @@ const ethers = require("ethers");
 const RPC = require('../config/RpcConfig.json');
 const { appendObjectToCSV, fixedToFloat } = require('../base/utils');
 const { fetchToken, getBalance, getErc20Balance } = require('../base/coin/token');
-const { getTransactionsList } = require('../protocol/ethereum/other/getEthereumData/getEthereumData')
+const { getTransactionsList } = require('../protocol/arbitrum/other/getArbitrumData/getArbitrumData');
 
 
 const tokenAddress = require('../config/tokenAddress.json')
@@ -19,10 +19,10 @@ const tokenAddress = require('../config/tokenAddress.json')
 module.exports = async (params) => {
     const { Wallet, Address, pky } = params;
     const chains = ['Ethereum', 'Arbitrum', 'Optimism', 'zkSync']
-    const chain = 'Ethereum'
+    const chain = 'Arbitrum'
     const wallet = new ethers.Wallet(pky, new ethers.getDefaultProvider(RPC[chain]));
 
-    const tokens = ['WETH', 'USDC', 'USDT']; // 查询的token名称列表
+    const tokens = ['WETH', 'USDC', 'USDT', 'NativeUSDC']; // 查询的token名称列表
 
     const AccountInfo = { Wallet, Address }
     // 查询ETH余额
