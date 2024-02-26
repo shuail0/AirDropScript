@@ -11,7 +11,7 @@ const ethers = require("ethers");
 const RPC = require('../config/RpcConfig.json');
 const { appendObjectToCSV, fixedToFloat } = require('../base/utils');
 const { fetchToken, getBalance, getErc20Balance } = require('../base/coin/token');
-const { getTransactionsList } = require('../protocol/ethereum/other/getEthereumData/getEthereumData')
+const { getTransactionsList } = require('../protocol/optimism/other/getOptimismData/getOptimismData')
 
 
 const tokenAddress = require('../config/tokenAddress.json')
