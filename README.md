@@ -2,6 +2,16 @@
 
 # 更新记录
 
+## 2024/2/26 更新
+- 新增项目： zksync和Ethereum网络余额、tx、消耗gas查询，查询任务使用LayerZero任务执行程序`LayerZeroRunner.js`执行。
+- 任务调整： 
+   - task301: 增加容错，保证所有账户都能被查询。
+   - task302: 增加容错，保证所有账户都能被查询。
+- 新增任务： 
+   - task300: 查询主任务，执行此任务可以运行task301/302/303/304。
+   - task303: zksync网络余额和查询指定Token的余额、tx数量、花费的GAS(ETH)任务。
+   - task304: zksync网络余额和查询指定Token的余额、tx数量、花费的GAS(ETH)任务。
+
 ## 2024/2/23 更新
 - 新增项目： zksync和Ethereum网络余额、tx、消耗gas查询，查询任务使用LayerZero任务执行程序`LayerZeroRunner.js`执行。
 - 新增任务：
