@@ -69,15 +69,10 @@ async function processQueue() {
 }
 
 (async function start() {
-    // 循环6次
-    for (let i = 0; i < 6; i++) {
-        console.log(`第${i + 1}轮循环开始`);
-        const results = await Promise.all(
-            Array.from({ length: Math.min(CONFIG.CONCURRENCY, walletData.length) }, processQueue)
-        );
-        console.log(`第${i + 1}轮循环结束, 等待20分钟`);
-        await sleep(20);
-    }
+
+        console.log(`第1轮循环开始`);
+        await Promise.all(Array.from({ length: Math.min(CONFIG.CONCURRENCY, walletData.length) }, processQueue));
     console.log("All wallets have been processed.");
     process.exit(0);
 })();
+
