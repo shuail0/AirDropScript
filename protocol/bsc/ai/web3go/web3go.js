@@ -4,6 +4,7 @@ const { getContract } = require('../../../../base/utils');
 const axios = require('axios');
 const randomUseragent = require('random-useragent');
 const { HttpsProxyAgent } = require('https-proxy-agent');
+const {sendRequest} = require('../../../../base/requestHelper');
 
 
 class Web3Go {
@@ -30,7 +31,7 @@ class Web3Go {
 
     getWeb3goContract(contractAddr = this.contractAddr, contractAbi = this.contractAbi) {
         return getContract(contractAddr, contractAbi, this.wallet);
-     }
+    }
 
     async mintPass() {
         const contract = this.getWeb3goContract();
@@ -47,32 +48,49 @@ class Web3Go {
     };
 
     async login() {
-        const nonceResponse = await axios.post(`${this.baseUrl}/api/account/web3/web3_nonce`, {
-            address: this.wallet.address
-        }, { httpAgent: this.agent, httpsAgent: this.agent, headers: this.headers });
+        let url = `${this.baseUrl}/api/account/web3/web3_nonce`
+        const nonceResponse = await sendRequest(url, {
+            method: 'post',
+            data: { address: this.wallet.address },
+            httpAgent: this.agent,
+            httpsAgent: this.agent,
+            headers: this.headers
+        });
 
-        const nonce = nonceResponse.data.nonce;
+        const nonce = nonceResponse.nonce;
         const msg = `reiki.web3go.xyz wants you to sign in with your Ethereum account:\n${this.wallet.address}\n\n${nonce}\n\nURI: https://reiki.web3go.xyz\nVersion: 1\nChain ID: 56\nNonce: ${nonce}\nIssued At: ${new Date().toISOString()}`;
         const signature = await this.wallet.signMessage(msg);
 
-        const challengeResponse = await axios.post(`${this.baseUrl}/api/account/web3/web3_challenge`, {
+        url = `${this.baseUrl}/api/account/web3/web3_challenge`
+        const jsonData = {
             address: this.wallet.address,
             nonce: nonce,
             challenge: JSON.stringify({ msg: msg }),
             signature: signature
-        }, { httpAgent: this.agent, httpsAgent: this.agent, headers: this.headers });
-        this.headers['Authorization'] = `Bearer ${challengeResponse.data.extra.token}`;
-        return challengeResponse
+        }
 
+        const challengeResponse = await sendRequest(url, {
+            method: 'post',
+            data: jsonData,
+            httpAgent: this.agent,
+            httpsAgent: this.agent,
+            headers: this.headers
+        });
+        this.headers['Authorization'] = `Bearer ${challengeResponse.extra.token}`;
+        return challengeResponse;
     }
 
     async claim() {
-
         const date = new Date().toISOString().split('T')[0];
-        const checkInResponse = await axios.put(`${this.baseUrl}/api/checkin?day=${date}`, {},
-            { httpAgent: this.agent, httpsAgent: this.agent, headers: this.headers }
-        );
-        return await checkInResponse.data;
+        const url = `${this.baseUrl}/api/checkin?day=${date}`
+        const checkInResponse = await sendRequest(url, {
+            method: 'put',
+            data: {},
+            httpAgent: this.agent,
+            httpsAgent: this.agent,
+            headers: this.headers
+        });
+        return await checkInResponse;
     }
 
     // 查询金叶子信息

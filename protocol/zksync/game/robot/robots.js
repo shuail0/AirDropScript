@@ -2,6 +2,7 @@ const { getContract } = require('../../../../base/utils');
 const randomUseragent = require('random-useragent');
 const { HttpsProxyAgent } = require('https-proxy-agent');
 const axios = require('axios');
+const {sendRequest} = require('../../../../base/requestHelper');
 
 class robots {
     constructor(wallet, proxy) {
@@ -41,8 +42,9 @@ class robots {
             'address': this.wallet.address,
         });
         const url = `${this.baseUrl}/api/raffle/v3/claim?${params}`;
-        const response = await axios.get(url, { httpAgent: this.agent, httpsAgent: this.agent, headers: this.headers });
-        return response.data.message
+        const config = { method:'get', httpAgent: this.agent, httpsAgent: this.agent, headers: this.headers };
+        const response = await sendRequest(url, config);
+        return response.data.message;
     }
 }
 

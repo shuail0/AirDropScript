@@ -2,6 +2,62 @@
 
 # 更新记录
 
+## 2024/2/26 更新
+- 新增项目： Arbitrum和Optimism网络余额、tx、消耗gas查询，查询任务使用LayerZero任务执行程序`LayerZeroRunner.js`执行。
+- 任务调整： 
+   - task301: 增加容错，保证所有账户都能被查询。
+   - task302: 增加容错，保证所有账户都能被查询。
+- 新增任务： 
+   - task300: 查询主任务，执行此任务可以运行task301/302/303/304。
+   - task303: Arbitrum网络余额和查询指定Token的余额、tx数量、花费的GAS(ETH)任务。
+   - task304: Optimism网络余额和查询指定Token的余额、tx数量、花费的GAS(ETH)任务。
+
+## 2024/2/23 更新
+- 新增项目： zksync和Ethereum网络余额、tx、消耗gas查询，查询任务使用LayerZero任务执行程序`LayerZeroRunner.js`执行。
+- 新增任务：
+   - task208: SmartLayer空投查询任务
+   - task301: zksync网络余额和查询指定Token的余额、tx数量、花费的GAS(ETH)任务，在代码中的tokens变量设置要查询的token名称（直接增加列表），执行前先检查config/tokenAddres.json文件的zkSync字段有没有要查询的token地址，如果没有需要手动添加。查询结果保存在data目录下的zkSyncBalances.csv文件中。
+   - task302: Ethereum网络余额和查询指定Token的余额、tx数量、花费的GAS(ETH)任务，在代码中的tokens变量设置要查询的token名称（直接增加列表），执行前先检查config/tokenAddres.json文件的zkSync字段有没有要查询的token地址，如果没有需要手动添加。网站接口返回的GAS消耗比浏览器查看到的低，这个GAS消耗只能作为参考。查询结果保存在data目录下的zkSyncBalances.csv文件中。 查询时需要打开ClashX的增强模式。
+## 2024/2/19 更新
+- 新增项目： voyager查询账户交易历史、staraknet领取空投合约
+- 新增任务： 
+   - task61： starknet 查询指定Token的余额、tx数量、花费的GAS(ETH)任务，在代码中的tokens变量设置要查询的token名称（直接增加列表），执行前先检查config/tokenAddres.json文件的starkNet字段有没有要查询的token地址，如果没有需要手动添加。查询结果保存在data目录下的stkBalances.csv文件中。
+   - task62：stk空投数量cha查询，查询完成后将结果保存在data/stkAirdropInfo.csv文件中。
+   - task63：stk空投claime程序,需要用tasks62的查询结果执行作为执行账户。
+
+## 2024/1/25 更新
+- 基础功能更新：
+   - 新增smart layer执行主程序SmartLayerRunner.js（runner目录下）和配置文件SmartLayerConfig.json(config目录下)，SmartLayerRunner执行主程序会循环执行6次任务操作，每轮账户执行完毕后休息20分钟再次执行下一轮操作。
+- 新增项目： berachain领水。
+- 项目调整：
+   - Uniswap： 在swap执行前先预估gas
+- 任务调整：
+   - task207: 增加猫咪升级检查，如果猫咪可以升级，则会自动执行升级。
+- 新增任务：
+   - task254: berachain领水任务。
+   
+## 2024/1/18 更新
+- 基础功能更新
+   - funcs.js: 新增add10PercentGasPrice函数，用来获取当前gas+10%的函数，方便发送交易时增加gas。
+   - requestHelper.js: 新增sendRequest函数，用于发送网络请求，请求默认设置5秒的timeout。
+- 配置更新：
+   - ChekInRunnerConfig.json ： 更换代理提供商，将代理IP更换为3分钟换一次IP
+- 新增项目： smartlayer
+- 任务调整：
+   - task200: 新增代理检测，如果代理失效暂停3分钟后再重新检测，直至成功. 同时增加任务执行日志功能。
+   - task201: 优化代码
+   - task202: 优化代码
+   - task203: 优化代码
+   - task204: 调整执行逻辑，将Carv任务更改为只做roin网络的签到
+- 新增任务：
+   - task205: Carv opBNB网络签到
+   - task206: Carv zkSync网络签到
+   - task207: smartlayer 任务执行程序
+   - task251: smartlayer获取钱包持有的猫咪，并保存至本地，第一次跑smartlayer需要执行一次，每个钱包只做一次。
+   - task252: web3go mintPass 任务， 第一次跑web3GO 需要先mintPass，每个钱包只做一次。
+   - task253: robot获取抽奖券任务，第一次跑robot需要执行一次，每个钱包只做一次。
+
+
 ## 2024/1/12 更新
 - 基础功能更新：
    - 新增签到运行主程序CheckInRunner.js（runner目录下）和配置文件ChekInRunnerConfig.json(config目录下)。

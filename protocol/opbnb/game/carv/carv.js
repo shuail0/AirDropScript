@@ -11,6 +11,7 @@ const { transferETHWithData } = require('../../../../base/funcs');
 const axios = require('axios');
 const randomUseragent = require('random-useragent');
 const { HttpsProxyAgent } = require('https-proxy-agent');
+const { sendRequest } = require('../../../../base/requestHelper');
 
 
 function formHexData(string) {
@@ -61,46 +62,45 @@ class Carv {
             text: message,
             signature: signature
         };
-        console.log(json_data);
-
         const url = `${this.baseUrl}/protocol/login`;
 
-        try {
-            const response = await axios.post(url, json_data, { httpAgent: this.agent, httpsAgent: this.agent, headers: this.headers });
-            const token = response.data.data.token;
-
-            // // 对返回的token进行base64编码
-            // 设置请求头
-
-            const bearer = "bearer " + Buffer.from(`eoa:${token}`).toString('base64');
-            this.headers = {
-                ...this.headers,
-                'Authorization': bearer,
-                'Content-Type': 'application/json'
-            };
-            return bearer;
-        } catch (error) {
-            console.error('Error fetching bearer token:', error.message);
-            return null;
-        }
-
+        const config = {
+            httpAgent: this.agent,
+            httpsAgent: this.agent,
+            headers: this.headers,
+            method: 'post',
+            data: json_data
+        };
+        const response = await sendRequest(url, config);
+        const token = response.data.token;
+        const bearer = "bearer " + Buffer.from(`eoa:${token}`).toString('base64');
+        this.headers['Authorization'] = bearer;
+        this.headers['Content-Type'] = 'application/json';
+        return bearer;
     }
 
 
     // 请求可以领取的数量和合约地址
     async fetchAmountData(chainId) {
-        // 请求的 JSON 数据
         const jsonData = {
             'chain_id': chainId,
         };
         const url = `${this.baseUrl}/airdrop/mint/carv_soul`;
-        // 发送 POST 请求
-        const response = await axios.post(url, jsonData, { httpAgent: this.agent, httpsAgent: this.agent, headers: this.headers });
-        return response.data.data;
+
+        const config = {
+            httpAgent: this.agent,
+            httpsAgent: this.agent,
+            headers: this.headers,
+            method: 'post',
+            data: jsonData
+        };
+        const response = await sendRequest(url, config);
+        return response.data;
     }
 
+
     // 签到
-    async checkIn( checkInData) {
+    async checkIn(checkInData) {
         const { permit, signature, contract } = checkInData
         const { account, amount, ymd } = permit
         // 构建交易数据
@@ -110,6 +110,32 @@ class Carv {
         const transactionData = `0xa2a9539c${addressData}${amountData}${ymdData}00000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000041${signature.substring(2)}00000000000000000000000000000000000000000000000000000000000000`;
         // 发送交易
         return await transferETHWithData(this.wallet, contract, transactionData);
+    }
+
+    A() {
+        const t = Date.now() * Math.pow(10, 3)
+          , e = Math.floor(Math.random() * Math.pow(10, 3));
+        return t + e
+    }
+
+    async getSmartAccount() {
+        const id = this.A();
+        const params = {
+            "method": "particle_aa_getSmartAccount",
+            "params": [
+                {
+                    "name": "BICONOMY",
+                    "version": "2.0.0",
+                    "ownerAddress": this.wallet.address
+                }
+            ],
+            "id": id,
+            "jsonrpc": "2.0"
+        }
+        const url = 'https://rpc.particle.network/evm-chain?method=particle_aa_getSmartAccount&chainId=204&projectUuid=64c673d8-30bd-4e02-8be4-f9c5531a79a5&projectKey=cwTncilkSkASDvXWHC6LAfj3UnJOSb0vWmdXmS9C'
+        const response = await axios.post(url, params);
+        return response.data;
+
     }
 
 }

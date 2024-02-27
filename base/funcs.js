@@ -10,6 +10,12 @@ const getContract = (address, abi, provider) => {
     return new ethers.Contract(address, abi, provider)
 };
 
+// 增加10%的gasPrice
+const add10PercentGasPrice = async (wallet) => {
+    const gasPrice = await wallet.provider.getGasPrice();
+    return gasPrice.mul(110).div(100);
+};
+
 
 // 发送ETH
 async function transferETHWithData(wallet, contractAddress, transactionData, value = '0x0') {
@@ -34,4 +40,4 @@ async function transferETHWithData(wallet, contractAddress, transactionData, val
     return await response.wait();
 }
 
-module.exports = { getContract, transferETHWithData };
+module.exports = { getContract, transferETHWithData, add10PercentGasPrice };

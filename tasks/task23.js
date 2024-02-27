@@ -22,8 +22,7 @@ module.exports = async (params) => {
     const zkfox = new ZkFox();
 
      // 查询代币信息
-     const wETH = await fetchToken(wETHAddress, wallet);//又不显示，有什么用呢？或者说怎么使用这里面获得的信息？比如decimal？
-     
+     const wETH = await fetchToken(wETHAddress, wallet); 
 
     //查询账户WETH余额
 

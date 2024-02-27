@@ -91,7 +91,7 @@ class UniSwap {
         return quotedAmountOut;
     };
 
-    async getLPPositionInfo(wallet, id){
+    async getLPPositionInfo(wallet, id) {
         const nonfungiblePositionManager = this.getNonfungiblePositionManagerContract(wallet);
         const positionInfo = await nonfungiblePositionManager.positions(id);
         return positionInfo;
@@ -167,7 +167,7 @@ class UniSwap {
         ])
     };
 
-    getCollectCallData(wallet, tokenId, recipient){
+    getCollectCallData(wallet, tokenId, recipient) {
         const maxUint128 = ethers.BigNumber.from("0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
         const nonfungiblePositionManager = this.getNonfungiblePositionManagerContract(wallet);
         return nonfungiblePositionManager.interface.encodeFunctionData('collect', [
@@ -179,7 +179,7 @@ class UniSwap {
             ]
         ]);
     };
-    
+
     getSweepTokenCallData(wallet, token) {
         const nonfungiblePositionManager = this.getNonfungiblePositionManagerContract(wallet);
         return nonfungiblePositionManager.interface.encodeFunctionData('sweepToken', [
@@ -193,16 +193,21 @@ class UniSwap {
 
     async swapEthToToken(wallet, tokenIn, tokenOut, fee, amountIn) {
         const router = this.getSwapRouterV3Contract(wallet);
-
         const swapCallData = this.getExactInputSingleCallData(wallet, tokenIn, tokenOut, fee, amountIn, wallet.address);
-        const response = await router.multicall([swapCallData], { value: amountIn });
+        // 预估交易费用
+        const gasEstimate = await router.estimateGas.multicall([swapCallData], { value: amountIn });
+        const gasPrice = await wallet.provider.getGasPrice();
+        const response = await router.multicall([swapCallData], { value: amountIn, gasPrice: gasPrice, gasLimit: gasEstimate });
         return await response.wait();
     };
 
     async swapTokenToToken(wallet, tokenIn, tokenOut, fee, amountIn) {
         const router = this.getSwapRouterV3Contract(wallet)
         const swapCallData = this.getExactInputSingleCallData(wallet, tokenIn, tokenOut, fee, amountIn, wallet.address)
-        const response = await router.multicall([swapCallData])
+        // 预估交易费用
+        const gasEstimate = await router.estimateGas.multicall([swapCallData]);
+        const gasPrice = await wallet.provider.getGasPrice();
+        const response = await router.multicall([swapCallData], { gasPrice: gasPrice, gasLimit: gasEstimate })
         return await response.wait();
     };
 
@@ -213,7 +218,10 @@ class UniSwap {
             floatToFixed(0),
             wallet.address
         ]);
-        const response = await router.multicall([swapCallData, unwrapCallData])
+        // 预估交易费用
+        const gasEstimate = await router.estimateGas.multicall([swapCallData, unwrapCallData]);
+        const gasPrice = await wallet.provider.getGasPrice();
+        const response = await router.multicall([swapCallData, unwrapCallData], { gasPrice: gasPrice, gasLimit: gasEstimate })
         return await response.wait();
     };
 
@@ -227,23 +235,23 @@ class UniSwap {
     async mintETHLiquidityPosition(wallet, token0, token1, poolFee, amount0, amount1, tickLower, tickUpper) {
         const nonfungiblePositionManager = this.getNonfungiblePositionManagerContract(wallet);
         const callData = this.getMintLiquidityPositionCallData(wallet, token0, token1, poolFee, amount0, amount1, tickLower, tickUpper);
-        const response = await nonfungiblePositionManager.multicall([callData], {value: amount1})
-        return await response.wait(); 
+        const response = await nonfungiblePositionManager.multicall([callData], { value: amount1 })
+        return await response.wait();
     };
 
     async increaseLiquidity(wallet, tokenId, amount0Desired, amount1Desired) {
         const nonfungiblePositionManager = this.getNonfungiblePositionManagerContract(wallet);
         const callData = this.getIncreaseLiquidityCallData(wallet, tokenId, amount0Desired, amount1Desired);
         const response = await nonfungiblePositionManager.multicall([callData])
-        return await response.wait(); 
+        return await response.wait();
 
     };
 
     async increaseLiquidityToETHPool(wallet, tokenId, amount0Desired, amount1Desired, amountETH) {
         const nonfungiblePositionManager = this.getNonfungiblePositionManagerContract(wallet);
         const callData = this.getIncreaseLiquidityCallData(wallet, tokenId, amount0Desired, amount1Desired);
-        const response = await nonfungiblePositionManager.multicall([callData], {value: amountETH})
-        return await response.wait(); 
+        const response = await nonfungiblePositionManager.multicall([callData], { value: amountETH })
+        return await response.wait();
 
     };
 
@@ -251,13 +259,13 @@ class UniSwap {
         const positionInfo = await this.getLPPositionInfo(wallet, tokenId);
         const liquidityAmount = parseInt(Number(positionInfo.liquidity) * decreasePCT);
         const callData = this.getDecreaseLiquidityCallData(wallet, tokenId, liquidityAmount);
-        const collectCallData = this.getCollectCallData(wallet, tokenId, wallet.address);        
+        const collectCallData = this.getCollectCallData(wallet, tokenId, wallet.address);
         const nonfungiblePositionManager = this.getNonfungiblePositionManagerContract(wallet);
         const response = await nonfungiblePositionManager.multicall([callData, collectCallData])
-        return await response.wait(); 
+        return await response.wait();
     };
 
-    async decreaseETHLiquidity(wallet, tokenId, decreasePCT=1) {
+    async decreaseETHLiquidity(wallet, tokenId, decreasePCT = 1) {
         const positionInfo = await this.getLPPositionInfo(wallet, tokenId);
         const liquidityAmount = parseInt(Number(positionInfo.liquidity) * decreasePCT);
         const callData = this.getDecreaseLiquidityCallData(wallet, tokenId, liquidityAmount);
@@ -268,7 +276,7 @@ class UniSwap {
             wallet.address
         ]);
         const response = await nonfungiblePositionManager.multicall([callData, collectCallData, unwrapCallData])
-        return await response.wait(); 
+        return await response.wait();
     };
 
     async decreaseETHAndTokenLiquidity(wallet, tokenId, decreasePCT) {
@@ -283,9 +291,9 @@ class UniSwap {
         ]);
         const wETHAddress = await this.getWETH9Address(wallet);
         const token = (positionInfo.token0 === wETHAddress) ? positionInfo.token1 : positionInfo.token0;
-        const sweepTokenCallData = this.getSweepTokenCallData(wallet,token);
+        const sweepTokenCallData = this.getSweepTokenCallData(wallet, token);
         const response = await nonfungiblePositionManager.multicall([callData, collectCallData, unwrapCallData, sweepTokenCallData])
-        return await response.wait(); 
+        return await response.wait();
     };
 
 }
