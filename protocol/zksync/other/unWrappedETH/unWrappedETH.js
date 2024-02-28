@@ -1,9 +1,6 @@
 /**
- *  项目名称： tarot Finance
- * 项目链接：https://www.tarot.to/
- * 项目文档：https://docs.tarot.to/
- * GitHub：https://github.com/tarot-finance
- * 已完成功能： supperETH, withdraw
+ *  项目名称： unWrappedETH
+ * 项目描述： 通过WETH合约提取ETH
  *
  */
 
@@ -23,6 +20,12 @@ class UnWrappedETH {
     async withdrawEth(wallet, amount) {
         const WETHContract = await this.getWETHContract(wallet);
         const response = await WETHContract.withdraw(amount);
+        return await response.wait();
+    }
+
+    async depositEth(wallet, amount) {
+        const WETHContract = await this.getWETHContract(wallet);
+        const response = await WETHContract.deposit({ value: amount });
         return await response.wait();
     }
 
