@@ -24,20 +24,20 @@ module.exports = async (params) => {
     const minAmount = ethBalance * 0.3  // 最小交易数量
     const maxAmount = ethBalance * 0.5 // 最大交易数量
     let amount = floatToFixed(getRandomFloat(minAmount, maxAmount));
-    console.log('随机交易数量', amount.toString(), ' 开始交易')
+    console.log('随机交易数量', fixedToFloat(amount), ' 开始交易')
 
     // 存款ETH
     let tx = await xBank.deposit(wallet, amount);
     console.log('交易成功txHash：', tx.transactionHash)
 
     // 随机暂停
-    const sleepTime = getRandomFloat(1, 5) * 60 * 1000;
-    console.log('随机暂停：', sleepTime / 1000, '秒');
-    await new Promise((resolve) => setTimeout(resolve, sleepTime));
+    const sleepTime = getRandomFloat(1, 5);
+    console.log('随机暂停：', sleepTime, '分钟');
+    await sleep(sleepTime);
 
     // 查询账户余额
     const bEthBalance = await getBalance(wallet, xBank.XBankAddr);
-    console.log('xEth余额：', bEthBalance, '开始赎回')
+    console.log('xEth余额：', fixedToFloat(bEthBalance), '开始赎回')
 
     // 提取ETH
     tx = await xBank.withdraw(wallet, bEthBalance);
