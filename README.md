@@ -2,6 +2,18 @@
 
 # 更新记录
 
+## 2024/2/28 更新
+
+- 新增项目：Basilisk、xBank、zkFox、DraculaFi、veSync、pixelSwap。
+
+- 新增任务：
+  - task21：Basilisk交互程序, 随机存入30%-50%的ETH，间隔一段时间后取出。
+  - task22：xBank交互程序, 随机存入30%-50%的ETH，间隔一段时间后取出。
+  - task23：zkFox交互程序, 随机存入30%-50%的ETH，间隔2分钟后取出。
+  - task24：DraculaFi交互程序，随机将30%-50%的ETH兑换为USDC，并将获得的USDC兑换为ETH。
+  - task25：veSync交互程序，随机将30%-50%的ETH兑换为USDC，并将获得的USDC兑换为ETH。
+  - task26：PixelSwap交互程序，随机将20%-30%的ETH换成wETH，再将账户中所有的wETH换成ETH。
+
 ## 2024/2/26 更新
 - 新增项目： Arbitrum和Optimism网络余额、tx、消耗gas查询，查询任务使用LayerZero任务执行程序`LayerZeroRunner.js`执行。
 - 任务调整： 
@@ -152,7 +164,7 @@
 - 新增zeroLend项目和对应任务 task35.js
 - 将task31、task32、task33、task34四个任务的ETH交互金额调整为余额-0.02ETH。
 - task30增加task35执行步骤。
-zksync Era大额交互执行: 
+  zksync Era大额交互执行: 
    1. zksync大额交互账户配置模板在data目录下的zks大额交互模板中，按照模板进行配置。
    2. 配置task统一配置为30，tasks会依次运行task31、task32、task33、task34、task35。
    3. 交易所API账户配置在config目录下的CexApiKeys.json文件。
