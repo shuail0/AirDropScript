@@ -1,9 +1,9 @@
 {
     "zskrpc": "https://mainnet.era.zksync.io",
     "ethrpc": "https://eth-mainnet.g.alchemy.com/v2/qRnk4QbaEmXJEs5DMnhitC0dSow-qATl",
-    "maxGasPrice": 50,
-    "walletPath": "/Users/crystalh/Documents/WRCapital/coding/AirDropScript/data/225 test.csv",
+    "maxGasPrice": 90,
+    "walletPath": "/Users/crystalh/Documents/WRCapital/coding/AirDropScript/data/227test.csv",
     "CONCURRENCY": 1,
     "minInterval": 1,
-    "maxInterval": 5
+    "maxInterval": 3
 }
