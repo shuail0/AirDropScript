@@ -17,6 +17,7 @@ module.exports = async (params) => {
     
         const zpet = new Zpet();
         const ETHAddress = coinAddress.ETH;
+        const wETHAddress = coinAddress.wETH;
         const zpetAddress = "0x0C6eaaAb86e8374A91e3F42c726B6FD1aBaCB54c";
 
         // 查询账户zept余额
@@ -41,7 +42,7 @@ module.exports = async (params) => {
 
             // 兑换zept
             console.log('随机交易数量', fixedToFloat(amount), ' 开始交易')
-            let tx = await zpet.swapExactETHForTokens(wallet, ETHAddress, zpetAddress, amount);
+            let tx = await zpet.swapExactETHForTokens(wallet, wETHAddress, zpetAddress, amount);
             console.log('交易成功txHash：', tx.transactionHash)
 
             // 随机暂停

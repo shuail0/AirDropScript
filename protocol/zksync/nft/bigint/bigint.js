@@ -1,6 +1,6 @@
 
 
-const { getContract } = require('../../../../base/utils');
+const { getContract, floatToFixed } = require('../../../../base/utils');
 const ethers = require('ethers');
 
 
@@ -19,10 +19,10 @@ class BigInt {
         const contract = this.getBigIntContract(wallet);
 
         const params = {
-            mint: amount
+            value: floatToFixed(0.0004)
         }
 
-        const response = await contract.batchMint(params);
+        const response = await contract.batchMint(amount, params);
         return await response.wait()
 
     };
