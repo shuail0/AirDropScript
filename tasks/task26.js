@@ -32,7 +32,7 @@ module.exports = async (params) => {
     const maxAmount = ethBalance * 0.3 // 最大交易数量
     // 随机交易数量
     let amount = floatToFixed(getRandomFloat(minAmount, maxAmount));
-    console.log('随机交易数量', amount.toString(), ' 开始交易')
+    console.log('随机交易数量', fixedToFloat(amount), ' 开始交易')
 
     // 将ETH兑换成wETH
     let tx = await pixelswap.deposit(wallet, amount);    

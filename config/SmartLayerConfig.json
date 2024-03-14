@@ -1,0 +1,6 @@
+{
+    "walletPath": "/Users/lishuai/Documents/crypto/bockchainbot/TestWalletData加密.csv",
+    "CONCURRENCY": 1,
+    "minInterval": 1,
+    "maxInterval": 2
+}

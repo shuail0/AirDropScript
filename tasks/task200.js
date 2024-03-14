@@ -14,7 +14,9 @@
 
 
 const tasks = require('.');
-const { sleep, getRandomFloat } = require('../base/utils');
+const { sleep, getRandomFloat, appendObjectToCSV } = require('../base/utils');
+const { sendRequest } = require('../base/requestHelper');
+const { HttpsProxyAgent } = require('https-proxy-agent');
 
 // 执行函数
 const executeTask = async (taskTag, params) => {
@@ -34,20 +36,58 @@ function shuffleArray(array) {
 
 module.exports = async (params) => {
 
-    const taskList = [201, 202, 203, 204];
+    const taskList = [201, 202, 203, 204, 205, 206];
+    // // const taskList = [204, 205, 206];
+    // const taskList = [203];
+
     const shuffleTaskList = shuffleArray(taskList)
     // 打印任务列表
     console.log('任务列表：', shuffleTaskList);
 
+    // 测试代理
+    const { proxy } = params;
+    agent = new HttpsProxyAgent(proxy);
+
+
+
     // 遍历执行任务
+    let taskTag, nowTime;
     for (let i = 0; i < shuffleTaskList.length; i++) {
-        const taskTag = shuffleTaskList[i];
-        // 打印任务标签
-        console.log('当前任务标签：', taskTag, '，开始执行任务');
-        await executeTask(taskTag, params);
-        // 随机休息
+        while (true) {
+
+            console.log('开始测试代理...');
+            try {
+                const reponose = await sendRequest('https://myip.ipip.net', { method: 'get', httpAgent: agent, httpsAgent: agent })
+                console.log('验证成功, ', reponose);
+                break;
+            } catch (error) {
+                console.log('代理失效，等待1分钟后重新验证')
+                await sleep(1);
+
+            }
+
+        }
+        try {
+            taskTag = shuffleTaskList[i];
+            // 打印任务标签
+            console.log('当前任务标签：', taskTag, '，开始执行任务');
+            await executeTask(taskTag, params);
+            nowTime = new Date().toLocaleString();
+            await appendObjectToCSV({ nowTime, ...params, taskTag: taskTag }, '../logs/ChekinSubTaskSucess.csv')
+        } catch (error) {
+            // 如果是因为超时导致失败，等待1分钟后重新执行
+            if (error.message.includes('Request timed out') || error.message.includes('ssl3_get_record:wrong')) {
+                console.log('代理失效，等待1分钟后重新执行');
+                await sleep(1);
+                i--;
+            } else {
+                nowTime = new Date().toLocaleString();
+                await appendObjectToCSV({ nowTime, ...params, taskTag: taskTag, error: error }, '../logs/ChekinSubTaskFail.csv')
+            }
+        }
+        // 随机休息5秒钟
         const interval = getRandomFloat(0.1, 0.2);
-        console.log(`任务完成，线程暂停${interval}分钟`);
+        console.log(`随机暂停${interval}分钟`);
         await sleep(interval);
     };
     console.log('任务已完成，切换新账户。')

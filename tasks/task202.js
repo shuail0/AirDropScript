@@ -13,27 +13,29 @@ const QnA3 = require('../protocol/bsc/ai/qna3/qna3.js');
 
 module.exports = async (params) => {
 
-    const proxy = 'http://sdpxicu7:xIN3wAWiYT9HwnKV@proxy.proxy-cheap.com:31112'
-    const { pky } = params;
+    const { pky, proxy } = params;
     const chain = 'opBNB'
 
     const wallet = new ethers.Wallet(pky, new ethers.getDefaultProvider(RPC[chain]));
 
     const qna3 = new QnA3(wallet, proxy);
     // 登陆
-    await qna3login();
+    console.log('QNA3 开始登陆');
+    const loginInfo = await qna3.login();
+    console.log('登陆结果：', loginInfo);
     // 获取用户信息
-    const graphlData = await qna3.fetchGraphqlData();
-    if (graphlData.userDetail.checkInStatus.todayCount === 0) {
-        // 签到
-        console.log(' Qna3 地址今日未签到，开始签到');
+    // const graphlData = await qna3.fetchGraphqlData();
+    // console.log('用户信息：', graphlData);
+    // if (graphlData.userDetail.checkInStatus.todayCount === 0) {
+    //     // 签到
+        console.log(' Qna3 开始签到');
         const repsponse = await qna3.checkIn(chain);
-        console.log('签到成功: ', repsponse);
-        // 跳出循环
+        console.log('签到结果: ', repsponse);
+    //     // 跳出循环
 
-    } else {
-        console.log(' Qna3 今日已签到');
-    }
+    // } else {
+    //     console.log(' Qna3 今日已签到');
+    // }
 
 
 

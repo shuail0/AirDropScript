@@ -1,5 +1,5 @@
 const { Wallet, Provider } = require('zksync-web3');
-const { convertCSVToObjectSync, fixedToFloat, sleep, appendObjectToCSV, saveLog, getRandomFloat, decryptUsingAESGCM } = require('../base/utils');
+const { convertCSVToObjectSync, fixedToFloat, sleep, appendObjectToCSV, saveLog, getRandomFloat, decryptUsingAESGCM } = require('../base/utils.js');
 const tasks = require('../tasks');
 const ethers = require('ethers');
 const CONFIG = require('../config/ZksTaskRunnerConfig.json');
