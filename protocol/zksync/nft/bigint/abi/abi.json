@@ -1,0 +1,15 @@
+[
+    {
+        "inputs": [
+            {
+                "name": "mint",
+                "type": "uint256"
+            }
+        ],
+        "name": "batchMint",
+        "outputs": [],
+        "payable": true,
+        "stateMutability": "payable",
+        "type": "function"
+    }
+]
