@@ -4,6 +4,42 @@
 
 ## 2024/2/28 更新
 
+- 新增项目：zept、zkdx、rubyScore、BigInt、gambit、chainPray、zkswap、zomma、FringeFi、OnsenSwap。
+
+- 对任务列表重新进行调整和排序，调整后的规则如下：
+
+  - task0-99: zksync交互任务
+  - task100-199: layzero交互任务
+  - task200-299: 签到类任务
+  - task300-399: 查询类任务
+  - 400-499: starknet交互任务
+
+- 新增任务：
+
+  - task27：zept交互程序,mint zept。
+
+  - task28：mint fUsdt。
+
+  - task29：rubyScore投票。
+
+  - task30：BigInt mint nft
+
+  - task31：gambit交互程序，小额存入USDC。
+
+  - task32：chainPray mint NFT
+
+  - task33:  Zk-Swap交互程序,小额将ETH兑换为USDC
+
+  - task34:  zomma交互程序，小额存入USDC
+
+  - task35: FringeFi交互程序，小额存入USDC
+
+  - task36: OnsenSwap,小额将ETH兑换为USDC
+
+    
+
+## 2024/2/28 更新
+
 - 新增项目：Basilisk、xBank、zkFox、DraculaFi、veSync、pixelSwap。
 
 - 新增任务：
