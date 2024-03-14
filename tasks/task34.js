@@ -1,49 +1,51 @@
 /**
- * 在reactor中存取资金
- *  1. 反复存取1个ETH5次。
- * 
+ * tasks227: zomma交互程序
+ * 1. 查询USDC数量
+ * 2. 随机存入0.0001-0.0007 USDC
+ * 3. 只存不取
  */
 
+const Zomma = require('../protocol/zksync/dex/zomma/zomma.js');
+const SyncSwap = require('../protocol/zksync/dex/syncswap/SyncSwap.js');
 
-const tasks = require('.');
-const { sleep, getRandomFloat, floatToFixed, nearestUsableTick, fixedToFloat } = require('../base/utils');
-const { getBalance, tokenTrasfer, fetchToken, tokenApprove } = require('../base/coin/token');
-const Reactorfusion = require('../protocol/zksync/lending/reactorfusion/reactorfusion');
-const coinAddress = require('../config/tokenAddress.json').zkSync
-
+const { fetchToken, getBalance, checkApprove } = require('../base/coin/token.js')
+const { floatToFixed, fixedToFloat, getRandomFloat } = require('../base/utils.js')
+const ethers = require('ethers');
 
 module.exports = async (params) => {
-    const {wallet} = params;
 
-    const ethBalance = await getBalance(wallet);  // 查询余额
-    let amount = ethBalance.sub(floatToFixed(0.02));  // 预留0.02ETH作为gas
+    const { wallet } = params;
 
-    const loopNum = 1  // 反复存取次数。
-    // 反复存取 5次
-    for (let i = 0; i < loopNum; i++) {
+    const zomma = new Zomma();
+    const ETHAddress = '0x0000000000000000000000000000000000000000';
+    const wETHAddress = '0x5aea5775959fbc2557cc8789bc1bf90a239d9a91';
+    const usdcAddress = '0x3355df6D4c9C3035724Fd0e3914dE96A5a83aaf4';
+    const p1ShareAddr = '0xAbe30392e811b9b54591286e601C6c1067333Bca';
+    const usdtAddress = '0x493257fD37EDB34451f62EDf8D2a0C418852bA4C';
+    // 查询代币信息
+    const wETH = await fetchToken(wETHAddress, wallet);
+    const usdc = await fetchToken(usdcAddress, wallet);
+    const usdt = await fetchToken(usdtAddress, wallet);
 
-        const reactorfusion = new Reactorfusion();
-        // // 查询账户余额
-        const ethBalance = fixedToFloat(await getBalance(wallet, coinAddress.ETH));
-        console.log('账户ETH余额：', ethBalance);
+    const depositAmount = getRandomFloat(0.01, 0.2, usdc.decimal)
+    console.log('随机存款数量', depositAmount);
 
-        console.log('存入数量', fixedToFloat(amount), ' 开始存入ETH');
-    
-        let tx = await reactorfusion.supplyEth(wallet, amount);
-        let sleepTime = getRandomFloat(1, 2);
-        console.log('交易成功 txHash:', tx.transactionHash,'，随机暂停', sleepTime, '分钟后移除取出资金');
-    
-        await sleep(sleepTime);
-        const frEthBalance = await getBalance(wallet, reactorfusion.rfETHAddr);
-        console.log('rfEth余额：', fixedToFloat(frEthBalance), '开始取出ETH')
-    
-        tx = await reactorfusion.withdrawEth(wallet, frEthBalance);
-        console.log('交易成功 txHash:', tx.transactionHash)
+    const usdcBalance = await getBalance(wallet, usdc.address);
+    console.log('USDC余额：', fixedToFloat(usdcBalance, usdc.decimal),);
+    // bigNumber比较大小
+    if (fixedToFloat(usdcBalance, usdc.decimal) < depositAmount) {
+        console.log('USDC余额不足，从syncswap将0.0001ETH兑换为USDC');
+        const syncswap = new SyncSwap();
+        // // 将ETH兑换成USDC
+        let tx = await syncswap.swapEthToToken(wallet, wETH.address, usdc.address, floatToFixed(0.0001));
+        console.log('交易成功txHash：', tx.transactionHash)
+    }
 
-        sleepTime = getRandomFloat(1, 2);
-        console.log('移除流动性成功，随机暂停', sleepTime, '分钟后重新存入资金');
-        await sleep(sleepTime);
+    console.log('开始检查授权并存款...');
+    console.log(usdc.address, zomma.poolAddr, floatToFixed(depositAmount, usdc.decimal));
+    console.log('授权完成，开始存款...');
+    // console.log('存款金额：', amount = 50000));
+    let tx = await zomma.deposit(wallet,floatToFixed(depositAmount));
+    console.log('transaction successful:',tx.transactionHash);
 
-    };
-
-};
+}

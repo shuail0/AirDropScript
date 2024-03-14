@@ -34,8 +34,8 @@ module.exports = async (params) => {
         ethBalance = fixedToFloat(await getBalance(wallet, ETHAddress));
         console.log('账户ETH余额：', ethBalance);
         // 设定随机金额
-        const minAmount = ethBalance * 0.3  // 最小交易数量
-        const maxAmount = ethBalance * 0.5 // 最大交易数量
+        const minAmount = ethBalance * 0.2  // 最小交易数量
+        const maxAmount = ethBalance * 0.7 // 最大交易数量
         depositAmoutnt = floatToFixed(getRandomFloat(minAmount, maxAmount));
         console.log('随机交易数量', fixedToFloat(depositAmoutnt), ' 将ETH转换为WETH');
         const tx = await unWrappedETH.depositEth(wallet, depositAmoutnt);

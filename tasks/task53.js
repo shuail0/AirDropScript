@@ -1,44 +1,84 @@
 /**
- * zkLend交互程序
- * 1.查询账户ETH余额。（token后续作为可配置参数）
- * 2.存入20%-30%的ETH （比例后续作为可配置参数）
- * 3.借出存款金额的40%-60%的ETH （比例后续作为可配置参数)
- * 4.还清所有贷款
- * 5.取出所有存入的ETH。
+ * 在izumi中添加单边流动性
+ *  1. 在UDSC/wETH 0.2%流动性池 mint流动性仓位。
+ *  2. 反复存取流动性仓位5次。
+ *  3. 取出所有流动性
+ * 
  */
-const {fetchToken, getBalance} = require('../base/coin/stkToken.js');
-const {getRandomFloat, multiplyBigNumberWithDecimal, fixedToFloat, sleep} = require('../base/utils.js');
-const ZkLend = require('../protocol/starknet/lending/zklend/zklend.js');
+const tasks = require('.');
+const { sleep, getRandomFloat, floatToFixed, nearestUsableTick } = require('../base/utils');
+const { getBalance, tokenTrasfer, fetchToken, tokenApprove } = require('../base/coin/token');
+const Izumi  = require('../protocol/zksync/dex/izumi/izumi');
+const coinAddress = require('../config/tokenAddress.json').zkSync
 
 
 module.exports = async (params) => {
+    const {wallet} = params;
+    // 参数配置
+    const poolFee = 2000;
 
-    // 可配参数
-    const ethAddr = '0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7';
-    const minPct = 0.2
-    const maxPct = 0.3
-    const randomPct = getRandomFloat(minPct, maxPct);
+    // 获取参数信息
+    const tokenA = await fetchToken(coinAddress.WETH, wallet);
+    const tokenB = await fetchToken(coinAddress.USDC, wallet);
+    const ethBalance = await getBalance(wallet);  // 查询余额
+    tokenA.amount = ethBalance.sub(floatToFixed(0.02));  // 预留0.02ETH作为gas
+    tokenB.amount = floatToFixed(0, tokenB.decimal)
+    const loopNum = 1  // 反复存取次数不算mint。
+
+
+    const izumi = new Izumi();
+
+    // 获取池信息
+
+    const poolInfo = await izumi.getPoolInfo(wallet, tokenA.address, tokenB.address, poolFee);
+    const [tokenX, tokenY] = (poolInfo.tokenX === tokenA.address) ? [tokenA, tokenB] : [tokenB, tokenA];
+
+    let tickLower, tickUpper;
+    if (poolInfo.tokenX === tokenA.address) {
+        tickLower = nearestUsableTick(Number(poolInfo.currentPoint) * (1 + 0.2), poolInfo.pointDelta);
+        tickUpper = nearestUsableTick(Number(poolInfo.currentPoint) * (1 + 0.3), poolInfo.pointDelta);
+
+    } else {
+        tickLower = nearestUsableTick(Number(poolInfo.currentPoint) * (1 - 0.3), poolInfo.pointDelta);
+        tickUpper = nearestUsableTick(Number(poolInfo.currentPoint) * (1 - 0.2), poolInfo.pointDelta);
+    }
+
     
-    const { account } = params;
-    const zklend = new ZkLend();
+    // mint LP仓位
+    console.log('开始授权')
+    await tokenApprove(wallet, tokenB.address, izumi.liquidityManagerAddress, floatToFixed(100, tokenB.decimal));
 
-    const token = await fetchToken(ethAddr);
-    // 查询余额
-    const tokenBalance = await getBalance(account, token.address);
-    console.log('余额查询成功：',token['symbol'],'余额：', fixedToFloat(tokenBalance, token.decimal));
+    console.log('开始创建LP仓位')
 
-    // 计算质押数量
-    const stakeAmount = multiplyBigNumberWithDecimal(tokenBalance, randomPct)
-    console.log('随机比例：', randomPct, '随机存入数量', fixedToFloat(stakeAmount, token.decimal), '开始存入资金');
+    const mintInfo = await izumi.mintETHLiquidityPosition(wallet, tokenX.address, tokenY.address, poolFee, tokenX.amount, tokenY.amount, tickLower, tickUpper);
+    console.log(mintInfo.transactionHash)
 
-    // 存款
-    let tx = await zklend.deposit(account, token.address, stakeAmount);
-    const sleepTime = getRandomFloat(5, 15);
-    console.log('成功存款，哈希：',tx, '，程序暂停', sleepTime, '分钟后取出资金');
-    await sleep(sleepTime);
-    // 取款
-    // 取出所有资金
-    tx = await zklend.withdrawAll(account, ethAddr)
-    console.log('成功取出所有', token['symbol'],'哈希：',tx, '任务完成');
+    console.log('获取仓位信息')
+
+    const positionIds = await izumi.getLPPositionIds(wallet);
+    const lastPositionId = positionIds[positionIds.length - 1]; // 获取最后一个仓位的ID
+
+    // const positionInfo = await izumi.getLPPositionInfo(wallet,lastPositionId);
+    // // 取出所有流动性
+    console.log('取出所有流动性')
+    await izumi.decreaseETHLiquidity(wallet, lastPositionId, 1, tokenB.address);
+    
+    
+    // // 反复存取
+    // for (let i = 0; i < loopNum; i++) {
+    //     console.log('开始循环增加流动性')
+    //     await izumi.increaseLiquidityToETHPool(wallet, lastPositionId, tokenX.amount, tokenY.amount, tokenA.amount);
+    //     const sleepTime = getRandomFloat(1, 3);
+    //     console.log('增加流动性成功，随机暂停', sleepTime, '分钟后移除流动性');
+    //     await sleep(sleepTime);
+    //         // 取出所有流动性
+    //     console.log('取出所有流动性')
+    //     await izumi.decreaseETHLiquidity(wallet, lastPositionId, 1, tokenB.address);
+    //     if (i < (loopNum)){
+    //         const sleepTime = getRandomFloat(1, 3);
+    //         console.log('移除流动性成功，随机暂停', sleepTime, '分钟后重新添加流动性');
+    //         await sleep(sleepTime);
+    //     };
+    // };
 
 };

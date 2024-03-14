@@ -21,8 +21,8 @@ module.exports = async (params) => {
     console.log('账户ETH余额：', ethBalance);
 
     // 设定随机金额
-    const minAmount = ethBalance * 0.3  // 最小交易数量
-    const maxAmount = ethBalance * 0.5 // 最大交易数量
+    const minAmount = ethBalance * 0.2  // 最小交易数量
+    const maxAmount = ethBalance * 0.7 // 最大交易数量
     let amount = floatToFixed(getRandomFloat(minAmount, maxAmount));
     console.log('随机交易数量', fixedToFloat(amount), ' 开始交易')
 

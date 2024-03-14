@@ -7,8 +7,8 @@
  * 5. 将所有的资金归集到主账户中
  */
 
-const tasks = require('.');
-const { multExchangeWithdraw, assetPooling } = require('../protocol/cex/multiExchangeWithdraw');
+const tasks = require('./index.js');
+const { multExchangeWithdraw, assetPooling } = require('../protocol/cex/multiExchangeWithdraw.js');
 const { fetchToken, getBalance, tokenTransfer } = require('../base/coin/stkToken.js');
 const { multiplyBigNumberWithDecimal, fixedToFloat, sleep, getRandomFloat, floatToFixed } = require('../base/utils.js');
 const coinAddress = require('../config/tokenAddress.json').starkNet
@@ -48,13 +48,13 @@ module.exports = async (params) => {
 
     // // 执行任务
     console.log('程序开始执行task71');
-    await tasks.task71(params);
+    await tasks.task471(params);
     console.log('task71执行完成，程序开始执行task72');
-    await tasks.task72(params);
+    await tasks.task472(params);
     console.log('task72执行完成，程序开始执行task73');
-    await tasks.task73(params);
+    await tasks.task473(params);
     console.log('task73执行完成，程序开始执行task74');
-    await tasks.task74(params);
+    await tasks.task744(params);
     console.log('task74执行完成，将资金充值至交易所中');
 
     // 将资金充值到交易所

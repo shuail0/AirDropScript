@@ -1,85 +1,69 @@
-/**
- * 在pancake中添加单边流动性
- *  1. 在UDSC/wETH 0.05%流动性池 mint流动性仓位。
- *  2. 反复存取流动性仓位5次。
- *  3. 取出所有流动性
- * 
- */
+/*
 
-const tasks = require('.');
-const { sleep, getRandomFloat, floatToFixed, nearestUsableTick } = require('../base/utils');
-const { getBalance, tokenTrasfer, fetchToken, tokenApprove } = require('../base/coin/token');
-const PancakeSwap = require('../protocol/zksync/dex/pancakeswap/pancakeswap');
+    gambit交互程序
+        1. 检测钱包是否有足够的usdc
+        2. 如果有足够的usdc，那么就直接调用depositUsdc
+        3. 如果没有足够的usdc，那么就前往mute进行兑换
+        4. 调用depositUsdc
+        5. 调用withdrawUsdc
+*/
+
+const Gambit = require('../protocol/zksync/dex/gambit/gambit.js');
+const Mute = require('../protocol/zksync/dex/mute/mute.js');
+const { getBalance, tokenApprove, checkApprove } = require('../base/coin/token.js')
+const { floatToFixed, fixedToFloat, sleep, getRandomFloat } = require('../base/utils.js')
 const coinAddress = require('../config/tokenAddress.json').zkSync
+const ethers = require('ethers');
 
 
 module.exports = async (params) => {
-    const {wallet} = params;
-    // 参数配置
-    const poolFee = 500;
+    const { wallet } = params;
+    const gambit = new Gambit();
+    const mute = new Mute();
+    const usdcAddress = coinAddress.USDC;
+    const ethAddress = coinAddress.ETH;
+    const gUSDCAddress = "0x0729e806f57CE71dA4464c6B2d313E517f41560b";
+    const wETHAddress = coinAddress.WETH;
 
-    // 获取参数信息
-    const tokenA = await fetchToken(coinAddress.WETH, wallet);
-    const tokenB = await fetchToken(coinAddress.USDC, wallet);
+    // 设定随机金额
+    const minAmount = 0.1  // 最小交易数量
+    const maxAmount = 0.3 // 最大交易数量
+    let amount = floatToFixed(getRandomFloat(minAmount, maxAmount, 6), 6);
+    console.log('随机交易数量', fixedToFloat(amount),)
 
-    const ethBalance = await getBalance(wallet);  // 查询余额
-    tokenA.amount = ethBalance.sub(floatToFixed(0.02));  // 预留0.02ETH作为gas
-    tokenB.amount = floatToFixed(0, tokenB.decimal)
-    const loopNum = 1  // 反复存取次数不算mint。
+    // 查询usdc授权
+    let usdcBalance = await getBalance(wallet, usdcAddress);
+    console.log('USDC余额：', fixedToFloat(usdcBalance, 6),);
 
-
-    const pancake = new PancakeSwap();
-
-    // 获取池信息
-    const poolInfo = await pancake.getPoolInfo(wallet, tokenA.address, tokenB.address, poolFee);    
-
-    const [token0, token1] = (poolInfo.token0 === tokenA.address) ? [tokenA, tokenB] : [tokenB, tokenA];
-
-    let tickLower, tickUpper;
-    if (poolInfo.token0 === tokenA.address) {
-        tickLower = nearestUsableTick(Number(poolInfo.tick) * (1 + 0.2), poolInfo.tickSpacing);
-        tickUpper = nearestUsableTick(Number(poolInfo.tick) * (1 + 0.3), poolInfo.tickSpacing);
-
-    } else {
-        tickLower = nearestUsableTick(Number(poolInfo.tick) * (1 - 0.3), poolInfo.tickSpacing);
-        tickUpper = nearestUsableTick(Number(poolInfo.tick) * (1 - 0.2), poolInfo.tickSpacing);
+    if (usdcBalance <= 1) {
+        console.log('USDC余额小于1，开始兑换Usdc');
+        // 查询eth余额
+        const ethBalance = await getBalance(wallet, ethAddress);
+        console.log('账户ETH余额：', fixedToFloat(ethBalance, 6));
+        // 随机交易数量
+        const minAmount = ethBalance * 0.2  // 最小交易数量
+        const maxAmount = ethBalance * 0.3 // 最大交易数量
+        amount = floatToFixed(getRandomFloat(minAmount, maxAmount, 6), 6);
+        console.log('随机交易数量', fixedToFloat(amount),)
+        // eth兑换usdc
+        console.log('开始兑换Usdc');
+        let tx = await mute.swapEthToToken(wallet, ethAddress, usdcAddress, amount);
+        console.log('交易成功 txHash:', tx.transactionHash)
+        // 开始存款Usdc
+        console.log('开始存款Usdc, 金额：', amount);
+        tx = await gambit.depositUsdc(wallet, amount);
+        console.log('交易成功 txHash:', tx.transactionHash)
     }
-    
-    // mint LP仓位
-    console.log('开始授权')
-    await tokenApprove(wallet, tokenB.address, pancake.v3SwapRouterAddress, (tokenB.amount).mul(10));
+    console.log('开始授权Usdc')
+    await checkApprove(wallet, usdcAddress, gambit.contractAddr, usdcBalance);
+    //     // 存款Usdc
+    console.log('开始存款Usdc, 金额：', amount);
+    let tx = await gambit.depositUsdc(wallet, amount);
+    console.log('交易成功 txHash:', tx.transactionHash)
+    // 剩余usdc兑换回eth
+    usdcBalance = await getBalance(wallet, usdcAddress);
+    console.log('USDC余额：', fixedToFloat(usdcBalance, 6),);
+    tx = await mute.swapTokenToEth(wallet, usdcAddress, wETHAddress, usdcBalance);
+    console.log('交易成功 txHash:', tx.transactionHash)
 
-    console.log('开始创建LP仓位')
-
-    const mintInfo = await pancake.mintETHLiquidityPosition(wallet, token0.address, token1.address, poolFee, token0.amount, token1.amount, tickLower, tickUpper)
-    console.log('mint成功，交易哈希：',mintInfo.transactionHash)
-
-
-    console.log('获取仓位信息')
-
-    const positionIds = await pancake.getLPPositionIds(wallet);
-    const lastPositionId = positionIds[positionIds.length - 1]; // 获取最后一个仓位的ID
-
-    // const positionInfo = await pancake.getLPPositionInfo(wallet,lastPositionId);
-    // 取出所有流动性
-    await pancake.decreaseETHLiquidity(wallet, lastPositionId, 1);
-
-
-    // // 反复存取
-    // for (let i = 0; i < loopNum; i++) {
-    //     console.log('开始增加流动性')
-    //     await pancake.increaseLiquidityToETHPool(wallet, lastPositionId, token0.amount, token1.amount, tokenA.amount);
-    //     const sleepTime = getRandomFloat(1, 3);
-    //     console.log('增加流动性成功，随机暂停', sleepTime, '分钟后移除流动性');
-    //     await sleep(sleepTime);
-    //         // 取出所有流动性
-    //     console.log('取出所有流动性')
-    //     await pancake.decreaseETHLiquidity(wallet, lastPositionId, 1);
-    //     if (i < (loopNum)){
-    //         const sleepTime = getRandomFloat(1, 3);
-    //         console.log('移除流动性成功，随机暂停', sleepTime, '分钟后重新添加流动性');
-    //         await sleep(sleepTime);
-    //     };
-    // };
-
-};
+}

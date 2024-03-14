@@ -15,8 +15,8 @@ const coinAddress = require('../config/tokenAddress.json').zkSync
 module.exports = async (params) => {
 
     // // 设定随机的ETH数量
-    const minAmount = 0.0001  // 最小交易数量
-    const maxAmount = 0.0002 // 最大交易数量
+    const minAmount = 0.001  // 最小交易数量
+    const maxAmount = 0.002 // 最大交易数量
 
     const { wallet } = params
     const spaceFi = new SpaceFi();

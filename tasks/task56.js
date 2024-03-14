@@ -1,58 +1,84 @@
 /**
- * task56: SithSwap 交互
- * 1. 查询账户ETH余额
- * 2. 将10%-20%（随机）的ETH随机兑换为tokens中的一个币。
- * 3. 暂停一段时间后再换回ETH。
+ * 在pancake中添加单边流动性
+ *  1. 查询最后一个LP仓位ID。
+ *  2. 向最后一个仓位存取一次流动性。
+ * 
  */
-const {fetchToken, getBalance} = require('../base/coin/stkToken.js');
-const { getRandomFloat, multiplyBigNumberWithDecimal, fixedToFloat, sleep, getRandomElement } = require('../base/utils.js');
-const SithSwap = require('../protocol/starknet/dex/sithswap/sithswap.js');
+
+const tasks = require('.');
+const { sleep, getRandomFloat, floatToFixed, nearestUsableTick } = require('../base/utils');
+const { getBalance, tokenTrasfer, fetchToken, tokenApprove } = require('../base/coin/token');
+const PancakeSwap = require('../protocol/zksync/dex/pancakeswap/pancakeswap');
+const coinAddress = require('../config/tokenAddress.json').zkSync
+
 
 module.exports = async (params) => {
-    // 可以交易的token列表
-    const tokens = [
-        // {name: 'ETH', address: '0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7'},
-        {name: 'USDC', address: '0x53c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8'},
-        {name: 'DAI', address: '0x00da114221cb83fa859dbdb4c44beeaa0bb37c7537ad5ae66fe5e0efd20e6eb3'},
-        {name: 'UDC', address: '0x068f5c6a61780768455de69077e07e89787839bf8166decfbf92b645209c0fb8'},
-        {name: 'WBTC', address: '0x03fe2b97c1fd336e750087d68b9b867997fd64a2661ff3ca5a7c771641e8e7ac'}
-    ];
-    // const tokenAAddr = tokens[0]['address'] // 第一个币固定为ETH
-    const tokenAAddr = '0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7'
-    const tokenBAddr = getRandomElement(tokens)['address']; // 随机选一个token
+    const {wallet} = params;
+    // 参数配置
+    const poolFee = 500;
 
-    const minPct = 0.1
-    const maxPct = 0.2
+    // 获取参数信息
+    const tokenA = await fetchToken(coinAddress.WETH, wallet);
+    const tokenB = await fetchToken(coinAddress.USDC, wallet);
+
+    const ethBalance = await getBalance(wallet);  // 查询余额
+    tokenA.amount = ethBalance.sub(floatToFixed(0.02));  // 预留0.02ETH作为gas
+    tokenB.amount = floatToFixed(0, tokenB.decimal)
+    const loopNum = 1  // 反复存取次数不算mint。
+
+
+    const pancake = new PancakeSwap();
+
+    // 获取池信息
+    const poolInfo = await pancake.getPoolInfo(wallet, tokenA.address, tokenB.address, poolFee);    
+
+    const [token0, token1] = (poolInfo.token0 === tokenA.address) ? [tokenA, tokenB] : [tokenB, tokenA];
+
+    let tickLower, tickUpper;
+    if (poolInfo.token0 === tokenA.address) {
+        tickLower = nearestUsableTick(Number(poolInfo.tick) * (1 + 0.2), poolInfo.tickSpacing);
+        tickUpper = nearestUsableTick(Number(poolInfo.tick) * (1 + 0.3), poolInfo.tickSpacing);
+
+    } else {
+        tickLower = nearestUsableTick(Number(poolInfo.tick) * (1 - 0.3), poolInfo.tickSpacing);
+        tickUpper = nearestUsableTick(Number(poolInfo.tick) * (1 - 0.2), poolInfo.tickSpacing);
+    }
     
-    const randomPct = getRandomFloat(minPct, maxPct);
-    const { account } = params;
-    const sithswap = new SithSwap();
-    //  获取代币信息
-    const tokenA = await fetchToken(tokenAAddr, account);
-    const tokenB = await fetchToken(tokenBAddr, account);
+    // mint LP仓位
+    console.log('开始授权')
+    await tokenApprove(wallet, tokenB.address, pancake.v3SwapRouterAddress, (tokenB.amount).mul(10));
+
+    // console.log('开始创建LP仓位')
+
+    // const mintInfo = await pancake.mintETHLiquidityPosition(wallet, token0.address, token1.address, poolFee, token0.amount, token1.amount, tickLower, tickUpper)
+    // console.log('mint成功，交易哈希：',mintInfo.transactionHash)
 
 
-    console.log(`开始执行任务, tokenA: ${tokenA['symbol']}, tokenB: ${tokenB['symbol']}`)
-    // 查询tokenA余额
-    const tokenABalance = await getBalance(account, tokenA.address);
-    console.log(tokenA['symbol'], '余额查询成功,余额：', fixedToFloat(tokenABalance, tokenA['decimal']));
+    console.log('获取仓位信息')
 
-    // 计算交换数量
-    const swapAmount = multiplyBigNumberWithDecimal(tokenABalance, randomPct)
-    console.log('随机比例：', randomPct, '随机交易数量', fixedToFloat(swapAmount, tokenA.decimal), '开始交易');
+    const positionIds = await pancake.getLPPositionIds(wallet);
+    const lastPositionId = positionIds[positionIds.length - 1]; // 获取最后一个仓位的ID
 
-    // // 交易
-    let tx = await sithswap.swapTokenToToken(account,tokenA.address, tokenB.address, swapAmount);
-    const sleepTime = getRandomFloat(1, 15);
-    console.log('交易成功，tx:', tx, ',随机暂停', sleepTime, '分钟！');
-    await sleep(sleepTime);
+    // const positionInfo = await pancake.getLPPositionInfo(wallet,lastPositionId);
+    // 取出所有流动性
+    // await pancake.decreaseETHLiquidity(wallet, lastPositionId, 1);
 
-    // 查询tokenB余额
-    const tokenBalance = await getBalance(account, tokenB.address);
-    console.log(tokenB['symbol'], '余额查询成功,余额：', fixedToFloat(tokenBalance, tokenB.decimal), '开始交易');
 
-    // 将tokenB换成TokenA
-    tx = await sithswap.swapTokenToToken(account, tokenB.address, tokenA.address, tokenBalance);
-    console.log('交易成功，tx:', tx, ',任务结束');
+    // 反复存取
+    for (let i = 0; i < loopNum; i++) {
+        console.log('开始增加流动性')
+        await pancake.increaseLiquidityToETHPool(wallet, lastPositionId, token0.amount, token1.amount, tokenA.amount);
+        const sleepTime = getRandomFloat(1, 3);
+        console.log('增加流动性成功，随机暂停', sleepTime, '分钟后移除流动性');
+        await sleep(sleepTime);
+            // 取出所有流动性
+        console.log('取出所有流动性')
+        await pancake.decreaseETHLiquidity(wallet, lastPositionId, 1);
+        if (i < (loopNum)){
+            const sleepTime = getRandomFloat(1, 3);
+            console.log('移除流动性成功，随机暂停', sleepTime, '分钟后重新添加流动性');
+            await sleep(sleepTime);
+        };
+    };
 
 };

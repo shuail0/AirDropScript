@@ -30,7 +30,7 @@ module.exports = async (params) => {
     
     // // 设定随机金额
     const minAmount = ethBalance * 0.2  // 最小交易数量
-    const maxAmount = ethBalance * 0.3 // 最大交易数量
+    const maxAmount = ethBalance * 0.6 // 最大交易数量
     // 随机交易数量
     let amount = floatToFixed(getRandomFloat(minAmount, maxAmount));
     console.log('随机交易数量', amount.toString(), ' 开始交易')
