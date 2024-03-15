@@ -7,34 +7,33 @@
 
 const Zpet = require('../protocol/zksync/game/zpet/zpet.js');
 const { fetchToken, getBalance, checkApprove, } = require('../base/coin/token.js')
-const { floatToFixed, fixedToFloat, sleep,getRandomFloat} = require('../base/utils.js')
-const ethers = require('ethers');
+const { floatToFixed, fixedToFloat, sleep, getRandomFloat } = require('../base/utils.js')
 const coinAddress = require('../config/tokenAddress.json').zkSync
 
 module.exports = async (params) => {
-    
-        const {wallet} = params;
-    
-        const zpet = new Zpet();
-        const ETHAddress = coinAddress.ETH;
-        const wETHAddress = coinAddress.wETH;
-        const zpetAddress = "0x0C6eaaAb86e8374A91e3F42c726B6FD1aBaCB54c";
 
+    const { wallet } = params;
+
+    const zpet = new Zpet();
+    const ETHAddress = coinAddress.ETH;
+    const wETHAddress = coinAddress.wETH;
+    const zpetAddress = "0x0C6eaaAb86e8374A91e3F42c726B6FD1aBaCB54c";
+
+
+
+    // 设定随机金额
+    const minAmount = 0.0001  // 最小交易数量
+    const maxAmount = 0.0002 // 最大交易数量
+    let amount = floatToFixed(getRandomFloat(minAmount, maxAmount));
+    while (true) {
         // 查询账户zept余额
         const zpetBalance = fixedToFloat(await getBalance(wallet, zpetAddress));
         console.log('账户zept余额：', zpetBalance);
-
-        // 设定随机金额
-        const minAmount = 0.0001  // 最小交易数量
-        const maxAmount = 0.0002 // 最大交易数量
-        let amount = floatToFixed(getRandomFloat(minAmount, maxAmount));
-
         // 余额够则直接mint zept
-        if(zpetBalance >= 4000){
-            console.log('账户zept余额大于4000，开始mint zept')
-            let tx = await zpet.mintZpet(wallet);
-            console.log('交易成功txHash：', tx.transactionHash)
-        }else{
+        if (zpetBalance >= 4000) {
+            break;
+        } else {
+
             // 查询代币信息
             console.log('账户zept余额不足，开始兑换zept')
             const ethBalance = fixedToFloat(await getBalance(wallet, ETHAddress));
@@ -50,10 +49,13 @@ module.exports = async (params) => {
             console.log('随机暂停：', sleepTime, '分钟');
             await sleep(sleepTime);
 
-            // mint zept
-            tx = await zpet.mintZpet(wallet);
-            console.log('交易成功txHash：', tx.transactionHash)
-            
         }
+    }
+
+    console.log('账户zept余额大于4000，开始mint zept')
+    // console.log(zpetAddress, zpet.zpetNFTAddress, floatToFixed(4000))
+    await checkApprove(wallet, zpetAddress, zpet.zpetNFTAddress, floatToFixed(4000));
+    let tx = await zpet.mintZpet(wallet);
+    console.log('交易成功txHash：', tx.transactionHash)
 }
 

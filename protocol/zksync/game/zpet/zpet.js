@@ -8,7 +8,7 @@ class zpet {
         this.wETHAddress = '0x5AEa5775959fBC2557Cc8789bC1bf90A239D9a91';
         this.RouterAddress = '0x18381c0f738146Fb694DE18D1106BdE2BE040Fa4';
         this.zpetAddress = '0x0C6eaaAb86e8374A91e3F42c726B6FD1aBaCB54c';
-        this.zpetAddress = '0xFabb6de2FCA082AAe5F74268F939Fe7ef1C1dB83';
+        this.zpetNFTAddress = '0xFabb6de2FCA082AAe5F74268F939Fe7ef1C1dB83';
         this.zpetAbi = require('../zpet/abi/zpetAbi.json');
         this.RouterAbi = require('../zpet/abi/ZFRouter.json');
     };
@@ -16,7 +16,7 @@ class zpet {
     async getRouter(wallet, RouterAddress = this.RouterAddress, routerAbi = this.RouterAbi) {
         return getContract(RouterAddress, routerAbi, wallet);
       }
-    async getZpet(wallet, zpetAddress = this.zpetAddress, zpetAbi = this.zpetAbi) {
+    async getZpet(wallet, zpetAddress = this.zpetNFTAddress, zpetAbi = this.zpetAbi) {
         return getContract(zpetAddress, zpetAbi, wallet);
     }
 
