@@ -8,8 +8,8 @@
 const Zomma = require('../protocol/zksync/dex/zomma/zomma.js');
 const SyncSwap = require('../protocol/zksync/dex/syncswap/SyncSwap.js');
 
-const { fetchToken, getBalance, checkApprove } = require('../base/coin/token.js')
-const { floatToFixed, fixedToFloat, getRandomFloat } = require('../base/utils.js')
+const { fetchToken, getBalance, checkApprove, tokenApprove } = require('../base/coin/token.js')
+const { floatToFixed, fixedToFloat, getRandomFloat, sleep } = require('../base/utils.js')
 const ethers = require('ethers');
 
 module.exports = async (params) => {
@@ -30,22 +30,19 @@ module.exports = async (params) => {
     const depositAmount = getRandomFloat(0.01, 0.2, usdc.decimal)
     console.log('随机存款数量', depositAmount);
 
-    const usdcBalance = await getBalance(wallet, usdc.address);
-    console.log('USDC余额：', fixedToFloat(usdcBalance, usdc.decimal),);
-    // bigNumber比较大小
+    let usdcBalance = await getBalance(wallet, usdc.address);
     if (fixedToFloat(usdcBalance, usdc.decimal) < depositAmount) {
         console.log('USDC余额不足，从syncswap将0.0001ETH兑换为USDC');
         const syncswap = new SyncSwap();
         // // 将ETH兑换成USDC
-        let tx = await syncswap.swapEthToToken(wallet, wETH.address, usdc.address, floatToFixed(0.0001));
-        console.log('交易成功txHash：', tx.transactionHash)
+        let tx = await syncswap.swapEthToToken(wallet, wETH.address, usdc.address, floatToFixed(0.005));
+        console.log('交易成功txHash：', tx.transactionHash, '一分钟后开始存款')
+        await sleep(1)
+        usdcBalance = await getBalance(wallet, usdc.address);
     }
-
-    console.log('开始检查授权并存款...');
-    console.log(usdc.address, zomma.poolAddr, floatToFixed(depositAmount, usdc.decimal));
+    console.log('USDC余额：', fixedToFloat(usdcBalance, usdc.decimal), '开始检查授权并存款...');
+    await checkApprove(wallet, usdc.address, zomma.poolAddr, floatToFixed(depositAmount, usdc.decimal));
     console.log('授权完成，开始存款...');
-    // console.log('存款金额：', amount = 50000));
     let tx = await zomma.deposit(wallet,floatToFixed(depositAmount));
     console.log('transaction successful:',tx.transactionHash);
-
 }

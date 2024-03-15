@@ -62,7 +62,8 @@ module.exports = async (params) => {
     console.log('交易成功 txHash:', tx.transactionHash)
     // 剩余usdc兑换回eth
     usdcBalance = await getBalance(wallet, usdcAddress);
-    console.log('USDC余额：', fixedToFloat(usdcBalance, 6),);
+    console.log('USDC余额：', fixedToFloat(usdcBalance, 6),'开始检查授权...');
+    await checkApprove(wallet, usdcAddress, mute.routerAddr, usdcBalance);
     tx = await mute.swapTokenToEth(wallet, usdcAddress, wETHAddress, usdcBalance);
     console.log('交易成功 txHash:', tx.transactionHash)
 
