@@ -5,6 +5,7 @@
  * 3. 取出WETH
  */
 
+const SyncSwap = require('../protocol/zksync/dex/syncswap/syncswap.js');
 const FringeFi = require('../protocol/zksync/lending/fringe/fringe.js');
 const { fetchToken, getBalance, tokenApprove, checkApprove } = require('../base/coin/token.js')
 const { floatToFixed, fixedToFloat, getRandomFloat, sleep } = require('../base/utils.js')
