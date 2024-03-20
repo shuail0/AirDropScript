@@ -9,7 +9,7 @@
 */
 
 const Gambit = require('../protocol/zksync/dex/gambit/gambit.js');
-const Mute = require('../protocol/zksync/dex/mute/mute.js');
+const SyncSwap = require('../protocol/zksync/dex/syncswap/SyncSwap.js');
 const { getBalance, tokenApprove, checkApprove } = require('../base/coin/token.js')
 const { floatToFixed, fixedToFloat, sleep, getRandomFloat } = require('../base/utils.js')
 const coinAddress = require('../config/tokenAddress.json').zkSync
@@ -19,7 +19,7 @@ const ethers = require('ethers');
 module.exports = async (params) => {
     const { wallet } = params;
     const gambit = new Gambit();
-    const mute = new Mute();
+    const mute = new SyncSwap();
     const usdcAddress = coinAddress.USDC;
     const ethAddress = coinAddress.ETH;
     const gUSDCAddress = "0x0729e806f57CE71dA4464c6B2d313E517f41560b";
@@ -27,7 +27,7 @@ module.exports = async (params) => {
 
     // 设定随机金额
     const minAmount = 0.1  // 最小交易数量
-    const maxAmount = 0.3 // 最大交易数量
+    const maxAmount = 0.2 // 最大交易数量
     let amount = floatToFixed(getRandomFloat(minAmount, maxAmount, 6), 6);
     console.log('随机交易数量', fixedToFloat(amount),)
 
@@ -35,23 +35,14 @@ module.exports = async (params) => {
     let usdcBalance = await getBalance(wallet, usdcAddress);
     console.log('USDC余额：', fixedToFloat(usdcBalance, 6),);
 
-    if (usdcBalance <= 1) {
-        console.log('USDC余额小于1，开始兑换Usdc');
+    if (fixedToFloat(usdcBalance, 6) < fixedToFloat(amount, 6)){
+        console.log('USDC余额小于质押金额，开始兑换Usdc');
         // 查询eth余额
         const ethBalance = await getBalance(wallet, ethAddress);
-        console.log('账户ETH余额：', fixedToFloat(ethBalance, 6));
-        // 随机交易数量
-        const minAmount = ethBalance * 0.2  // 最小交易数量
-        const maxAmount = ethBalance * 0.3 // 最大交易数量
-        amount = floatToFixed(getRandomFloat(minAmount, maxAmount, 6), 6);
-        console.log('随机交易数量', fixedToFloat(amount),)
+        console.log('账户ETH余额：', fixedToFloat(ethBalance));
         // eth兑换usdc
         console.log('开始兑换Usdc');
-        let tx = await mute.swapEthToToken(wallet, ethAddress, usdcAddress, amount);
-        console.log('交易成功 txHash:', tx.transactionHash)
-        // 开始存款Usdc
-        console.log('开始存款Usdc, 金额：', amount);
-        tx = await gambit.depositUsdc(wallet, amount);
+        let tx = await mute.swapEthToToken(wallet, wETHAddress, usdcAddress, floatToFixed(0.0001));
         console.log('交易成功 txHash:', tx.transactionHash)
     }
     console.log('开始授权Usdc')
