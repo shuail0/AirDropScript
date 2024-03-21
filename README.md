@@ -2,6 +2,10 @@
 
 # 更新记录
 
+## 2024/3/21 更新
+- 新增任务：
+   - task410: starknet资金归集任务，将账户中的USDC、WBTC、USDT兑换为ETH后归集到交易所地址中。
+
 ## 2024/2/28 更新
 
 - 新增项目：zept、zkdx、rubyScore、BigInt、gambit、chainPray、zkswap、zomma、FringeFi、OnsenSwap。
