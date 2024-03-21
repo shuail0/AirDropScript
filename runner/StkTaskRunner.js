@@ -8,7 +8,7 @@ const readlineSync = require('readline-sync');
 const fs = require('fs');
 const crypto = require('crypto');
 
-const provider = new RpcProvider({ nodeUrl: RPC['StarkNet']});
+const provider = new RpcProvider({ nodeUrl: constants.NetworkName.SN_MAIN });
 const ethereumProvider = new ethers.getDefaultProvider(RPC['Ethereum']);
 const walletData = convertCSVToObjectSync(CONFIG.walletPath);
 const pwd = readlineSync.question('Please enter your password: ', {
