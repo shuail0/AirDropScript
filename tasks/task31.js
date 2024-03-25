@@ -9,7 +9,7 @@
 */
 
 const Gambit = require('../protocol/zksync/dex/gambit/gambit.js');
-const SyncSwap = require('../protocol/zksync/dex/syncswap/SyncSwap.js');
+const Mute = require('../protocol/zksync/dex/mute/mute.js')
 const { getBalance, tokenApprove, checkApprove } = require('../base/coin/token.js')
 const { floatToFixed, fixedToFloat, sleep, getRandomFloat } = require('../base/utils.js')
 const coinAddress = require('../config/tokenAddress.json').zkSync
@@ -19,15 +19,15 @@ const ethers = require('ethers');
 module.exports = async (params) => {
     const { wallet } = params;
     const gambit = new Gambit();
-    const mute = new SyncSwap();
+    const mute = new Mute();
     const usdcAddress = coinAddress.USDC;
     const ethAddress = coinAddress.ETH;
     const gUSDCAddress = "0x0729e806f57CE71dA4464c6B2d313E517f41560b";
     const wETHAddress = coinAddress.WETH;
 
     // 设定随机金额
-    const minAmount = 0.1  // 最小交易数量
-    const maxAmount = 0.2 // 最大交易数量
+    const minAmount = 0.01  // 最小交易数量
+    const maxAmount = 0.1 // 最大交易数量
     let amount = floatToFixed(getRandomFloat(minAmount, maxAmount, 6), 6);
     console.log('随机交易数量', fixedToFloat(amount),)
 
