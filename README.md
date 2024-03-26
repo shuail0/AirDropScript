@@ -9,7 +9,7 @@
   - config/RpcConfig.json：增加Mode Network默认RPC。
   - config/tokenAddress.json: 增加Mode网络常用token合约地址。
 - 新增任务：
-  - task501：renzo交互任务，将掌珠中30%-50%的ETH质押转换为ezETH。
+  - task501：renzo交互任务，将账户余额的30%-50%的ETH质押转换为ezETH。
 
 ## 2024/3/25 更新
 - 新增任务
