@@ -14,5 +14,7 @@
     "Kava": "https://evm.kava.io",
     "Mantle": "https://1rpc.io/mantle",
     "StarkNet": "https://alpha-mainnet.starknet.io",
-    "beraChain": "https://artio.rpc.berachain.com"
+    "beraChain": "https://artio.rpc.berachain.com",
+    "Sepolia": "https://eth-sepolia.g.alchemy.com/v2/qWbwo4qkGFiGCoWfbrJ6qTOYaJFK-3jI",
+    "Mode": "https://mainnet.mode.network"
 }
