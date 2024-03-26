@@ -5,6 +5,9 @@
 ## 2024/3/26 更新
 
 - 新增项目: Renzo质押项目
+- 基础功能更新：
+  - config/RpcConfig.json：增加Mode Network默认RPC。
+  - config/tokenAddress.json: 增加Mode网络常用token合约地址。
 - 新增任务：
   - task501：renzo交互任务，将掌珠中30%-50%的ETH质押转换为ezETH。
 
