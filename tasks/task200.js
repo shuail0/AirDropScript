@@ -36,9 +36,9 @@ function shuffleArray(array) {
 
 module.exports = async (params) => {
 
-    const taskList = [201, 202, 203, 204, 205, 206];
+    // const taskList = [201, 202, 203, 204, 205, 206];
     // // const taskList = [204, 205, 206];
-    // const taskList = [203];
+    const taskList = [203];
 
     const shuffleTaskList = shuffleArray(taskList)
     // 打印任务列表

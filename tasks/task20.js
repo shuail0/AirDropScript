@@ -36,7 +36,7 @@ module.exports = async (params) => {
     let tx = await woofi.swapEthToToken(wallet, eeeAddr, USDCAddress, amount);
     console.log('交易成功txHash：', tx.transactionHash)
 
-    // 随机暂停
+    // // 随机暂停
     const sleepTime = getRandomFloat(1, 5) * 60 * 1000;
     console.log('随机暂停：', sleepTime / 1000, '秒');
     await new Promise((resolve) => setTimeout(resolve, sleepTime));
@@ -50,29 +50,29 @@ module.exports = async (params) => {
     tx = await woofi.swapTokenToEth(wallet, USDCAddress, eeeAddr, usdcBalance);
     console.log('交易成功 txHash:', tx.transactionHash)
 
-    // 随机暂停
-    const sleepTime2 = getRandomFloat(1, 5) * 60 * 1000;
-    console.log('随机暂停：', sleepTime2 / 1000, '秒');
-    await new Promise((resolve) => setTimeout(resolve, sleepTime2)); 
+    // // 随机暂停
+    // const sleepTime2 = getRandomFloat(1, 5) * 60 * 1000;
+    // console.log('随机暂停：', sleepTime2 / 1000, '秒');
+    // await new Promise((resolve) => setTimeout(resolve, sleepTime2)); 
 
-    // 存款ETH
-    const depositAmountEther = ethBalance * 0.5;
-    console.log('存款ETH数量', depositAmountEther);
+    // // 存款ETH
+    // const depositAmountEther = ethBalance * 0.5;
+    // console.log('存款ETH数量', depositAmountEther);
 
-    const depositAmountWei = ethers.utils.parseEther(depositAmountEther.toString());
+    // const depositAmountWei = ethers.utils.parseEther(depositAmountEther.toString());
 
-    let txDeposit = await woofi.deposit(wallet, depositAmountWei);
-    console.log('存款成功 txHash:', txDeposit.transactionHash);
-    // 随机暂停
-    const sleepTime3 = getRandomFloat(1, 3) * 60 * 1000;
-    console.log('随机暂停：', sleepTime3 / 1000, '秒');
-    await new Promise((resolve) => setTimeout(resolve, sleepTime3)); 
+    // let txDeposit = await woofi.deposit(wallet, depositAmountWei);
+    // console.log('存款成功 txHash:', txDeposit.transactionHash);
+    // // 随机暂停
+    // const sleepTime3 = getRandomFloat(1, 3) * 60 * 1000;
+    // console.log('随机暂停：', sleepTime3 / 1000, '秒');
+    // await new Promise((resolve) => setTimeout(resolve, sleepTime3)); 
 
-    // 提取ETH
-    const weWethBalance = await getBalance(wallet, weWETH);   
-    console.log('提取ETH数量', weWethBalance);
+    // // 提取ETH
+    // const weWethBalance = await getBalance(wallet, weWETH);   
+    // console.log('提取ETH数量', weWethBalance);
 
-    let txWithdraw = await woofi.withdraw(wallet);
-    console.log('提取成功 txHash:', txWithdraw.transactionHash)
+    // let txWithdraw = await woofi.withdraw(wallet);
+    // console.log('提取成功 txHash:', txWithdraw.transactionHash)
 }
 
