@@ -4,7 +4,8 @@ const { getContract } = require('../../../../base/utils');
 const axios = require('axios');
 const randomUseragent = require('random-useragent');
 const { HttpsProxyAgent } = require('https-proxy-agent');
-const {sendRequest} = require('../../../../base/requestHelper');
+const { sendRequest } = require('../../../../base/requestHelper');
+const { pro } = require('ccxt');
 
 
 class Web3Go {
@@ -56,15 +57,19 @@ class Web3Go {
             httpsAgent: this.agent,
             headers: this.headers
         });
+        const r = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        let signnonce = '';
+        for (let i = 0; i < 17; i++) {
+            signnonce += r.charAt(Math.floor(Math.random() * r.length));
+        }
+        const msg = `reiki.web3go.xyz wants you to sign in with your Ethereum account:\n${this.wallet.address}\n\nWelcome to Web3Go! Click to sign in and accept the Web3Go Terms of Service. This request will not trigger any blockchain transaction or cost any gas fees. Your authentication status will reset after 7 days. Wallet address: ${this.wallet.address} Nonce: ${nonceResponse.nonce}\n\nURI: https://reiki.web3go.xyz\nVersion: 1\nChain ID: 56\nNonce: ${signnonce}\nIssued At: ${new Date().toISOString()}`;
 
-        const nonce = nonceResponse.nonce;
-        const msg = `reiki.web3go.xyz wants you to sign in with your Ethereum account:\n${this.wallet.address}\n\n${nonce}\n\nURI: https://reiki.web3go.xyz\nVersion: 1\nChain ID: 56\nNonce: ${nonce}\nIssued At: ${new Date().toISOString()}`;
         const signature = await this.wallet.signMessage(msg);
 
         url = `${this.baseUrl}/api/account/web3/web3_challenge`
         const jsonData = {
             address: this.wallet.address,
-            nonce: nonce,
+            nonce: nonceResponse.nonce,
             challenge: JSON.stringify({ msg: msg }),
             signature: signature
         }
