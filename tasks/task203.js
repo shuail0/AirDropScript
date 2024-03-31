@@ -23,13 +23,13 @@ module.exports = async (params) => {
     console.log('开始登陆');
     const challengeResponse = await web3go.login();
     console.log('登陆结果：', challengeResponse);
-    // const sleepTime = getRandomFloat(0.1, 0.2);
-    // await sleep();
+    const sleepTime = getRandomFloat(0.1, 0.2);
+    await sleep();
     
-    // // // 每日签到
-    // console.log('开始签到');
-    // const claimResult = await web3go.claim();
-    // console.log('签到结果：', claimResult);
+    // // 每日签到
+    console.log('开始签到');
+    const claimResult = await web3go.claim();
+    console.log('签到结果：', claimResult);
 
 
     // // 查询用户信息
