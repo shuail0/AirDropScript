@@ -1,10 +1,10 @@
 
 /**
- *  项目名称： ZeroLend
- * 项目链接：https://app.zerolend.xyz/
- * 项目文档：https://docs.zerolend.xyz/
- * GitHub：https://github.com/zerolend
- * 已完成功能： supplyEth, withdrawEth, borrowEth, repayEth, supplyToken, withdrawToken, borrowToken, repayToken
+ *  项目名称： Ionic
+ * 项目链接：https://app.ionic.money/
+ * 项目文档：https://doc.ionic.money/ionic-documentation
+ * GitHub：https://github.com/orgs/ionicprotocol/repositories
+ * 已完成功能： supplyToken, withdrawToken
  * 
  */
 
