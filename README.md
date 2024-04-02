@@ -2,6 +2,14 @@
 
 # 更新记录
 
+## 2024/4/2 更新
+- 新增项目： Kim、SwapMode、Supswap、Ionic
+- 新增任务：
+   - task502: Ionic交互项目，将账户中的所有ezETH存入Ionic中。
+   - task506: Kim 交互任务，将30%-60%的ETH兑换为ezETH，随机休息1-5分钟后再换回ETH。
+   - task507: SwapMode 交互任务，将30%-60%的ETH兑换为ezETH，随机休息1-5分钟后再换回ETH。
+   - task508: Supswap 交互任务，将30%-60%的ETH兑换为ezETH，随机休息1-5分钟后再换回ETH。
+
 ## 2024/3/26 更新
 
 - 新增项目: Renzo质押项目
