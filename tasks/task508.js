@@ -21,41 +21,29 @@ module.exports = async (params) => {
     const supSwap = new SupSwap(wallet);
     // // 查询代币信息
     const wETH = await fetchToken(coinAddress.wETH, wallet);
-    const USDC = await fetchToken(coinAddress.USDC, wallet);
     const ezETH = await fetchToken(coinAddress.ezETH, wallet);
-
     // // // 查询账户余额
-    // const ezETHBalance = fixedToFloat(await getErc20Balance(wallet, ezETH.address));
-    // console.log('账户ezETH余额：', ezETHBalance);
-
-    // 把ezETH兑换成USDC
-
+    const ethBalance = fixedToFloat(await wallet.getBalance());
+    console.log('账户ETH余额：', ethBalance);
     // // // 设定随机金额
-    // const minAmount = ethBalance * 0.2  // 最小交易数量
-    // const maxAmount = ethBalance * 0.6 // 最大交易数量
+    const minAmount = ethBalance * 0.2  // 最小交易数量
+    const maxAmount = ethBalance * 0.6 // 最大交易数量
     // // 随机交易数量
-    // let amount = floatToFixed(getRandomFloat(minAmount, maxAmount));
-    // let amount = floatToFixed(0.0001);
-    // console.log('交易数量：', fixedToFloat(amount));
-    // let tx = await supSwap.swapEthToToken(wETH.address, ezETH.address, amount, 100);
-    // console.log('交易成功，hash：', tx.transactionHash)
+    let amount = floatToFixed(getRandomFloat(minAmount, maxAmount));
+    console.log('交易数量：', fixedToFloat(amount));
+    let tx = await supSwap.swapEthToToken(wETH.address, ezETH.address, amount, 100);
+    console.log('交易成功，hash：', tx.transactionHash)
 
-    // let ezETHBalance = await getErc20Balance(wallet, ezETH.address);
-    // console.log('ezETH余额：', fixedToFloat(ezETHBalance), '开始授权...');
+    // 随机暂停
+    const sleepTime = getRandomFloat(1, 5);
+    console.log('随机暂停：', sleepTime, '分钟');
+    await sleep(sleepTime);
 
-    // await checkApprove(wallet, ezETH.address, supSwap.routerAddr, ezETHBalance);
-    // tx = await supSwap.swapTokenToToken(ezETH.address, wETH.address, ezETHBalance, 100);
-    // console.log('交易成功，hash：', tx.transactionHash)
-
-    // 查询ezETH余额
-    await sleep(1);
-    ezETHBalance = await getErc20Balance(wallet, ezETH.address);
+    let ezETHBalance = await getErc20Balance(wallet, ezETH.address);
     console.log('ezETH余额：', fixedToFloat(ezETHBalance), '开始授权...');
-    
+
     await checkApprove(wallet, ezETH.address, supSwap.routerAddr, ezETHBalance);
-
-    tx = await supSwap.swapTokenToEth(ezETH.address, wETH.address, ezETHBalance, 100);
-    console.log('交易成功 txHash:', tx.transactionHash)
-
+    tx = await supSwap.swapTokenToToken(ezETH.address, wETH.address, ezETHBalance, 100);
+    console.log('交易成功，hash：', tx.transactionHash)
 };
 

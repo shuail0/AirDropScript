@@ -20,12 +20,11 @@ module.exports = async (params) => {
     const wallet = new ethers.Wallet(pky, new ethers.getDefaultProvider(RPC.Mode));
     const ionic = new Ionic(wallet);
     // // 查询代币信息
-    const wETH = await fetchToken(coinAddress.wETH, wallet);
     const ezETH = await fetchToken(coinAddress.ezETH, wallet);
 
     // // 查询ezETH余额
     const ezETHBalance = await getErc20Balance(wallet, ezETH.address);
-    console.log('ezETH余额：', fixedToFloat(ezETHBalance, ezETH.decimal), '开始授权...');
+    console.log('ezETH余额：', fixedToFloat(ezETHBalance, ezETH.decimal), '开始存款...');
     let tx = await ionic.supplyToken(ezETH.address, ezETHBalance);
     console.log('交易成功，hash：', tx.transactionHash)
 
