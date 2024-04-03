@@ -26,12 +26,14 @@ class LayerBank {
 
     async supply(amount){
         const CoreContract = this.getCoreContract();
+        const gasPrice = (await this.wallet.provider.getGasPrice()).mul(50).div(100); // 减少50%的gasPrice
         const response = await CoreContract.supply(this.lETHAddr, amount, {value: amount});
         return await response.wait();
     };
 
     async redeemToken(amount){
         const CoreContract = this.getCoreContract();
+        const gasPrice = (await this.wallet.provider.getGasPrice()).mul(50).div(100); // 减少50%的gasPrice
         const response = await CoreContract.redeemToken(this.lETHAddr, amount);
         return await response.wait();
 
