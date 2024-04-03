@@ -37,14 +37,14 @@ class IronClad{
     async deposit(amount){
         const proxyContract = this.getproxyContract();
         const gasPrice = (await this.wallet.provider.getGasPrice()).mul(50).div(100); // 减少50%的gasPrice
-        const response = await proxyContract.deposit(this.ezETHAddr, amount, this.wallet.address, '0x0');
+        const response = await proxyContract.deposit(this.ezETHAddr, amount, this.wallet.address, '0x0', {gasPrice});
         return await response.wait();
     };
 
     async withdraw(amount){
         const proxyContract = this.getproxyContract();
         const gasPrice = (await this.wallet.provider.getGasPrice()).mul(50).div(100); // 减少50%的gasPrice
-        const response = await proxyContract.withdraw(this.ezETHAddr, amount, this.wallet.address);
+        const response = await proxyContract.withdraw(this.ezETHAddr, amount, this.wallet.address, {gasPrice});
         return await response.wait();
     }
 

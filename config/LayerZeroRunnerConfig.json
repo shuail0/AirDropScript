@@ -1,6 +1,6 @@
 {
-    "maxGasPrice": 100,
-    "walletPath": "/Users/lishuai/Documents/crypto/bockchainbot/TestWalletData加密.csv",
+    "maxGasPrice": 40,
+    "walletPath": "/Users/crystalh/Documents/WRCapital/coding/AirDropScript/data/504test.csv",
     "CONCURRENCY": 1,
     "minInterval": 5,
     "maxInterval": 15
