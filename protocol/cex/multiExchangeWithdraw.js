@@ -7,6 +7,7 @@
 const { loadApiKeys } = require('./cexUtils');
 const Bitget = require('./bitget');
 const OKX = require('./okx');
+const Binance = require('./binance');
 
 
 const multExchangeWithdraw = async (params) => {
@@ -19,6 +20,9 @@ const multExchangeWithdraw = async (params) => {
             break;
         case 'bitget':
             exchangeInstance = new Bitget(apiKeys);
+            break;
+        case 'binance':
+            exchangeInstance = new Binance(apiKeys);
             break;
         default:
             throw new Error(`Exchange ${exchange_name} is not supported`);
