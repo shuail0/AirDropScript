@@ -1,9 +1,9 @@
 /**
- * tasks101: stargate USDC跨链程序  
- * 1. 列表中所有账户的USDC余额信息
- * 2. 找出余额最多的链，作为转出链
- * 3. 随机选一个链，作为目标链
- * 4. 计算跨链金额,其余的全部跨链至目标链
+ * tasks101: Stone跨链程序  
+ * 1. 从交易所提ETH至Manta链
+ * 2. 将ETH兑换为Stone
+ * 3. 生成一个随机跨链次数，然后在Manta和Mode链之间跨链，执行一次跨链算一次。
+ * 4. 跨链完成后在Manta将Stone兑换为ETH，并充值至交易所。
  * 
  */
 
@@ -22,6 +22,12 @@ const {
     sleep,
 } = require("../base/utils.js");
 
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 module.exports = async (params) => {
     const { pky, amount, exchangeAddr } = params;
     const chains = ['Manta', 'Mode']; // 配置链信息
@@ -30,8 +36,6 @@ module.exports = async (params) => {
 
     const MantaStone = await fetchToken(tokenAddresss['Manta']['STONE'], mantaWallet);
     const MantaWETH = await fetchToken(tokenAddresss['Manta']['wETH'], mantaWallet);
-    const MantaUSDC = await fetchToken(tokenAddresss['Manta']['USDC'], mantaWallet);
-    console.log('MantaStone:', MantaStone.address, 'MantaWETH:', MantaWETH.address);
 
     // 1. 提币
     console.log('开始提币')
@@ -70,13 +74,13 @@ module.exports = async (params) => {
 
     // 3. 刷跨链
     // 循环跨链次数
-    const bridgeTimes = 2;
+    const bridgeTimes = getRandomInt(20,30);
 
     const stone = new Stone();
     // 循环跨链
     for (let i = 0; i < bridgeTimes; i++) {
 
-        console.log('第', i + 1, '次跨链');
+        console.log('随机总次数:',bridgeTimes,',当前开始第', i + 1, '次跨链');
         let walletInfo = {};
         let STONE, StoneBalance;
         // // 遍历所有链
@@ -122,7 +126,7 @@ module.exports = async (params) => {
             console.log('开始跨链，从Mode跨链至Manta,金额:', fixedToFloat(ModeStoneBalance, ModeStone.decimal));
             const stone = new Stone();
             const tx = await stone.bridgeStone(modeWallet, 'Mode', 'Manta', ModeStoneBalance);
-            console.log('跨链成功tx:', tx)
+            console.log('跨链成功tx:', tx.transactionHash)
             await sleep(2);
             MantaStoneBalance = await getErc20Balance(mantaWallet, MantaStone.address);
         } else if (ModeStoneBalance.lte(0) && MantaStoneBalance.lte(0)){
@@ -147,7 +151,7 @@ module.exports = async (params) => {
             to: exchangeAddr,
             value: transferAmount
         });
-        console.log('tx:', tx);
+        console.log('tx:', tx.hash);
 
     }
 
