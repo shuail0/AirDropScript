@@ -96,6 +96,7 @@ const executeTask = async (taskTag, params) => {
       wt.time = new Date().toISOString();
       wt.error = error;
       delete wt.wallet;
+      delete wt.pky;
       await appendObjectToCSV(wt, "../logs/zksyncLargeVolumeFail.csv");
     }
   }

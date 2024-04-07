@@ -60,7 +60,8 @@ async function processWallet(wt, ...args) {
         await logWithTime('../logs/Sucess', `walletName:${wt.Wallet}, walletAddr:${wt.Address}, taskTag:${wt.taskTag}`);
         wt.time = new Date().toISOString();
         delete wt.wallet;
-        await appendObjectToCSV(wt, '../logs/zksyncSucess.csv')
+        delete wt.pky;
+        await appendObjectToCSV(wt, '../logs/layerZeroSucess.csv')
         const interval = getRandomFloat(CONFIG.minInterval, CONFIG.maxInterval)
         console.log(`任务完成，线程暂停${interval}分钟`);
         await sleep(interval);
@@ -70,7 +71,8 @@ async function processWallet(wt, ...args) {
         wt.time = new Date().toISOString();
         wt.error = error;
         delete wt.wallet;
-        await appendObjectToCSV(wt, '../logs/zksyncFail.csv')
+        delete wt.pky;
+        await appendObjectToCSV(wt, '../logs/layerZeroFail.csv')
     }
 }
 

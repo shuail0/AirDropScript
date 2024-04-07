@@ -42,6 +42,7 @@ async function processWallet(wt, ...args) {
         await logWithTime('../logs/Sucess', `walletName:${wt.Wallet}, walletAddr:${wt.Address}, taskTag:${wt.taskTag}`);
         wt.time = new Date().toISOString();
         delete wt.wallet;
+        delete wt.pky;
         await appendObjectToCSV(wt, '../logs/chekinSucess.csv')
         
         // 休息
@@ -56,6 +57,7 @@ async function processWallet(wt, ...args) {
         wt.time = new Date().toISOString();
         wt.error = error;
         delete wt.wallet;
+        delete wt.pky;
         await appendObjectToCSV(wt, '../logs/chekinFail.csv')
     }
 }
