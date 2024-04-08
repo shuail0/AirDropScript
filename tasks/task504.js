@@ -22,12 +22,12 @@ module.exports = async (params) => {
     // // 查询代币信息
     const ironEzETH = await fetchToken(ironclad.ironEzETHAddr, wallet);
     const ezETH = await fetchToken(coinAddress.ezETH, wallet);
-    const wETH = await fetchToken(coinAddress.WETH, wallet);
+    const wETH = await fetchToken(coinAddress.wETH, wallet);
 
 
     // 查询ezETH余额
     let ezETHBalance = await getErc20Balance(wallet, ezETH.address);
-    console.log('ezETH余额：', fixedToFloat(ezETHBalance, ezETH.decimal), '开始授权...');
+    console.log('ezETH余额：', fixedToFloat(ezETHBalance, ezETH.decimal));
 
     if (ezETHBalance.lt(floatToFixed(0.0001)) ) {
         console.log('ezETH余额不足，从Kim中买入ezETH');
@@ -40,34 +40,25 @@ module.exports = async (params) => {
         // // 随机交易数量
         let amount = floatToFixed(getRandomFloat(minAmount, maxAmount));
         console.log('随机交易数量', fixedToFloat(amount), ' 开始交易')
-        tx = await kim.swapEthToToken(wETH.address, ezETH.address, amount);
-        console.log('买入成功，hash：', tx, '开始检查授权')
+        let swapTx = await kim.swapEthToToken(wETH.address, ezETH.address, amount);
+        console.log('买入成功，hash：', swapTx, '开始检查授权')
     };  
 
-    await sleep(2);
+    await sleep(0.1);
 
 
     ezETHBalance = await getErc20Balance(wallet, ezETH.address);
-    console.log('ezETH余额：', fixedToFloat(ezETHBalance, ezETH.decimal), '开始授权...');
-    
-        
-    
-
+    console.log('ezETH余额：', fixedToFloat(ezETHBalance, ezETH.decimal), '开始检查授权...');
     await checkApprove(wallet, ezETH.address, ironclad.proxyContractAddr, ezETHBalance);
-
     let tx = await ironclad.deposit(ezETHBalance);
     console.log('交易成功 txHash:', tx.transactionHash)
-
     const sleepTime = getRandomFloat(1, 5);
     console.log('随机暂停：', sleepTime, '分钟');
     await sleep(sleepTime);
-
     const ironEzETHBalance = await getErc20Balance(wallet, ironEzETH.address);
-    console.log('质押余额:', fixedToFloat(ironEzETHBalance, ironEzETH.decimal), '开始授权...');
-    
-
+    console.log('质押余额:', fixedToFloat(ironEzETHBalance, ironEzETH.decimal), '开始检查授权...');
     await checkApprove(wallet, ironEzETH.address, ironclad.proxyContractAddr, ironEzETHBalance);
-
+    console.log('开始取出ezETH');
     tx = await ironclad.withdraw(ironEzETHBalance);
     console.log('交易成功 txHash:', tx.transactionHash);
 }
