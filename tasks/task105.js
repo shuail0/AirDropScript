@@ -44,17 +44,17 @@ module.exports = async (params) => {
     console.log(`提币成功，等待${sleepTime}分钟后查询钱包余额;`)
     await sleep(sleepTime);  // 等待10分钟
 
-    tradingAmount = floatToFixed(amount - 0.001);
+    tradingAmount = floatToFixed(amount - 0.002);
     // 2. 买入Stone
     // 检查账户余额
     while (true) {
         try {
             const ethBalance = await mantaWallet.getBalance();
             if (ethBalance.lt(tradingAmount)) { // 如果账户余额小于1个ETH
-                console.log('当前钱包余额:', fixedToFloat(ethBalance), ',账户余额小于', amount, 'ETH， 等待5分钟后再次查询；');
+                console.log('当前钱包余额:', fixedToFloat(ethBalance), ',账户余额小于', fixedToFloat(tradingAmount), 'ETH， 等待5分钟后再次查询；');
                 await sleep(5);
             } else {
-                console.log('当前钱包余额:', fixedToFloat(ethBalance), ',账户余额大于', amount, 'ETH， 程序继续运行；');
+                console.log('当前钱包余额:', fixedToFloat(ethBalance), ',账户余额大于', fixedToFloat(tradingAmount), 'ETH， 程序继续运行；');
                 break;
             };
 
@@ -65,7 +65,7 @@ module.exports = async (params) => {
     };
 
     const aperture = new AperTure(mantaWallet);
-    console.log('开始将ETH转换为Stone,金额:', amount);
+    console.log('开始将ETH兑换为Stone,金额:', fixedToFloat(tradingAmount));
     let tx = await aperture.swapEthToToken(MantaWETH.address, MantaStone.address, 500, tradingAmount);
     console.log('tx:', tx.transactionHash);
 
