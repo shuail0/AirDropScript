@@ -74,13 +74,13 @@ module.exports = async (params) => {
 
     // 3. 刷跨链
     // 循环跨链次数
-    const bridgeTimes = getRandomInt(30,60);
+    const bridgeTimes = getRandomInt(30, 60);
 
     const stone = new Stone();
     // 循环跨链
     for (let i = 0; i < bridgeTimes; i++) {
 
-        console.log('随机总次数:',bridgeTimes,',当前开始第', i + 1, '次跨链');
+        console.log('随机总次数:', bridgeTimes, ',当前开始第', i + 1, '次跨链');
         let walletInfo = {};
         let STONE, StoneBalance;
         // // 遍历所有链
@@ -129,32 +129,38 @@ module.exports = async (params) => {
             const stone = new Stone();
             const tx = await stone.bridgeStone(modeWallet, 'Mode', 'Manta', ModeStoneBalance);
             console.log('跨链成功tx:', tx.transactionHash)
-            await sleep(2);
-            MantaStoneBalance = await getErc20Balance(mantaWallet, MantaStone.address);
-        } else if (ModeStoneBalance.lte(0) && MantaStoneBalance.lte(0)){
+
+        } else if (ModeStoneBalance.lte(0) && MantaStoneBalance.lte(0)) {
             // 抛出异常
             throw new Error('Mode 和 Manta Stone余额均为0，无法继续运行程序');
         }
     }
 
-    if (MantaStoneBalance.gt(0)) {
-        console.log('将MantaStone兑换为MantaETH,金额:', fixedToFloat(MantaStoneBalance, MantaStone.decimal));
-        await checkApprove(mantaWallet, MantaStone.address, aperture.swapRouterAddr, MantaStoneBalance);
-        let tx = await aperture.swapTokenToEth(MantaStone.address, MantaWETH.address, 500, MantaStoneBalance);
-        console.log('tx:', tx.transactionHash);
-        // 5. 充值
-        // 查询manta ETH余额
-        const mantaEthBalance = await mantaWallet.getBalance();
-        console.log('MantaETH余额:', fixedToFloat(mantaEthBalance));
-        // 转账金额为余额 - 0.0001ETH
-        let transferAmount = mantaEthBalance.sub(floatToFixed(0.0001));
-        console.log('开始将ETH转回交易所，金额:', fixedToFloat(transferAmount));
-        tx = await mantaWallet.sendTransaction({
-            to: exchangeAddr,
-            value: transferAmount
-        });
-        console.log('tx:', tx.hash);
+    while (true) {
+        MantaStoneBalance = await getErc20Balance(mantaWallet, MantaStone.address);
+        if (MantaStoneBalance.gt(0)) {
+            console.log('将MantaStone兑换为MantaETH,金额:', fixedToFloat(MantaStoneBalance, MantaStone.decimal));
+            await checkApprove(mantaWallet, MantaStone.address, aperture.swapRouterAddr, MantaStoneBalance);
+            let tx = await aperture.swapTokenToEth(MantaStone.address, MantaWETH.address, 500, MantaStoneBalance);
+            console.log('tx:', tx.transactionHash);
+            // 5. 充值
+            // 查询manta ETH余额
+            const mantaEthBalance = await mantaWallet.getBalance();
+            console.log('MantaETH余额:', fixedToFloat(mantaEthBalance));
+            // 转账金额为余额 - 0.0001ETH
+            let transferAmount = mantaEthBalance.sub(floatToFixed(0.0001));
+            console.log('开始将ETH转回交易所，金额:', fixedToFloat(transferAmount));
+            tx = await mantaWallet.sendTransaction({
+                to: exchangeAddr,
+                value: transferAmount
+            });
+            console.log('tx:', tx.hash);
+            break;
 
+        } else {
+            console.log('MantaStone余额为0，等待2分钟后继续查询');
+            await sleep(2);
+        }
     }
 
 
