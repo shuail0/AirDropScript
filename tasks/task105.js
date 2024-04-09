@@ -74,7 +74,7 @@ module.exports = async (params) => {
 
     // 3. 刷跨链
     // 循环跨链次数
-    const bridgeTimes = getRandomInt(20,30);
+    const bridgeTimes = getRandomInt(30,60);
 
     const stone = new Stone();
     // 循环跨链
@@ -106,7 +106,9 @@ module.exports = async (params) => {
         console.log('开始跨链，从', maxChain, '跨链至', randomChain, '金额:', fixedToFloat(bridgeAmount, walletInfo[maxChain].tokenInfo.decimal));
         let bridgetx = await stone.bridgeStone(walletInfo[maxChain].wallet, maxChain, randomChain, bridgeAmount);
         console.log('跨链成功tx:', bridgetx.transactionHash)
-        await sleep(2);
+        let sleepTime = getRandomFloat(3, 5);
+        console.log('随机暂停：', sleepTime, '分钟');
+        await sleep(sleepTime);
 
     }
 
