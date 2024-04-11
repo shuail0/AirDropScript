@@ -2,6 +2,12 @@
 
 # 更新记录
 
+### 2024/4/10 更新
+- 新增任务：
+   - task510:查询Mode链的钱包是否有wETH，如果有，转换为原生ETH。
+- 任务调整：
+   - task507:修复兑换ezETH兑换ETH收到wETH的BUG。
+   - task508:修复兑换ezETH兑换ETH收到wETH的BUG。
 
 
 ### 2024/4/8 更新
@@ -10,7 +16,6 @@
 - 新增运行程序：runner目录下新增` bnSubtrasfer.js`程序，功能是将指定资产从所有子账户的现货账户中归集到主账户现货账户中，每30秒执行一轮。运行前需要把代码中的` mainAccEmail`改为主账户的邮箱地址，` currenc`改为需要归集的币种。
 - 新增任务：
   - task105: Stone刷跨链程序， 从币安提ETH至Manta后兑换为Stone，然后再Manta和Stone之间来回跨链20-30次（每次跨链算一次）。最后再将Stone换回ETH，存入交易所。 使用LayerZero运行程序执行，数据模板参考zksync大额模板。
-  - task503: 
   - task504: IronClad交互程序,存入ez ETH，等待1-5分钟后取出
   - task505: LayerBank交互程序, 随机存入30% - 50%的ETH，等待1-5分钟后取出
   - task509: Molend交互程序, 随机存入20% - 60%的ETH，等待1-5分钟后取出
