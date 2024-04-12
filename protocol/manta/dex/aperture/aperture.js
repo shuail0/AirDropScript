@@ -59,7 +59,7 @@ class AperTure {
 
     async swapTokenToEth(tokenIn, tokenOut, fee, amount, min = ethers.BigNumber.from(0), ) {
         const router = this.getRouter();
-        const gasPrice = (await this.wallet.provider.getGasPrice()).mul(15).div(100); // 减少85%的gasPrice
+        const gasPrice = (await this.wallet.provider.getGasPrice()).mul(90).div(100); // 减少85%的gasPrice
         const callData = this.getExactInputSingleCallData( tokenIn, tokenOut, fee, amount, min, '0x0000000000000000000000000000000000000002');
         const unwrapWETH9CallData = router.interface.encodeFunctionData('unwrapWETH9', [
             floatToFixed(0)
