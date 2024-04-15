@@ -36,6 +36,7 @@ module.exports = async (params) => {
 
     const MantaStone = await fetchToken(tokenAddresss['Manta']['STONE'], mantaWallet);
     const MantaWETH = await fetchToken(tokenAddresss['Manta']['wETH'], mantaWallet);
+    const aperture = new AperTure(mantaWallet);
 
     // 1. 提币
     console.log('开始提币')
@@ -64,7 +65,6 @@ module.exports = async (params) => {
         };
     };
 
-    const aperture = new AperTure(mantaWallet);
     console.log('开始将ETH兑换为Stone,金额:', fixedToFloat(tradingAmount));
     let tx = await aperture.swapEthToToken(MantaWETH.address, MantaStone.address, 500, tradingAmount);
     console.log('tx:', tx.transactionHash);
@@ -111,9 +111,6 @@ module.exports = async (params) => {
         await sleep(sleepTime);
 
     }
-
-
-
     // 4. 卖出Stone
 
     // 查询MantaStone余额
@@ -135,7 +132,6 @@ module.exports = async (params) => {
             throw new Error('Mode 和 Manta Stone余额均为0，无法继续运行程序');
         }
     }
-
     while (true) {
         MantaStoneBalance = await getErc20Balance(mantaWallet, MantaStone.address);
         if (MantaStoneBalance.gt(0)) {
