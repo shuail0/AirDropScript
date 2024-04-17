@@ -48,7 +48,7 @@ const tokenApprove = async (Wallet, tokenAddr, spender, approveValue) => {
 };
 
 // 代币转账
-const tokenTransfer = async (wallet, address, amount, tokenAddr) => {
+const tokenTransfer = async (wallet, tokenAddr, amount, address) => {
     const tokenContract = getContract(tokenAddr, abi, wallet);
     const tx = await tokenContract.transfer(address, amount);
     return await tx.wait();
