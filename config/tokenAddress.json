@@ -22,37 +22,46 @@
         "WETH": "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
         "USDT": "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
         "USDC": "0xff970a61a04b1ca14834a43f5de4533ebddb5cc8",
-        "NativeUSDC": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831"
+        "NativeUSDC": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+        "STG": "0x6694340fc020c5e6b96567843da2df01b2ce1eb6"
     },
     "Optimism": {
         "WETH": "0x4200000000000000000000000000000000000006",
         "USDT": "0x94b008aA00579c1307B0EF2c499aD98a8ce58e58",
         "USDC": "0x7f5c764cbc14f9669b88837ca1490cca17c31607",
-        "NativeUSDC": "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85"
+        "NativeUSDC": "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
+        "STG": "0x296f55f8fb28e498b858d0bcda06d955b2cb3f97"
     },
     "Base": {
-        "USDC": "0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA"
+        "USDC": "0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA",
+        "STG": "0xe3b53af74a4bf62ae5511055290838050bf764df"
     },
     "Linea": {
-        "USDC": ""
+        "USDC": "",
+        "STG": "0x808d7c71ad2ba3fa531b068a2417c63106bc0949"
     },
     "BSC": {
-        "USDT": "0x55d398326f99059fF775485246999027B3197955"
+        "USDT": "0x55d398326f99059fF775485246999027B3197955",
+        "STG": "0xb0d502e938ed5f4df2e681fe6e419ff29631d62b"
     },
     "Avalanche": {
-        "USDC": "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E"
+        "USDC": "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E",
+        "STG": "0x2f6f07cdcf3588944bf4c42ac74ff24bf56e7590"
     },
     "Polygon": {
-        "USDC": "0x2791bca1f2de4661ed88a30c99a7a9449aa84174"
+        "USDC": "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
+        "STG": "0x2F6F07CDcf3588944Bf4C42aC74ff24bF56e7590"
     },
     "Fantom": {
-        "USDC": "0x28a92dde19D9989F39A49905d7C9C2FAc7799bDf"
+        "USDC": "0x28a92dde19D9989F39A49905d7C9C2FAc7799bDf",
+        "STG": "0x2f6f07cdcf3588944bf4c42ac74ff24bf56e7590"
     },
     "Metis": {
         "USDC": "0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000"
     },
     "Kava": {
-        "USDT": "0xAad094F6A75A14417d39f04E690fC216f080A41a"
+        "USDT": "0xAad094F6A75A14417d39f04E690fC216f080A41a",
+        "STG": "0x83c30eb8bc9ad7c56532895840039e62659896ea"
     },
     "Mantle": {
         "USDC": "0xAad094F6A75A14417d39f04E690fC216f080A41a"
