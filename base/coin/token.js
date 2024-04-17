@@ -47,6 +47,13 @@ const tokenApprove = async (Wallet, tokenAddr, spender, approveValue) => {
     return await txApprove.wait();
 };
 
+// 代币转账
+const tokenTransfer = async (wallet, address, amount, tokenAddr) => {
+    const tokenContract = getContract(tokenAddr, abi, wallet);
+    const tx = await tokenContract.transfer(address, amount);
+    return await tx.wait();
+};
+
 
 
 // erc20代币转账，仅限于zksync网络
@@ -71,4 +78,4 @@ async function checkApprove(wallet, tokenAddr, spender, approveValue) {
     }
 }
 
-module.exports = { getSwapTokenAddress, fetchToken, getBalance, tokenApprove, tokenTrasfer, getAllowance, checkApprove, getErc20Balance }
+module.exports = { getSwapTokenAddress, fetchToken, getBalance, tokenApprove, tokenTrasfer, getAllowance, checkApprove, getErc20Balance, tokenTransfer }
