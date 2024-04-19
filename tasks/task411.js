@@ -36,7 +36,7 @@ module.exports = async (params) => {
     const token = await fetchToken(coinAddress[tokenSymbol], account);
     // 查询余额
     let tokenBalance = await getBalance(account, token.address);
-    if (tokenBalance.lt(floatToFixed(0.0001))) {
+    if (tokenBalance.lt(floatToFixed(0.01))) {
         await retry(multExchangeWithdraw, [params], 2, 5);  // 提币，最多重试1次
         const sleepTime = getRandomFloat(10, 15)
         console.log(`提币成功，等待${sleepTime}分钟后尝试跨链;`)
@@ -45,7 +45,7 @@ module.exports = async (params) => {
     // // 再次查询余额
     while (true) {
         tokenBalance = await getBalance(account, token.address);
-        if (tokenBalance.lt(floatToFixed(0.0001))) { // 如果账户余额小于1个ETH
+        if (tokenBalance.lt(floatToFixed(0.01))) { // 如果账户余额小于1个ETH
             console.log('当前钱包余额:', fixedToFloat(tokenBalance), ',账户余额小于', 0.001, 'ETH, 等待5分钟后再次查询;');
             await sleep(5);
         } else {
