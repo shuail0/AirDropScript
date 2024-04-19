@@ -1,6 +1,11 @@
 # AirDropScript
 
 # 更新记录
+## 2024/4/19 更新
+- 新增任务：
+   - task411: 交易所提ETH至starknet后再将ETH从官桥跨链至主网。程序数据格式参照`stk大额数据模板.csv`, 主网的地址填到`exchangeAddr`字段中即可。运行主程序为`StkLargeVolumeTransaction.js`.
+- 其他：
+   - 包更新：使用了新版本的starknetjs库，运行前先执行`npm i`,安装新版本的库。
 
 ### 2024/4/10 更新
 - 新增任务：
