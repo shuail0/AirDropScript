@@ -88,8 +88,7 @@ class StkBridges {
         const trasferCallData = gettokenTransferCallData(token.address, '0x6e02b62e101b44382d030d7aee5528bf65eed13d3b2d5da3dfa883a2e1ce5f7', fee);
         bridgeAmount = amount - fee;
         callData = this.getWithdrawCallData(account, recipient, token, bridgeAmount);
-        // const multiCallData = [trasferCallData, callData];
-        const multiCallData = [callData];
+        const multiCallData = [trasferCallData, callData];
         console.log('multiCallData:', multiCallData);
         return await multiCallContract(account, multiCallData);
 
