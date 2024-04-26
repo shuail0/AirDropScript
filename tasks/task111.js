@@ -14,7 +14,7 @@ module.exports = async (params) => {
         const wallet = new ethers.Wallet(pky, provider);
         const ethBalance = await wallet.getBalance();
         ethers.logger.info('ETH余额:', fixedToFloat(ethBalance), '开始转账');
-        const transferAmount = ethers.utils.parseEther("0.001");
+        const transferAmount = ethBalance.sub(ethers.utils.parseEther("0.0045"));
         const tx = await wallet.sendTransaction({
             to: exchangeAddr,
             value: transferAmount
