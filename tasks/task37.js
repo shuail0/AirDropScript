@@ -2,8 +2,8 @@
  * tasks11 : syncswapPayMast交互程序：
  *  1.传入wallet类。
  *  2.查询账户ETH余额。
- *  3.在指定范围随机将一定数量的ETH兑换为USDC
- *  4.将获得的USDC兑换为ETH, 使用交易等token作为GAS支付。
+ *  3.在指定范围随机将一定数量的ETH兑换为USDC, DAI, USDT中的一种。
+ *  4.将获得的币兑换为ETH, 使用交易的token作为GAS支付。
  */
 
 const SyncSwapPaymast = require('../protocol/zksync/dex/syncswapPaymast/SyncSwapPaymast.js');
