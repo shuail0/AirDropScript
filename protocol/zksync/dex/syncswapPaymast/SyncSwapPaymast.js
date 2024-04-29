@@ -37,7 +37,7 @@ class SyncSwapPaymast {
     return getContract(routerAddr, routerAbi, wallet);
   };
 
-  async swapEthToToken(wallet, tokenIn, tokenOut, amount, min=0) {
+  async swapEthToToken(wallet, tokenIn, tokenOut, amount, min = 0) {
     const router = await this.getRouter(wallet);
     const poolAddr = await this.getPool(wallet, tokenIn, tokenOut)
     // 交易模式：
@@ -74,7 +74,7 @@ class SyncSwapPaymast {
         [15]
       )
     });
-    
+
 
     const response = await router.swap(
       paths,
@@ -104,6 +104,7 @@ class SyncSwapPaymast {
       data: swapData,
       callback: '0x0000000000000000000000000000000000000000',
       callbackData: '0x',
+      useVault: true
     }];
     const paths = [{
       steps: steps,
@@ -125,6 +126,24 @@ class SyncSwapPaymast {
         [15]
       )
     });
+
+    console.log('paymasterParams', paymasterParams);
+
+
+    // const response = await router.populateTransaction.swap(
+    //   paths,
+    //   0,
+    //   ethers.BigNumber.from(Math.floor(Date.now() / 1000)).add(1800),
+    //   {
+    //     ...params,
+    //     customData: {
+    //       paymasterParams: paymasterParams,
+    //       ergsPerPubdata: utils.DEFAULT_GAS_PER_PUBDATA_LIMIT,
+    //     },
+    //   }
+    // )
+    // console.log('response', response);
+    // process.exit(0);
     const response = await router.swap(
       paths,
       0,
