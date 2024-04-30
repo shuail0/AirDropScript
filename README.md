@@ -1,6 +1,13 @@
 # AirDropScript
 
 # 更新记录
+## 2024/4/30 更新
+- 新增项目：购买Sepolia、Eclipse测试网跨链
+- 新增任务：
+   - task106: 在OP或ARB网络使用0.0001-0.0002ETH购买sepoliaETH，然后随机将0.3-0.8sepoliaETH跨链至Eclipse测试网。
+- 配置调整：
+   - RpcCoinfig.json: 修改Sepolia网络默认RPC
+
 ## 2024/4/28 更新
 - 新增任务：
    - task37: syncswap Paymaster交互任务， 首先将账户中20%-60%的ETH兑换为USDC、DAI、USDT其中一种，然后再换回ETH，换回的金额为获得的币种-0.5。
