@@ -35,7 +35,9 @@ class TestBridge {
         const contract = this.getTestBridgeContract(wallet, contractAddress[soureChain].contract)
         const dstChainId = contractAddress[dstChain].chainId
         const value = amount.add(ethers.utils.parseEther('0.00014'));
-        const gasPrice = await wallet.provider.getGasPrice();
+        const basePrice =  await wallet.provider.getGasPrice();
+        // 增加10%的gasPrice
+        const gasPrice = basePrice.add(basePrice.div(10));
         const gasLimit = await contract.estimateGas.swapAndBridge(
             amount,
             '0x0',
