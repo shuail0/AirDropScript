@@ -4,15 +4,15 @@ const RPC = require('../config/RpcConfig.json');
 const { appendObjectToCSV } = require('../base/utils');
 
 module.exports = async (params) => {
-    const { pky } = params;
+    const { Wallet, Address, pky } = params;
     const provider = new ethers.providers.JsonRpcProvider(RPC.sepolia);
     const wallet = new ethers.Wallet(pky, provider);
     const analogDeploy = new AnalogDeploy();
-    const AccountInfo = { Address: wallet.address };
+    const AccountInfo = { Wallet, Address }
 
     const transactionResults = [];
 
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 1; i++) {
         try {
             // 部署合约
             const contractAddress = await analogDeploy.deployContract(wallet);
@@ -34,10 +34,9 @@ module.exports = async (params) => {
             const txHash = await analogDeploy.subMessage(wallet, analogDeploy.generateRandomHex);
             console.log(`第 ${i + 1} 次合约交互成功，交互hash: ${txHash}`);
 
-            // 记录交易结果
             transactionResults.push({
-                walletName: 'testwallet',  // 示例值，请根据实际需要替换
-                walletAddr: wallet.address,
+                Wallet,
+                Address,
                 contractAddress,
                 verifyStatus: verifyStatus ? 'Success' : 'Failure',
                 txHash
