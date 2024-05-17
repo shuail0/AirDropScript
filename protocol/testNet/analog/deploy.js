@@ -45,8 +45,23 @@ class AnalogDeploy {
             "constructor_args": "",
             "license_type": "none"
         };
-        const response = await axios.post(url, params);
-        console.log('合约验证成功，验证结果:', response.data.message);
+
+        try {
+            const response = await axios.post(url, params);
+            const data = response.data;
+
+            // 检查响应数据以确定验证状态
+            if (response.status === 200 && data.message && data.message.toLowerCase().includes("started")) {
+                console.log('合约验证成功，验证结果:', data.message);
+                return true;
+            } else {
+                console.error('合约验证失败，验证结果:', data.message || response.status);
+                return false;
+            }
+        } catch (error) {
+            console.error('合约验证请求出错:', error.message);
+            return false;
+        }
     }
 
     generateRandomHex() {

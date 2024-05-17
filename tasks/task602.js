@@ -12,7 +12,7 @@ module.exports = async (params) => {
 
     const transactionResults = [];
 
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < 5; i++) {
         try {
             // 部署合约
             const contractAddress = await analogDeploy.deployContract(wallet);
@@ -34,8 +34,10 @@ module.exports = async (params) => {
             const txHash = await analogDeploy.subMessage(wallet, analogDeploy.generateRandomHex);
             console.log(`第 ${i + 1} 次合约交互成功，交互hash: ${txHash}`);
 
+            // 记录交易结果
             transactionResults.push({
-                AccountInfo,
+                walletName: 'testwallet',  // 示例值，请根据实际需要替换
+                walletAddr: wallet.address,
                 contractAddress,
                 verifyStatus: verifyStatus ? 'Success' : 'Failure',
                 txHash
