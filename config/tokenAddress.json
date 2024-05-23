@@ -38,7 +38,10 @@
         "STG": "0xe3b53af74a4bf62ae5511055290838050bf764df"
     },
     "Linea": {
-        "USDC": "",
+        "DAI": "0x4AF15ec2A0BD43Db75dd04E62FAA3B8EF36b00d5",
+        "USDC": "0x176211869cA2b568f2A7D4EE941E073a821EE1ff",
+        "USDT": "0xA219439258ca9da29E9Cc4cE5596924745e12B93",
+        "WBTC": "0x3aab2285ddcddad8edf438c1bab47e1a9d05a9b4",
         "STG": "0x808d7c71ad2ba3fa531b068a2417c63106bc0949"
     },
     "BSC": {
