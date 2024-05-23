@@ -17,5 +17,7 @@
     "beraChain": "https://artio.rpc.berachain.com",
     "Sepolia": "https://rpc.sepolia.org/",
     "Mode": "https://mainnet.mode.network",
-    "Manta": "https://pacific-rpc.manta.network/http"
+    "Manta": "https://pacific-rpc.manta.network/http",
+    "sepolia": "https://1rpc.io/sepolia",
+    "Holesky": "https://1rpc.io/holesky"
 }

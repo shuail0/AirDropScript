@@ -71,17 +71,35 @@ const saveObjectToCSV = (data, outputPath) => {
   console.log(`Data saved to ${outputPath}`);
 };
 
-// 将单个对象追加到 CSV 文件
-const appendObjectToCSV = async (obj, outputPath) => {
-  // Check if the file already exists. If not, write headers.
-  if (!fs.existsSync(outputPath)) {
-      const headers = Object.keys(obj).filter(key => key !== 'wallet').join(',');
-      fs.writeFileSync(outputPath, headers + '\n', 'utf8');
-  }
-  const values = Object.values(obj).map(value => `"${value}"`).join(',');
-  const csvRow = `${values}\n`;
-  fs.appendFileSync(outputPath, csvRow, 'utf8');
+// // 将单个对象追加到 CSV 文件
+// const appendObjectToCSV = async (obj, outputPath) => {
+//   // Check if the file already exists. If not, write headers.
+//   if (!fs.existsSync(outputPath)) {
+//       const headers = Object.keys(obj).filter(key => key !== 'wallet').join(',');
+//       fs.writeFileSync(outputPath, headers + '\n', 'utf8');
+//   }
+//   const values = Object.values(obj).map(value => `"${value}"`).join(',');
+//   const csvRow = `${values}\n`;
+//   fs.appendFileSync(outputPath, csvRow, 'utf8');
 
+// };
+
+const appendObjectToCSV = async (obj, outputPath) => {
+  try {
+      // Check if the file already exists. If not, write headers.
+      if (!fs.existsSync(outputPath)) {
+          const headers = Object.keys(obj).join(',');
+          fs.writeFileSync(outputPath, headers + '\n', 'utf8');
+      }
+
+      const values = Object.values(obj).map(value => `"${value}"`).join(',');
+      const csvRow = `${values}\n`;
+      fs.appendFileSync(outputPath, csvRow, 'utf8');
+
+      console.log(`Successfully appended data to ${outputPath}`);
+  } catch (error) {
+      console.error(`Error appending data to CSV: ${error.message}`);
+  }
 };
 
 // 暂停函数
