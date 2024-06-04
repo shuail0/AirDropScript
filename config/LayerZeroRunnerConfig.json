@@ -1,6 +1,6 @@
 {
-    "maxGasPrice": 15,
-    "walletPath": "/Users/crystalh/Documents/WRCapital/coding/AirDropScript/data/scroll test.csv",
+    "maxGasPrice": 40,
+    "walletPath": "/Users/admin/Desktop/AccountScript/wallet.csv",
     "CONCURRENCY": 1,
     "minInterval": 5,
     "maxInterval": 15

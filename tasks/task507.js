@@ -42,7 +42,7 @@ module.exports = async (params) => {
     console.log('ezETH余额：', fixedToFloat(ezETHBalance), '开始授权...');
 
     await checkApprove(wallet, ezETH.address, swapMode.routerAddr, ezETHBalance);
-    tx = await swapMode.swapTokenToToken(ezETH.address, wETH.address, ezETHBalance);
+    tx = await swapMode.swapTokenToEth(ezETH.address, wETH.address, ezETHBalance);
     console.log('交易成功，hash：', tx.transactionHash);
 
 };

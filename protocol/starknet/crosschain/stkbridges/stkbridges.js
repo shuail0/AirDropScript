@@ -1,7 +1,9 @@
 const { BigNumber, Wallet, providers, utils } = require('ethers');
 const { getContract, floatToFixed } = require('../../../../base/utils');
-const { SequencerProvider, constants, RpcProvider } = require("starknet");
-
+const { SequencerProvider, constants, RpcProvider, CallData } = require("starknet");
+const { multExchangeWithdraw } = require('../../../cex/multiExchangeWithdraw');
+const { getContract:getStkContract, bigNumbetToUint256, multiCallContract } = require('../../../../base/stkUtils');
+const { gettokenTransferCallData } = require('../../../../base/coin/stkToken');
 class StkBridges {
     constructor() {
         this.ethContractAddr = '0xae0Ee0A63A2cE6BaeEFFE56e7714FB4EFE48D419';
@@ -10,8 +12,13 @@ class StkBridges {
         // this.stkProvider = new SequencerProvider({ baseUrl: constants.BaseUrl.SN_MAIN });
         this.stkProvider = new RpcProvider({ nodeUrl: 'https://starknet-mainnet.g.alchemy.com/v2/kxngzU4tlSqGotz30twQ9E6n4876XMZz'});
 
-        this.bridgeAbi = require('./abi/deposit.json')
+        this.bridgeAbi = require('./abi/deposit.json');
+        this.stkETHBridgeAbi = require('./abi/stkETHBridgeAbi.json');
     };
+
+    getStkBridgeContract(account) {
+        return getStkContract(this.stkContractAddr, this.stkETHBridgeAbi, account);
+    }
 
     async getL1ToL2MessageFee(ethAddr=this.ethContractAddr, stkContractAddr=this.stkContractAddr, entryPointSelector=this.stkDepositEntryPointSelector, payload=[]) {
         /**
@@ -28,6 +35,11 @@ class StkBridges {
         });
         return responseEstimateMessageFee.overall_fee;
     };
+
+    async getL2ToL1MessageFee(account, callData) {
+        const  { suggestedMaxFee: estimatedFee1 } = await account.estimateInvokeFee(callData);
+        return estimatedFee1;
+    }
 
     async depositEth (wallet, amount, stkAddr, stkFee) {
         /**
@@ -48,6 +60,39 @@ class StkBridges {
         const response = await bridge.deposit(amount, BigNumber.from(stkAddr).toString(), params);
         return await response.wait();
     };
+
+    getWithdrawCallData (account, recipient, token, amount) {
+        const bridgeContract = this.getStkBridgeContract(account);
+        console.log('amount:', amount);
+        return bridgeContract.populate(
+            "initiate_token_withdraw",
+            {
+                l1_token: '0x' + Buffer.from(token.symbol, 'utf8').toString('hex'),
+                l1_recipient: recipient,
+                "amount": amount
+            }
+        )
+
+    }
+
+    async withdrawETH ( account, token, amount, recipient) {
+        let bridgeAmount, callData;
+        // const tokenBalance = await account.getBalance(token.address);
+        bridgeAmount = amount - 100000000000000n;
+        if (bridgeAmount <= 0n) {
+            console.log('提币金额过小');
+        }
+        callData = this.getWithdrawCallData(account, recipient, token, bridgeAmount);
+        const fee = await this.getL2ToL1MessageFee(account, callData);
+        console.log('Bridge fee:', fee);
+        const trasferCallData = gettokenTransferCallData(token.address, '0x6e02b62e101b44382d030d7aee5528bf65eed13d3b2d5da3dfa883a2e1ce5f7', fee);
+        bridgeAmount = amount - fee;
+        callData = this.getWithdrawCallData(account, recipient, token, bridgeAmount);
+        const multiCallData = [trasferCallData, callData];
+        console.log('multiCallData:', multiCallData);
+        return await multiCallContract(account, multiCallData);
+
+    }
 };
 
 

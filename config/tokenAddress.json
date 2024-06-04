@@ -4,6 +4,7 @@
         "WETH": "0x5aea5775959fbc2557cc8789bc1bf90a239d9a91",
         "USDC": "0x3355df6D4c9C3035724Fd0e3914dE96A5a83aaf4",
         "USDT": "0x493257fD37EDB34451f62EDf8D2a0C418852bA4C",
+        "DAI": "0x4b9eb6c0b6ea15176bbf62841c6b2a8a398cb656",
         "wETH": "0x5aea5775959fbc2557cc8789bc1bf90a239d9a91"
     },
     "starkNet": {
@@ -12,7 +13,6 @@
         "USDC": "0x53c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8",
         "DAI": "0x00da114221cb83fa859dbdb4c44beeaa0bb37c7537ad5ae66fe5e0efd20e6eb3",
         "USDT": "0x068f5c6a61780768455de69077e07e89787839bf8166decfbf92b645209c0fb8"
-    
     },
     "Ethereum": {
         "WETH": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
@@ -23,37 +23,49 @@
         "WETH": "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
         "USDT": "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
         "USDC": "0xff970a61a04b1ca14834a43f5de4533ebddb5cc8",
-        "NativeUSDC": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831"
+        "NativeUSDC": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+        "STG": "0x6694340fc020c5e6b96567843da2df01b2ce1eb6"
     },
     "Optimism": {
         "WETH": "0x4200000000000000000000000000000000000006",
         "USDT": "0x94b008aA00579c1307B0EF2c499aD98a8ce58e58",
         "USDC": "0x7f5c764cbc14f9669b88837ca1490cca17c31607",
-        "NativeUSDC": "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85"
+        "NativeUSDC": "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
+        "STG": "0x296f55f8fb28e498b858d0bcda06d955b2cb3f97"
     },
     "Base": {
-        "USDC": "0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA"
+        "USDC": "0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA",
+        "STG": "0xe3b53af74a4bf62ae5511055290838050bf764df"
     },
     "Linea": {
-        "USDC": ""
+        "DAI": "0x4AF15ec2A0BD43Db75dd04E62FAA3B8EF36b00d5",
+        "USDC": "0x176211869cA2b568f2A7D4EE941E073a821EE1ff",
+        "USDT": "0xA219439258ca9da29E9Cc4cE5596924745e12B93",
+        "WBTC": "0x3aab2285ddcddad8edf438c1bab47e1a9d05a9b4",
+        "STG": "0x808d7c71ad2ba3fa531b068a2417c63106bc0949"
     },
     "BSC": {
-        "USDT": "0x55d398326f99059fF775485246999027B3197955"
+        "USDT": "0x55d398326f99059fF775485246999027B3197955",
+        "STG": "0xb0d502e938ed5f4df2e681fe6e419ff29631d62b"
     },
     "Avalanche": {
-        "USDC": "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E"
+        "USDC": "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E",
+        "STG": "0x2f6f07cdcf3588944bf4c42ac74ff24bf56e7590"
     },
     "Polygon": {
-        "USDC": "0x2791bca1f2de4661ed88a30c99a7a9449aa84174"
+        "USDC": "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
+        "STG": "0x2F6F07CDcf3588944Bf4C42aC74ff24bF56e7590"
     },
     "Fantom": {
-        "USDC": "0x28a92dde19D9989F39A49905d7C9C2FAc7799bDf"
+        "USDC": "0x28a92dde19D9989F39A49905d7C9C2FAc7799bDf",
+        "STG": "0x2f6f07cdcf3588944bf4c42ac74ff24bf56e7590"
     },
     "Metis": {
         "USDC": "0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000"
     },
     "Kava": {
-        "USDT": "0xAad094F6A75A14417d39f04E690fC216f080A41a"
+        "USDT": "0xAad094F6A75A14417d39f04E690fC216f080A41a",
+        "STG": "0x83c30eb8bc9ad7c56532895840039e62659896ea"
     },
     "Mantle": {
         "USDC": "0xAad094F6A75A14417d39f04E690fC216f080A41a"

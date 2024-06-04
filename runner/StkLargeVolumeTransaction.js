@@ -7,7 +7,7 @@ const readlineSync = require('readline-sync');
 const fs = require('fs');
 const crypto = require('crypto');
 
-const provider = new Provider({ sequencer: { network: constants.NetworkName.SN_MAIN } });
+const provider = new RpcProvider({ nodeUrl: constants.NetworkName.SN_MAIN });
 // const provider = new RpcProvider({ nodeUrl: CONFIG.stkrpc});
 const ethereumProvider = new ethers.getDefaultProvider(CONFIG.ethrpc);
 const walletData = convertCSVToObjectSync(CONFIG.walletPath);

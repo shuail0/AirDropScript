@@ -1,6 +1,46 @@
 # AirDropScript
 
 # 更新记录
+## 2024/5/23 更新
+- 新增任务
+   - task305: 查询evm钱包余额任务，根据列表中设置的链和token查询余额后保存到本地。
+
+## 2024/4/30 更新
+- 新增项目：购买Sepolia、Eclipse测试网跨链
+- 新增任务：
+   - task106: 在OP或ARB网络使用0.0001-0.0002ETH购买sepoliaETH，然后随机将0.3-0.8sepoliaETH跨链至Eclipse测试网。
+- 配置调整：
+   - RpcCoinfig.json: 修改Sepolia网络默认RPC
+
+## 2024/4/28 更新
+- 新增任务：
+   - task37: syncswap Paymaster交互任务， 首先将账户中20%-60%的ETH兑换为USDC、DAI、USDT其中一种，然后再换回ETH，换回的金额为获得的币种-0.5。
+- 任务调整：
+   - task22: 删除任务。
+   
+## 2024/4/19 更新
+- 新增任务：
+   - task411: 交易所提ETH至starknet后再将ETH从官桥跨链至主网。程序数据格式参照`stk大额数据模板.csv`, 主网的地址填到`exchangeAddr`字段中即可。运行主程序为`StkLargeVolumeTransaction.js`.
+- 其他：
+   - 包更新：使用了新版本的starknetjs库，运行前先执行`npm i`,安装新版本的库。
+
+### 2024/4/10 更新
+- 新增任务：
+   - task510:查询Mode链的钱包是否有wETH，如果有，转换为原生ETH。
+- 任务调整：
+   - task507:修复兑换ezETH兑换ETH收到wETH的BUG。
+   - task508:修复兑换ezETH兑换ETH收到wETH的BUG。
+
+
+### 2024/4/8 更新
+
+- 新增项目：AperTure、Stone跨链桥、Ironclad、LayerBank、Molend、币安提币和资金划转
+- 新增运行程序：runner目录下新增` bnSubtrasfer.js`程序，功能是将指定资产从所有子账户的现货账户中归集到主账户现货账户中，每30秒执行一轮。运行前需要把代码中的` mainAccEmail`改为主账户的邮箱地址，` currenc`改为需要归集的币种。
+- 新增任务：
+  - task105: Stone刷跨链程序， 从币安提ETH至Manta后兑换为Stone，然后再Manta和Stone之间来回跨链20-30次（每次跨链算一次）。最后再将Stone换回ETH，存入交易所。 使用LayerZero运行程序执行，数据模板参考zksync大额模板。
+  - task504: IronClad交互程序,存入ez ETH，等待1-5分钟后取出
+  - task505: LayerBank交互程序, 随机存入30% - 50%的ETH，等待1-5分钟后取出
+  - task509: Molend交互程序, 随机存入20% - 60%的ETH，等待1-5分钟后取出
 
 ## 2024/4/2 更新
 - 新增项目： Kim、SwapMode、Supswap、Ionic

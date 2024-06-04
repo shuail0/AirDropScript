@@ -4,15 +4,19 @@ module.exports = {
         "chainId": 1,
     },
     "Arbitrum": {
-        "contract": '0x0A9f824C05A74F577A536A8A0c673183a872Dff4',
+        "contract": '0xfca99f4b5186d4bfbdbd2c542dca2eca4906ba45',
         "chainId": 1,
     },
     "Optimism": {
-        "contract": '',
+        "contract": '0x8352C746839699B1fc631fddc0C3a00d4AC71A17',
         "chainId": 1,
     },
     "Goerli": {
         "contract": '',
         "chainId": 154,
+    },
+    "Sepolia": {
+        "contract": '',
+        "chainId": 161,
     }
 }

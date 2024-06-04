@@ -42,7 +42,7 @@ module.exports = async (params) => {
     console.log('lETH余额：', fixedToFloat(lETHBalance, lETH.decimal), '开始授权...');
 
     await checkApprove(wallet, lETH.address, layerbank.core, lETHBalance);
-
+    console.log('开始取出ETH');
     tx = await layerbank.redeemToken(lETHBalance);
     console.log('交易成功 txHash:', tx.transactionHash)
 

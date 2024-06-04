@@ -23,6 +23,7 @@ class Stargate {
         this.routerAbi = require('./abi/StargateRouter.json');
         this.routerETHAbi = require('./abi/StargateRouterETH.json');
         this.poolAbi = require('./abi/StargatePool.json');
+        this.STGAbi = require('./abi/StargateSTG.json');
         // this.bridgeAbi = require('./abi/StargateBridge.json');
         // this.factoryAbi = require('./abi/StargateFactory.json');
         // this.stargateComposerAbi = require('./abi/StargateComposer.json');
@@ -37,6 +38,9 @@ class Stargate {
     }
     getPoolContract(wallet, poolAddr) {
         return getContract(poolAddr, this.poolAbi, wallet)
+    }
+    getSTGContract(wallet, stgAddr) {
+        return getContract(stgAddr, this.STGAbi, wallet)
     }
     // 预估跨链费用
     async getCrossChainFee(wallet, soureChain, dstChain, functionType) {
@@ -114,6 +118,43 @@ class Stargate {
         )
         return await response.wait();
     }
+
+    async sendSTG(wallet, soureChainSTGAddress, dstChain, amount) {
+        const STGContract = this.getSTGContract(wallet, soureChainSTGAddress);
+        // estimatesSendTokensFee
+        const sendFee = await STGContract.estimateSendTokensFee(
+            contractAddress[dstChain].chainId, // dstChainID
+            true, // useZero
+            '0x00010000000000000000000000000000000000000000000000000000000000014c08'
+        );
+        let value = sendFee.nativeFee.add(sendFee.zroFee)
+        // 增加10%的value
+        value = value.add(value.div(10));
+        console.log('value', ethers.utils.formatEther(value));
+        // 给2倍gasPrice
+        let gasPrice = (await wallet.provider.getGasPrice()).mul(2);
+        const gasLimit = await STGContract.estimateGas.sendTokens(
+            contractAddress[dstChain].chainId, // dstChainID
+            wallet.address, // dstAddress
+            amount, // amount
+            '0x0000000000000000000000000000000000000000',
+            '0x00010000000000000000000000000000000000000000000000000000000000014c08',
+            { value }
+        );
+        // console.log('gasPrice', gasPrice.toString());
+        // console.log('gasLimit', gasLimit.toString());
+        // // 打印预估费用（gasPrice * gasLimit + value）
+        console.log('预估费用', ethers.utils.formatEther(gasPrice.mul(gasLimit).add(value)));
+        const response = await STGContract.sendTokens(
+            contractAddress[dstChain].chainId, // dstChainID
+            wallet.address, // dstAddress
+            amount, // amount
+            '0x0000000000000000000000000000000000000000',
+            '0x00010000000000000000000000000000000000000000000000000000000000014c08',
+            { gasPrice, gasLimit, value }
+        );
+        return await response.wait();
+     }
 
     async addLiquidity() { }
     async withdrawLocal() { }
